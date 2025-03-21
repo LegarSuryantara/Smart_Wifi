@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nama paket');
             $table->string('kategori');
-            $table->int('harga');
+            $table->integer('harga');
             $table->string('kecepatan');
             $table->timestamps();
         });
