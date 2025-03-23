@@ -1,5 +1,5 @@
 <!-- resources/views/admin/pakets/edit.blade.php -->
-@extends('layouts.app')
+@extends('layouts.app_1')
 
 @section('title', 'Edit Paket')
 

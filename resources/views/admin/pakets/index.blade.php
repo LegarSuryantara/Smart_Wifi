@@ -1,5 +1,5 @@
 <!-- resources/views/admin/pakets/index.blade.php -->
-@extends('layouts.app')
+@extends('layouts.app_1')
 
 @section('title', 'Daftar Paket')
 
