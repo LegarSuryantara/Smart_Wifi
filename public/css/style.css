@@ -1,0 +1,117 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+body {
+    font-family: "Poppins", sans-serif;
+}
+.hero-section {
+    background-image: url(../image/Herosectionbackground.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    
+    padding: 50px 0;
+}
+.hero-section img {
+    height: 300px;
+    width: 200px;
+}
+.hero-section h2 {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+.hero-section p {
+    font-size: 1rem;
+}
+.package-section h2 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+.package-card {
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.package-card h3 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.package-card p {
+    margin-bottom: 5px;
+}
+.package-card .price {
+    font-size: 1.5rem;
+}
+.package-card .badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+footer {
+    background-color: rgb(47, 47, 47);
+    color: white;
+    padding: 50px 50px;
+}
+
+footer .content p {
+    line-height: 15px;
+}
+
+footer .content p i {
+    margin-right: 10px;
+}
+
+footer .title {
+    margin-bottom: 15px;
+}
+
+iframe {
+    border-radius: 15px;
+}
+
+.login-container {
+    max-width: 900px;
+    margin: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.5s;
+}
+.login-container:hover {
+    transform: scale(1.05);
+}
+.login-form {
+    padding: 2rem;
+}
+.login-form h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #333;
+}
+.login-form p {
+    color: #666;
+}
+.login-form .form-control {
+    border-radius: 0.5rem;
+}
+.login-form .btn {
+    background-color: #f7c948;
+    color: #fff;
+    border-radius: 0.5rem;
+}
+.login-form .btn:hover {
+    background-color: #f5b942;
+}
+.login-form a {
+    color: #007bff;
+}
+.login-form a:hover {
+    text-decoration: underline;
+}
+.loginform {
+    background-image: url(../image/backgroundlogin.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
