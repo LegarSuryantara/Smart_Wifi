@@ -1,5 +1,5 @@
 <!-- resources/views/admin/pakets/create.blade.php -->
-@extends('layouts.app')
+@extends('layouts.app_1')
 
 @section('title', 'Tambah Paket')
 
