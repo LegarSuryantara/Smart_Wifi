@@ -4,10 +4,14 @@ use App\Http\Controllers\adminPaketsController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+Route::get('/',function(){
+    return view('listpaket');
 });
 
 Route::get('/dashboard', function () {
@@ -18,6 +22,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::prefix('admin')->group(function () {
+        Route::resource('pakets', adminPaketsController::class);
+    });
 
     //Permission routes
     Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
@@ -34,11 +42,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/roles/{id}/edit', [RoleController::class, 'edit'])->name('roles.edit');
     Route::post('/roles/{id}', [RoleController::class, 'update'])->name('roles.update');
     Route::delete('/roles', [RoleController::class, 'destroy'])->name('roles.destroy');
-    
+
+    //Users route
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    // Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+    // Route::post('/users', [UserController::class, 'store'])->name('users.store');
+    Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
+    Route::post('/users/{id}', [UserController::class, 'update'])->name('users.update');
+    // Route::delete('/users', [UserController::class, 'destroy'])->name('users.destroy');
+
 });
 
 require __DIR__.'/auth.php';
-
-Route::prefix('admin')->group(function () {
-    Route::resource('pakets', adminPaketsController::class);
-});

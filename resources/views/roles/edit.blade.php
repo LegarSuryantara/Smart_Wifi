@@ -4,7 +4,7 @@
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 Roles / Edit
             </h2>
-            <a href="{{ route('roles.index') }}" class="bg-slate-700 text-sm rounded-md text-white px-5 py-3">Back</a>
+            <a href="{{ route('roles.index') }}" class="bg-slate-700 text-sm rounded-md text-white px-5 py-3 uppercase">Back to roles</a>
         </div>
     </x-slot>
 
@@ -24,7 +24,6 @@
                         <div class="flex flex-wrap gap-3 mb-3">
                             @foreach ($permissions as $permission)
                                 <div class="w-full sm:w-[calc(50%-0.75rem)] md:w-[calc(33.33%-0.75rem)] lg:w-[calc(25%-0.75rem)]">
-                                    <!-- Label membungkus seluruh konten -->
                                     <label for="permission-{{ $permission->id }}" 
                                         class="flex items-center space-x-2 p-3 bg-white rounded-lg border border-gray-200 shadow-xs hover:shadow-sm transition-all cursor-pointer hover:bg-gray-50">
                                         <input {{ ($hasPermissions->contains($permission->name)) ? 'checked':'' }} type="checkbox" 
@@ -41,7 +40,7 @@
                                 </div>
                             @endforeach
                         </div>
-                        <button class="bg-slate-700 text-sm rounded-md text-white px-5 py-3">Update</button>
+                        <button class="bg-slate-700 text-sm rounded-md text-white px-5 py-3 uppercase">Update roles</button>
                      </div>
                     </form>
                 </div>

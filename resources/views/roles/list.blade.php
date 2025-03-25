@@ -4,8 +4,8 @@
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 {{ __('Roles') }}
             </h2>
-            <a href="{{ route('roles.create') }}" class="bg-slate-700 text-sm rounded-md text-white px-3 py-2 hover:bg-slate-600 transition-colors">
-                Create
+            <a href="{{ route('roles.create') }}" class="bg-slate-700 text-sm rounded-md text-white px-3 py-2 hover:bg-slate-600 transition-colors uppercase">
+                create role
             </a>
         </div>
     </x-slot>
@@ -19,7 +19,7 @@
                             <th class="px-6 py-3 text-left" width="60">#</th>
                             <th class="px-6 py-3 text-left">Name</th>
                             <th class="px-6 py-3 text-left">Permissions</th>
-                            <th class="px-6 py-3 text-left" width="120">Created</th>
+                            <th class="px-6 py-3 text-left" width="150">Created</th>
                             <th class="px-6 py-3 text-center" width="180">Action</th>
                         </tr>
                     </thead>
@@ -40,13 +40,15 @@
                                         {{ $role->created_at->format('d/m/Y H:i') }}
                                     </td>
                                     <td class="px-6 py-3 text-center">
-                                    <a href="{{ route('roles.edit',$role->id) }}" class="bg-slate-700 text-sm rounded-md text-white px-3 py-2 hover:bg-slate-600 transition-colors">
+                                    <div class="flex justify-center space-x-2">
+                                    <a href="{{ route('roles.edit',$role->id) }}" class="bg-slate-700 text-sm rounded-md text-white px-3 py-2 hover:bg-slate-600 transition-colors uppercase">
                                         Edit
                                     </a>
                                     
-                                    <a href="javascript:void(0);" onclick="deleteRole({{ $role->id }})" class="bg-red-600 text-sm rounded-md text-white px-3 py-2 hover:bg-red-500 transition-colors">
+                                    <a href="javascript:void(0);" onclick="deleteRole({{ $role->id }})" class="bg-red-600 text-sm rounded-md text-white px-3 py-2 hover:bg-red-500 transition-colors uppercase">
                                         Delete
                                     </a> 
+                                    </div>
                                     </td>      
                                 </tr>
                             @endforeach

@@ -4,7 +4,7 @@
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 Permission / Edit
             </h2>
-            <a href="{{ route('permissions.index') }}" class="bg-slate-700 text-sm rounded-md text-white px-5 py-3">Back</a>
+            <a href="{{ route('permissions.index') }}" class="bg-slate-700 text-sm rounded-md text-white px-5 py-3 uppercase">Back to permissions</a>
         </div>
     </x-slot>
 
@@ -22,7 +22,7 @@
                             <p class="text-red-400 font-medium">{{ $message  }}</p>
                             @enderror
                         </div>
-                        <button class="bg-slate-700 hover:bg-slate-600 text-sm rounded-md text-white px-5 py-3">Update</button>
+                        <button class="bg-slate-700 hover:bg-slate-600 text-sm rounded-md text-white px-5 py-3 uppercase">Update permission</button>
                      </div>
                     </form>
                 </div>

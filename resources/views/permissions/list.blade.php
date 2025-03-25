@@ -4,8 +4,8 @@
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 {{ __('Permissions') }}
             </h2>
-            <a href="{{ route('permissions.create') }}" class="bg-slate-700 text-sm rounded-md text-white px-3 py-2 hover:bg-slate-600 transition-colors">
-                Create
+            <a href="{{ route('permissions.create') }}" class="bg-slate-700 text-sm rounded-md text-white px-3 py-2 hover:bg-slate-600 transition-colors uppercase">
+                Create permission
             </a>
         </div>
     </x-slot>
@@ -39,10 +39,10 @@
                                     </td>
                                     <td class="px-6 py-3 text-center">
                                         <div class="flex justify-center space-x-2">
-                                            <a href="{{ route('permissions.edit',$permission->id) }}" class="bg-slate-700 text-sm rounded-md text-white px-3 py-2 hover:bg-slate-600 transition-colors">
+                                            <a href="{{ route('permissions.edit',$permission->id) }}" class="bg-slate-700 text-sm rounded-md text-white px-3 py-2 hover:bg-slate-600 transition-colors uppercase">
                                                 Edit
                                             </a>
-                                            <a href="javascript:void(0);" onclick="deletePermission({{ $permission->id }})" class="bg-red-600 text-sm rounded-md text-white px-3 py-2 hover:bg-red-500 transition-colors">
+                                            <a href="javascript:void(0);" onclick="deletePermission({{ $permission->id }})" class="bg-red-600 text-sm rounded-md text-white px-3 py-2 hover:bg-red-500 transition-colors uppercase">
                                                 Delete
                                             </a>
                                         </div>

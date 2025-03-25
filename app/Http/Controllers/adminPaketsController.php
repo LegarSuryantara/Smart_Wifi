@@ -4,9 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\Pakets;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class adminPaketsController extends Controller
+class adminPaketsController extends Controller implements HasMiddleware
 {
+    public static function middleware()
+    {
+        return[
+            new Middleware('permission:view pakets', only: ['index']),
+            new Middleware('permission:edit pakets', only: ['edit']),
+            new Middleware('permission:create pakets', only: ['create']),
+            new Middleware('permission:delete pakets', only: ['destroy']),
+        ];
+    }
     /**
      * Menampilkan daftar paket.
      */
