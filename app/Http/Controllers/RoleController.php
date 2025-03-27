@@ -26,7 +26,7 @@ class RoleController extends Controller implements HasMiddleware
     public function index()
     {
         $roles = Role::orderBy('name','ASC')->paginate(10);
-        return view('roles.list',[
+        return view('admin.roles.list',[
             'roles'=>$roles
         ]);
     }
@@ -37,7 +37,7 @@ class RoleController extends Controller implements HasMiddleware
     public function create()
     {
         $permissions = Permission::orderBy('name','ASC')->get();
-        return view('roles.create',[
+        return view('admin.roles.create',[
             'permissions' => $permissions
         ]);
 
@@ -83,7 +83,7 @@ class RoleController extends Controller implements HasMiddleware
         $hasPermissions = $role->permissions->pluck('name');
         $permissions = Permission::orderBy('name','ASC')->get();
 
-        return view('roles.edit',[
+        return view('admin.roles.edit',[
             'permissions'=>$permissions,
             'hasPermissions'=>$hasPermissions,
             'role'=>$role

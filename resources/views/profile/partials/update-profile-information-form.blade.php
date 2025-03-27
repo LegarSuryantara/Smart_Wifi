@@ -5,7 +5,7 @@
         </h2>
 
         <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-            {{ __("Update your account's profile information and email address.") }}
+            {{ __("Update your account's profile information, email address, and contact details.") }}
         </p>
     </header>
 
@@ -45,6 +45,25 @@
                     @endif
                 </div>
             @endif
+        </div>
+
+        <!-- Phone Number Field -->
+        <div>
+            <x-input-label for="phone" :value="__('No Hp')" />
+            <x-text-input id="phone" name="phone" type="tel" class="mt-1 block w-full" 
+                :value="old('phone', $user->phone)" required autocomplete="tel" />
+            <x-input-error class="mt-2" :messages="$errors->get('phone')" />
+            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                {{ __('Format: 0812 3456 7890 (10-15 digits)') }}
+            </p>
+        </div>
+
+        <!-- Address Field -->
+        <div>
+            <x-input-label for="address" :value="__('Alamat')" />
+            <x-textarea id="address" name="address" class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" 
+                autocomplete="street-address" rows="3">{{ old('address', $user->address) }}</x-textarea>
+            <x-input-error class="mt-2" :messages="$errors->get('address')" />
         </div>
 
         <div class="flex items-center gap-4">

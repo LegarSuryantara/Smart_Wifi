@@ -1,10 +1,11 @@
+<!-- edit.blade.php -->
 <x-app-layout>
     <x-slot name="header">
     <div class="flex justify-between">
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 Users / Edit
             </h2>
-            <a href="{{ route('users.index') }}" class="bg-slate-700 text-sm rounded-md text-white px-5 py-3 uppercase">Back to roles</a>
+            <a href="{{ route('users.index') }}" class="bg-slate-700 text-sm rounded-md text-white px-5 py-3 uppercase">Back to user</a>
         </div>
     </x-slot>
 
@@ -32,6 +33,22 @@
                             @enderror
                         </div>
 
+                        <label for="" class="text-lg font-sm">Phone number</label>
+                        <div class="my-3">
+                            <input value="{{ old('phone',$user->phone) }}" name="phone" placeholder="Enter phone number" type="tel" class="text-black border-gray-300 shadow-sm max-w-1/2 rounded-lg">
+                            @error('phone')
+                            <p class="text-red-400 font-sm">{{ $message  }}</p>
+                            @enderror
+                        </div>
+
+                        <label for="" class="text-lg font-sm">Address</label>
+                        <div class="my-3">
+                            <input value="{{ old('address',$user->address) }}" name="address" placeholder="Enter address" type="text" class="text-black border-gray-300 shadow-sm max-w-1/2 rounded-lg">
+                            @error('address')
+                            <p class="text-red-400 font-sm">{{ $message  }}</p>
+                            @enderror
+                        </div>
+
                         <div class="flex flex-wrap gap-3 mb-3">
                             @foreach ($roles as $role)
                                 <div class="w-full sm:w-[calc(50%-0.75rem)] md:w-[calc(33.33%-0.75rem)] lg:w-[calc(25%-0.75rem)]">
@@ -53,7 +70,7 @@
                                 </div>
                             @endforeach
                         </div>
-                        <button class="bg-slate-700 text-sm rounded-md text-white px-5 py-3 uppercase">Update roles</button>
+                        <button class="bg-slate-700 text-sm rounded-md text-white px-5 py-3 uppercase">Update user</button>
                      </div>
                     </form>
                 </div>

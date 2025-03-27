@@ -98,6 +98,7 @@
                     </div>
                 </div>
                 </div>
+                
         </section>
         <section class="package-section p-4">
             <div class="container">
@@ -146,6 +147,7 @@
                 </div>
             </div>
         </section>
+
     </main>
     <footer>
         <div class="container-fluid text-left">

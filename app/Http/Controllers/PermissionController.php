@@ -24,7 +24,7 @@ class PermissionController extends Controller implements HasMiddleware
     public function index()
     {
         $permissions = Permission::orderBy('created_at','DESC')->paginate(25);
-        return view('permissions.list',[
+        return view('admin.permissions.list',[
             'permissions' => $permissions
         ]);
     }
@@ -34,7 +34,7 @@ class PermissionController extends Controller implements HasMiddleware
      */
     public function create()
     {
-        return view('permissions.create');
+        return view('admin.permissions.create');
     }
 
     /**
@@ -46,7 +46,9 @@ class PermissionController extends Controller implements HasMiddleware
             'name' => 'required|unique:permissions|min:3'
         ]);
         if($validator->passes()) {
-            Permission::create(['name'=> $request->name  ]);
+            Permission::create([
+                'name'=> $request->name  
+            ]);
             return redirect()->route('permissions.index')->with('Success','Permission Added Successfully.');
         }else{
             return redirect()->route('permissions.create')->withInput()->withErrors($validator); 
@@ -67,7 +69,7 @@ class PermissionController extends Controller implements HasMiddleware
     public function edit( $id)
     {
         $permission = Permission::findOrFail($id);
-        return view('permissions.edit',[
+        return view('admin.permissions.edit',[
             'permission'=>$permission
         ]);
     }

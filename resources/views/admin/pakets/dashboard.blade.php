@@ -1,4 +1,3 @@
-<!-- resources/views/admin/pakets/index.blade.php -->
 @extends('layouts.app_1')
 
 @section('title', 'Daftar Paket')
@@ -40,36 +39,31 @@
         </div>
     </div>
 </section>
+
+<!-- Menampilkan paket -->
 <section class="package-section p-4">
     <div class="container">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>Paket Internet</h2>
-            <a href="{{ route('pakets.create') }}" class="btn btn-primary">Tambah Paket</a>
-        </div>
+        <h2 class="text-2xl font-bold mb-6 text-left">Paket Internet</h2>
         <div class="row">
             @foreach($pakets as $paket)
-            <div class="col-md-3 mb-4">
-                <div class="package-card bg-primary text-white position-relative">
-                    <h3>{{ $paket->nama_paket }}</h3>
-                    <p class="text-danger price">Unlimited</p>
-                    <p>Kategori</p>
-                    <p class="text-danger price">{{ $paket->kategori }}</p>
-                    <p>Kecepatan Internet</p>
-                    <p class="text-danger price">{{ $paket->kecepatan }} Mbps</p>
-                    <p>Harga Bulanan</p>
-                    <p class="text-danger price">Rp {{ number_format($paket->harga, 0, ',', '.') }}</p>
-                    <div class="d-flex gap-2 mt-3">
-                        <a href="{{ route('pakets.edit', $paket->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                        <form action="{{ route('pakets.destroy', $paket->id) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus?')">Hapus</button>
-                        </form>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">{{ $paket->nama_paket }}</h3>
+                            <p class="card-text">
+                                <strong>Kategori:</strong> {{ $paket->kategori }}<br>
+                                <strong>Kecepatan:</strong> {{ $paket->kecepatan }}<br>
+                                <strong>Harga:</strong> Rp {{ number_format($paket->harga, 0, ',', '.') }}
+                            </p>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <a href="#" class="btn btn-primary btn-block">Pilih Paket</a>
+                        </div>
                     </div>
                 </div>
-            </div>
             @endforeach
         </div>
     </div>
 </section>
+
 @endsection

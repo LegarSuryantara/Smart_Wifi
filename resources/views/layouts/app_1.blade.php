@@ -35,9 +35,6 @@
                         <li class="nav-item">
                             <a class="nav-link" href="#">Hubungi Kami</a>
                         </li>
-                        <li>
-                            <button type="button" class="btn btn-danger">Daftar Sekarang</button>
-                        </li>
                     </ul>
                 </div>
             </div>

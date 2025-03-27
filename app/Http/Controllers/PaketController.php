@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 
-class adminPaketsController extends Controller implements HasMiddleware
+class PaketController extends Controller implements HasMiddleware
 {
     public static function middleware()
     {
@@ -24,7 +24,13 @@ class adminPaketsController extends Controller implements HasMiddleware
     public function index()
     {
         $pakets = Pakets::all();
-        return view('admin.pakets.index', compact('pakets'));
+        return view('admin.pakets.list', compact('pakets'));
+    }
+
+    public function home()
+    {
+        $pakets = Pakets::all();
+        return view('admin.pakets.dashboard', compact('pakets'));
     }
 
     /**

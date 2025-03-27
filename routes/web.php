@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\adminPaketsController;
+use App\Http\Controllers\PaketController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 Route::get('/',function(){
-    return view('listpaket');
+    return view('guests/dashboard');
 });
 
 Route::get('/dashboard', function () {
@@ -22,10 +22,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    Route::prefix('admin')->group(function () {
-        Route::resource('pakets', adminPaketsController::class);
-    });
 
     //Permission routes
     Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
@@ -45,12 +41,20 @@ Route::middleware('auth')->group(function () {
 
     //Users route
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
-    // Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
-    // Route::post('/users', [UserController::class, 'store'])->name('users.store');
+    Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+    Route::post('/users', [UserController::class, 'store'])->name('users.store');
     Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
     Route::post('/users/{id}', [UserController::class, 'update'])->name('users.update');
-    // Route::delete('/users', [UserController::class, 'destroy'])->name('users.destroy');
+    Route::delete('/users', [UserController::class, 'destroy'])->name('users.destroy');
 
+    // Pakets routes
+    Route::get('/pakets', [PaketController::class, 'index'])->name('pakets.index');
+    Route::get('/home', [PaketController::class, 'home'])->name('pakets.home');
+    Route::get('/pakets/create', [PaketController::class, 'create'])->name('pakets.create');
+    Route::post('/pakets', [PaketController::class, 'store'])->name('pakets.store');
+    Route::get('/pakets/{paket}/edit', [PaketController::class, 'edit'])->name('pakets.edit');
+    Route::put('/pakets/{paket}', [PaketController::class, 'update'])->name('pakets.update');
+    Route::delete('/pakets/{paket}', [PaketController::class, 'destroy'])->name('pakets.destroy');
 });
 
 require __DIR__.'/auth.php';

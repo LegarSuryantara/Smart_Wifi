@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller implements HasMiddleware
 {
@@ -16,8 +17,8 @@ class UserController extends Controller implements HasMiddleware
         return[
             new Middleware('permission:view users', only: ['index']),
             new Middleware('permission:edit users', only: ['edit']),
-            // new Middleware('permission:create users', only: ['create']),
-            // new Middleware('permission:delete users', only: ['destroy']),
+            new Middleware('permission:create users', only: ['create']),
+            new Middleware('permission:delete users', only: ['destroy']),
         ];
     }
     /**
@@ -26,7 +27,7 @@ class UserController extends Controller implements HasMiddleware
     public function index()
     {
         $users = User::latest()->paginate(10);
-        return view('users.list',[
+        return view('admin.users.list',[
             'users'=>$users
         ]);
     }
@@ -36,7 +37,10 @@ class UserController extends Controller implements HasMiddleware
      */
     public function create()
     {
-        //
+        $roles = Role::orderBy('name','ASC')->get();
+        return view('admin.users.create',[
+            'roles'=> $roles,
+        ]);
     }
 
     /**
@@ -44,7 +48,27 @@ class UserController extends Controller implements HasMiddleware
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(),[
+            'name' => 'required|min:3',
+            'email' => 'required|email|unique:users,email',
+            'phone' =>'required|unique:users,email',
+            'address',
+            'password' => 'required|min:5|same:confirm_password',
+            'confirm_password' => 'required'
+        ]);
+        if($validator->fails()){
+            return redirect()->route('users.create')->withInput()->withErrors($validator); 
+        }
+        $user= new User();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->phone = $request->phone;
+        $user->address = $request->address;
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        $user->syncRoles($request->role);
+        return redirect()->route('users.index')->with('success','User added successfully');
     }
 
     /**
@@ -64,7 +88,7 @@ class UserController extends Controller implements HasMiddleware
         $roles = Role::orderBy('name','ASC')->get();
 
         $hasRoles = $user->roles->pluck('id');
-        return view('users.edit',[
+        return view('admin.users.edit',[
             'user'=>$user,
             'roles'=>$roles,
             'hasRoles' => $hasRoles
@@ -79,13 +103,17 @@ class UserController extends Controller implements HasMiddleware
         $user = User::findOrFail($id);
         $validator = Validator::make($request->all(),[
             'name' => 'required|min:3',
-            'email' => 'required|email|unique:users,email,'.$id.',id'
+            'email' => 'required|email|unique:users,email,'.$id.',id',
+            'phone' =>'required|unique:users,email',
+            'address',
         ]);
         if($validator->fails()){
             return redirect()->route('users.edit',$id)->withInput()->withErrors($validator); 
         }
         $user->name=$request->name;
         $user->email=$request->email;
+        $user->phone = $request->phone;
+        $user->address = $request->address;
         $user->save();
 
         $user->syncRoles($request->role);
@@ -95,8 +123,24 @@ class UserController extends Controller implements HasMiddleware
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request)
     {
-        //
+        $user = User::find($request->id);
+
+        if (!$user){
+            session()->flash('error, User not found');
+            return response()->json([
+                'status' => false,
+
+            ]);
+        }
+
+        $user->delete();
+        
+        session()->flash('success, User deleted successfully');
+            return response()->json([
+                'status' => true,
+
+            ]);
     }
 }

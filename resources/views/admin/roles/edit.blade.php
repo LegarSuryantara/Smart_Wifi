@@ -1,3 +1,4 @@
+<!-- edit.blade.php -->
 <x-app-layout>
     <x-slot name="header">
     <div class="flex justify-between">
@@ -40,7 +41,7 @@
                                 </div>
                             @endforeach
                         </div>
-                        <button class="bg-slate-700 text-sm rounded-md text-white px-5 py-3 uppercase">Update roles</button>
+                        <button class="bg-slate-700 text-sm rounded-md text-white px-5 py-3 uppercase">Update role</button>
                      </div>
                     </form>
                 </div>
