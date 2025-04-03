@@ -1,8 +1,12 @@
 # Smart WiFi Management System - Laravel
 
 ![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
-![MySQL](https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white)
+
+![MySQL](https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white) **OR**
+![MariaDB](https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=mariadb&logoColor=white)
+
 ![Breeze](https://img.shields.io/badge/Laravel_Breeze-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
+
 ![Spatie](https://img.shields.io/badge/Spatie_Permission-4A154B?style=for-the-badge)
 
 A comprehensive WiFi management system built with Laravel, featuring user authentication with Laravel Breeze and role-based permissions with Spatie.
@@ -10,10 +14,7 @@ A comprehensive WiFi management system built with Laravel, featuring user authen
 ## Features
 
 - User authentication system
-- Role-based access control (Admin, Staff, User)
-- WiFi package management
-- Customer management
-- Responsive admin dashboard
+- Role-based access control (Admin, User)
 - Database seeding with sample data
 
 ## Prerequisites
@@ -21,7 +22,7 @@ A comprehensive WiFi management system built with Laravel, featuring user authen
 - PHP 8.0+
 - Composer
 - Node.js 14+
-- MySQL 5.7+
+- Database: MySQL 5.7+ **or** MariaDB 10.3+
 - Git
 
 ## Installation
@@ -153,4 +154,25 @@ Smart_Wifi/
 
 ## Contributing
 
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+**Untuk semua anggota tim:**
+
+1. **Clone/Pull**:
+   - Anda bebas melakukan clone/pull repository kapan saja untuk keperluan pengembangan
+
+2. **Sebelum melakukan perubahan besar**:
+   - Harap berdiskusi terlebih dahulu melalui grup tim
+   - Beritahukan terlebih dahulu untuk perubahan signifikan
+
+3. **Prosedur Merge & Commit**:
+   - Beri tahu tim sebelum melakukan merge ke branch utama
+   - Commit message dengan jelas
+   - Lakukan pull request dan minta minimal 1 review dari anggota tim
+
+4. **Branch Policy**:
+   - Buat branch baru saat diperlukan
+   - Jangan langsung commit ke branch main/master
+
+**Aturan Tambahan**:
+- Update dokumentasi jika ada perubahan penting
+- Test perubahan Anda sebelum melakukan commit dan merge
+- Komunikasikan konflik merge secepatnya
