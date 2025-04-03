@@ -33,12 +33,6 @@ class PaketSeeder extends Seeder
                 'kategori' => 'Eksekutif',
                 'harga' => 250000,
                 'kecepatan' => '80 Mbps'
-            ],
-            [
-                'nama_paket' => 'Paket Premium',
-                'kategori' => 'Eksekutif',
-                'harga' => 350000,
-                'kecepatan' => '100 Mbps'
             ]
         ];
 

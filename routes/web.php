@@ -14,10 +14,13 @@ use App\Http\Controllers\{
 // Route::get('/', function () {
 //     return view('welcome');
 // });
+// Route::get('/',function(){
+//     return view('guests/dashboard');
+// });
 
 Route::get('/', [PaketController::class, 'showGuestPackages'])->name('guest.dashboard');
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('user.index');
 });
 
