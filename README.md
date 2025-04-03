@@ -122,12 +122,6 @@ The system comes with pre-seeded data:
 
 ## Troubleshooting
 
-### Spatie Package Not Found
-
-```bash
-composer require spatie/laravel-permission
-```
-
 ### Cache Issues
 
 ```bash
