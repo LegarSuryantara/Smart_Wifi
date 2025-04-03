@@ -1,38 +1,156 @@
-Langkah langkah menjalankan projek Smart_Wifi
-Ketikan perintah-perintah berikut di terminal
+# Smart WiFi Management System - Laravel
 
-git clone : Untuk Menduplikasi projek
+![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white)
+![Breeze](https://img.shields.io/badge/Laravel_Breeze-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
+![Spatie](https://img.shields.io/badge/Spatie_Permission-4A154B?style=for-the-badge)
 
-composer install : digunakan untuk menginstall semua dependesi laravel. Jangan lupa masuk ke dalam projek laravel yang sudah kita clone sebelumnya "cd Smart_Wifi"
+A comprehensive WiFi management system built with Laravel, featuring user authentication with Laravel Breeze and role-based permissions with Spatie.
 
-npm install : lakukan setelah composer install
+## Features
 
-cp .env.example .env : digunakan untuk membuat file konfigurasi .env
+- User authentication system
+- Role-based access control (Admin, Staff, User)
+- WiFi package management
+- Customer management
+- Responsive admin dashboard
+- Database seeding with sample data
 
-php artisan key:generate : Membuat kunci enkripsi untuk aplikasi Laravel
+## Prerequisites
 
-buat database mysql dengan nama "Smart_Wifi"
+- PHP 8.0+
+- Composer
+- Node.js 14+
+- MySQL 5.7+
+- Git
 
-php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider" : wajib jalankan ini karena menggunakn SPATIE
+## Installation
 
-php artisan migrate:fresh : jalankan jika ingin migrasi tabelnya saja / menghapus seluruh isi dari tabel migrasi
+### 1. Clone the repository
 
-php artisan migrate, php artisan db:seed : ketikan perintah tersebut untuk membuat dan mengsi tabel
+```bash
+git clone https://github.com/yourusername/Smart_Wifi.git
+cd Smart_Wifi
+```
 
-php artisan optimize:clear : jalankan agar chace dan lainnya di kosongkan
+### 2. Install PHP dependencies
 
-1.npm run dev
-# atau untuk production : untuk menyalakan fungsi hot reload jalankan setidaknya sekali (npm run build) agar build nya berjalan karena kita menggunakan breeze
-2.npm run build : untuk production dengan fitur hot reload berfungsi juga untuk Install & Compile Frontend Assets   
+```bash
+composer install
+```
 
--
+### 3. Install JavaScript dependencies
 
-php artisan serve : menjalankan laravel
+```bash
+npm install
+```
 
+### 4. Configure environment
 
-Troubleshoot umum : 
-Error Spatie Not Found:
-- composer require spatie/laravel-permission
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
+### 5. Database setup
 
+Create a MySQL database named `Smart_Wifi` and update your `.env` file:
 
+```ini
+DB_DATABASE=Smart_Wifi
+DB_USERNAME=your_db_username
+DB_PASSWORD=your_db_password
+```
+
+### 6. Set up Spatie Permissions
+
+```bash
+php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
+```
+
+### 7. Run migrations and seeders
+
+```bash
+php artisan migrate:fresh --seed
+```
+
+### 8. Compile assets
+
+For development:
+```bash
+npm run dev
+```
+
+For production:
+```bash
+npm run build
+```
+
+### 9. Start the development server
+
+```bash
+php artisan serve
+```
+
+## Seeded Data
+
+The system comes with pre-seeded data:
+
+- **Roles**: Admin, User
+
+- **Admin User**:
+  - Email: admin@wifi.com
+  - Password: administrator_defaults11890
+
+- **User**:
+  - Email: user@wifi.com
+  - Password: user_default_password123
+
+- **Permission**:
+  - User permissions
+  - Role permissions
+  - Permission permissions
+  - Pakets permissions
+  - Users permissions
+
+- **Paket**:
+  - Paket Dasar
+  - Paket Reguler
+  - Paket Bisnis
+  - Paket Eksekutif
+
+## Troubleshooting
+
+### Spatie Package Not Found
+
+```bash
+composer require spatie/laravel-permission
+```
+
+### Cache Issues
+
+```bash
+php artisan optimize:clear
+```
+
+### Frontend Assets Not Loading
+
+```bash
+npm install && npm run build
+```
+
+## Project Structure
+
+```
+Smart_Wifi/
+├── app/               # Application core
+├── database/          # Migrations and seeders
+├── resources/         # Views and assets
+├── routes/            # Application routes
+├── config/            # Configuration files
+└── public/            # Publicly accessible files
+```
+
+## Contributing
+
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.

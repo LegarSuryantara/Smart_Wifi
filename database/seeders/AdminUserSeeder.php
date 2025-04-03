@@ -37,6 +37,7 @@ class AdminUserSeeder extends Seeder
         // 3. Assign role ke user
         $admin->assignRole($adminRole, $userRole);
 
+        $this->command->warn('Role: ADMIN');
         $this->command->info('Default admin user created!');
         $this->command->warn('Email: admin@wifi.com');
         $this->command->warn('Password: administrator_defaults11890');

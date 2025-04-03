@@ -31,6 +31,7 @@ class UserSeeder extends Seeder
             $user->assignRole($userRole);
         }
 
+        $this->command->warn('Role: USER');
         $this->command->info('Regular user created!');
         $this->command->warn('Email: user@wifi.com');
         $this->command->warn('Password: user_default_password123');
