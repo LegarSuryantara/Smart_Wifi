@@ -108,9 +108,9 @@
                             <div class="package-card text-white position-relative">
                                 <h3 class="text-black">{{ $paket['nama_paket'] }}</h3>
                                 <p class="text-danger price">Unlimited</p>
-                                <p>Kecepatan Internet</p>
+                                <p class="text-black">Kecepatan Internet</p>
                                 <p class="text-danger price">{{ $paket['kecepatan'] }}</p>
-                                <p>Harga Bulanan</p>
+                                <p class="text-black">Harga Bulanan</p>
                                 <p class="text-danger price">Rp {{ number_format($paket['harga'], 0, ',', '.') }}</p>
                                 <div class="card-footer bg-transparent">
                                     <a href="{{ route('register') }}" class="btn btn-light btn-block">

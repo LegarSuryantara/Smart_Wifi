@@ -52,10 +52,8 @@
                         <div class="flex flex-wrap gap-3 mb-3">
                             @foreach ($roles as $role)
                                 <div class="w-full sm:w-[calc(50%-0.75rem)] md:w-[calc(33.33%-0.75rem)] lg:w-[calc(25%-0.75rem)]">
-                                    <label for="permission-{{ $role->id }}" 
-                                        class="flex items-center space-x-2 p-3 bg-white rounded-lg border border-gray-200 shadow-xs hover:shadow-sm transition-all cursor-pointer hover:bg-gray-50">
-
-                                        <input {{ ($hasRoles->contains($role->id)) ? 'checked':'' }}
+                                    <label class="flex items-center space-x-2 p-3 bg-white rounded-lg border border-gray-200 shadow-xs hover:shadow-sm transition-all cursor-pointer hover:bg-gray-50">
+                                        <input {{ ($hasRoles->contains($role->id)) ? 'checked' : '' }}
                                             type="checkbox" 
                                             name="role[]" 
                                             value="{{ $role->name }}" 
