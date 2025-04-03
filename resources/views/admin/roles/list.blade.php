@@ -38,7 +38,7 @@
                                         {{ $role->permissions->pluck('name')->implode(' | ') }}
                                     </td>
                                     <td class="px-6 py-3 text-left">
-                                        {{ $role->created_at->format('d/m/Y H:i') }}
+                                        {{ $role->created_at->format('d/m/Y') }}
                                     </td>
                                     <td class="px-6 py-3 text-center">
                                     <div class="flex justify-center space-x-2">

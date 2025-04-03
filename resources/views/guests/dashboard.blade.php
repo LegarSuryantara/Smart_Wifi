@@ -19,44 +19,44 @@
               <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                   <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Paket</a>
+                    <a class="nav-link active" aria-current="page" href="#paket internet">Paket</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="#">Informasi</a>
+                    <a class="nav-link" href="#informasi">Informasi</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link" href="#">Tentang Kami</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="#">Hubungi Kami</a>
+                    <a class="nav-link" href="#sosial media">Hubungi Kami</a>
                   </li>
-                        @if (Route::has('login'))
-                            <nav class="flex items-center justify-end gap-4">
-                                @auth
-                                    <a
-                                        href="{{ url('/dashboard') }}"
-                                        class="inline-block px-5 py-1.5 dark:text-[#EDEDEC] border-[#19140035] hover:border-[#1915014a] border text-[#1b1b18] dark:border-[#3E3E3A] dark:hover:border-[#62605b] rounded-sm text-sm leading-normal"
-                                    >
-                                        Dashboard
-                                    </a>
-                                @else
-                                    <a
-                                        href="{{ route('login') }}"
-                                        class="inline-block px-5 py-1.5 dark:text-[#EDEDEC] text-[#1b1b18] border border-transparent hover:border-[#19140035] dark:hover:border-[#3E3E3A] rounded-sm text-sm leading-normal"
-                                    >
-                                        Log in
-                                    </a>
+                    @if (Route::has('login'))
+                        <nav class="flex items-center justify-end gap-4">
+                            @auth
+                                <a
+                                    href="{{ auth()->user()->hasAnyRole('admin') ? route('admin.index') : route('user.index') }}"
+                                    class="inline-block px-5 py-1.5 dark:text-[#EDEDEC] border-[#19140035] hover:border-[#1915014a] border text-[#1b1b18] dark:border-[#3E3E3A] dark:hover:border-[#62605b] rounded-sm text-sm leading-normal"
+                                >
+                                    Dashboard
+                                </a>
+                            @else
+                                <a
+                                    href="{{ route('login') }}"
+                                    class="inline-block px-5 py-1.5 dark:text-[#EDEDEC] text-[#1b1b18] border border-transparent hover:border-[#19140035] dark:hover:border-[#3E3E3A] rounded-sm text-sm leading-normal"
+                                >
+                                    Log in
+                                </a>
 
-                                    @if (Route::has('register'))
-                                        <a type="button"
-                                            href="{{ route('register') }}"
-                                            class="btn btn-danger">
-                                            Daftar Sekarang
-                                        </a>
-                                    @endif
-                                @endauth
-                            </nav>
-                        @endif
+                                @if (Route::has('register'))
+                                    <a type="button"
+                                        href="{{ route('register') }}"
+                                        class="btn btn-danger">
+                                        Daftar Sekarang
+                                    </a>
+                                @endif
+                            @endauth
+                        </nav>
+                    @endif
                 </ul>
               </div>
             </div>
@@ -97,95 +97,70 @@
                         </div>
                     </div>
                 </div>
-                </div>
-                
-        </section>
-        <section class="package-section p-4">
-            <div class="container">
-                <h2>paket internet</h2>
-                <div class="row">
-                    <div class="col-md-3 mb-4">
-                        <div class="package-card bg-success text-white position-relative">
-                            <h3>Paket dasar</h3>
-                            <p class="text-danger price">Unlimited</p>
-                            <p>Kecepatan Internet</p>
-                            <p class="text-danger price">10 Mbps</p>
-                            <p>harga bulanan</p>
-                            <p class="text-danger price">Rp 100.000</p>
+                </div>  
+            </section>
+            <section class="package-section p-4">
+                <div class="container">
+                    <h2 id="paket internet">Paket Internet</h2>
+                    <div class="row">
+                        @foreach($pakets as $paket)
+                        <div class="col-md-3 mb-4">
+                            <div class="package-card text-white position-relative">
+                                <h3 class="text-black">{{ $paket['nama_paket'] }}</h3>
+                                <p class="text-danger price">Unlimited</p>
+                                <p>Kecepatan Internet</p>
+                                <p class="text-danger price">{{ $paket['kecepatan'] }}</p>
+                                <p>Harga Bulanan</p>
+                                <p class="text-danger price">Rp {{ number_format($paket['harga'], 0, ',', '.') }}</p>
+                                <div class="card-footer bg-transparent">
+                                    <a href="{{ route('register') }}" class="btn btn-light btn-block">
+                                        Daftar untuk Berlangganan
+                                    </a>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-3 mb-4">
-                        <div class="package-card bg-info text-white position-relative">
-                            <h3>Paket Reguler</h3>
-                            <p class="text-danger price">Unlimited</p>
-                            <p>Kecepatan Internet</p>
-                            <p class="text-danger price">20 Mbps</p>
-                            <p>harga bulanan</p>
-                            <p class="text-danger price">Rp 150.000</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-4">
-                        <div class="package-card bg-primary text-white position-relative">
-                            <h3>Paket Bisnis</h3>
-                            <p class="text-danger price">Unlimited</p>
-                            <p>Kecepatan Internet</p>
-                            <p class="text-danger price">40 Mbps</p>
-                            <p>harga bulanan</p>
-                            <p class="text-danger price">Rp 200.000</p>
-                        </div>
-                    </div>
-                    <div class="col-md-3 mb-4">
-                        <div class="package-card bg-warning text-white position-relative">
-                            <h3>Paket Eksekutif</h3>
-                            <p class="text-danger price">Unlimited</p>
-                            <p>Kecepatan Internet</p>
-                            <p class="text-danger price">80 Mbps</p>
-                            <p>harga bulanan</p>
-                            <p class="text-danger price">Rp 250.000</p>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
-            </div>
-        </section>
-
-    </main>
-    <footer>
-        <div class="container-fluid text-left">
-            <div class="row">
-              <div class="col">
-                <div class="title">
-                    <h5>Alamat</h5>
+            </section>
+        </main>
+            <footer>
+                <div class="container-fluid text-left">
+                    <div class="row">
+                    <div class="col">
+                        <div class="title">
+                            <h5 id="alamat">Alamat</h5>
+                        </div>
+                        <div class="content">
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d544.3376387748079!2d114.3445059!3d-8.2492684!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd15a9a3deb8e39%3A0x690a6afba6b12d2d!2sJl.%20Nangka%20No.1%2C%20Dusun%20Jurang%20Jero%2C%20Kalirejo%2C%20Kec.%20Kabat%2C%20Kabupaten%20Banyuwangi%2C%20Jawa%20Timur%2068461!5e1!3m2!1sid!2sid!4v1742567472544!5m2!1sid!2sid" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="title">
+                            <h5 id="informasi">Informasi</h5>
+                        </div>
+                        <div class="content">
+                            <p><i class="fa-solid fa-phone"></i>+6285730902001</p>
+                            <p><i class="fa-solid fa-envelope"></i>Faturalief15@gmail.com</p>
+                            <p><i class="fa-solid fa-location-dot"></i>Perumahan Pakis Kalirejo Blok N no 1</p>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="title">
+                            <h5 id="sosial media">Sosial media</h5>
+                        </div>
+                        <div class="content">
+                            <p><i class="fa-brands fa-telegram"></i>085730902001</p>
+                            <p><i class="fa-brands fa-facebook"></i>faturalief17@yahoo.com</p>
+                            <p><i class="fa-brands fa-twitter"></i>aliefcahyono15@yahoo.com</p>
+                            <p><i class="fa-brands fa-instagram"></i>aliefchn203</p>
+                        </div>
+                    </div>
+                    </div>
                 </div>
-                <div class="content">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d544.3376387748079!2d114.3445059!3d-8.2492684!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd15a9a3deb8e39%3A0x690a6afba6b12d2d!2sJl.%20Nangka%20No.1%2C%20Dusun%20Jurang%20Jero%2C%20Kalirejo%2C%20Kec.%20Kabat%2C%20Kabupaten%20Banyuwangi%2C%20Jawa%20Timur%2068461!5e1!3m2!1sid!2sid!4v1742567472544!5m2!1sid!2sid" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                </div>
-              </div>
-              <div class="col">
-                <div class="title">
-                    <h5>Informasi</h5>
-                </div>
-                <div class="content">
-                    <p><i class="fa-solid fa-phone"></i>+6285730902001</p>
-                    <p><i class="fa-solid fa-envelope"></i>Faturalief15@gmail.com</p>
-                    <p><i class="fa-solid fa-location-dot"></i>Perumahan Pakis Kalirejo Blok N no 1</p>
-                </div>
-              </div>
-              <div class="col">
-                <div class="title">
-                    <h5>Sosial media</h5>
-                </div>
-                <div class="content">
-                    <p><i class="fa-brands fa-telegram"></i>085730902001</p>
-                    <p><i class="fa-brands fa-facebook"></i>faturalief17@yahoo.com</p>
-                    <p><i class="fa-brands fa-twitter"></i>aliefcahyono15@yahoo.com</p>
-                    <p><i class="fa-brands fa-instagram"></i>aliefchn203</p>
-                </div>
-              </div>
-            </div>
-          </div>
-    </footer>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
+            </footer>
+            <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        </body>
 </html>

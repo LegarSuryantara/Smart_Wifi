@@ -43,27 +43,26 @@
 <!-- Menampilkan paket -->
 <section class="package-section p-4">
     <div class="container">
-        <h2 class="text-2xl font-bold mb-6 text-left">Paket Internet</h2>
+        <h2 id="paket internet">Paket Internet</h2>
         <div class="row">
             @foreach($pakets as $paket)
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h3 class="card-title">{{ $paket->nama_paket }}</h3>
-                            <p class="card-text">
-                                <strong>Kategori:</strong> {{ $paket->kategori }}<br>
-                                <strong>Kecepatan:</strong> {{ $paket->kecepatan }}<br>
-                                <strong>Harga:</strong> Rp {{ number_format($paket->harga, 0, ',', '.') }}
-                            </p>
-                        </div>
-                        <div class="card-footer bg-transparent">
-                            <a href="#" class="btn btn-primary btn-block">Pilih Paket</a>
-                        </div>
+            <div class="col-md-3 mb-4">
+                <div class="package-card text-white position-relative">
+                    <h3 class="text-black">{{ $paket['nama_paket'] }}</h3>
+                    <p class="text-danger price">Unlimited</p>
+                    <p>Kecepatan Internet</p>
+                    <p class="text-danger price">{{ $paket['kecepatan'] }}</p>
+                    <p>Harga Bulanan</p>
+                    <p class="text-danger price">Rp {{ number_format($paket['harga'], 0, ',', '.') }}</p>
+                    <div class="card-footer bg-transparent">
+                        <a href="#" class="btn btn-light btn-block">
+                            Pilih Paket
+                        </a>
                     </div>
                 </div>
+            </div>
             @endforeach
         </div>
     </div>
 </section>
-
 @endsection

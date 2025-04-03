@@ -5,7 +5,7 @@
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 Users / Create
             </h2>
-            <a href="{{ route('users.index') }}" class="bg-slate-700 text-sm rounded-md text-white px-5 py-3 uppercase">Back to user</a>
+            <a href="{{ route('users.index') }}" class="bg-slate-700 text-sm rounded-md text-white px-3 py-2 hover:bg-slate-600 transition-colors uppercase">Back to user</a>
         </div>
     </x-slot>
 
@@ -86,7 +86,7 @@
                                 </div>
                             @endforeach
                         </div>
-                        <button class="bg-slate-700 text-sm rounded-md text-white px-5 py-3 uppercase">Create user</button>
+                        <button class="bg-slate-700 text-sm rounded-md text-white px-3 py-2 hover:bg-slate-600 transition-colors uppercase">Create user</button>
                      </div>
                     </form>
                 </div>

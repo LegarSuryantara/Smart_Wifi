@@ -24,17 +24,37 @@
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">Paket</a>
+                            <a class="nav-link active" aria-current="page" href="#paket internet">Paket</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Informasi</a>
+                            <a class="nav-link" href="#informasi">Informasi</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">Tentang Kami</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Hubungi Kami</a>
+                            <a class="nav-link" href="#sosial media">Hubungi Kami</a>
                         </li>
+                        <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+
+                        <x-responsive-nav-link :href="route('logout')"
+                                onclick="event.preventDefault();
+                                            this.closest('form').submit();">
+                            {{ __('Log Out') }}
+                        </x-responsive-nav-link>
+                        </form>
+
+                        @auth
+                            @if(auth()->user()->hasRole('admin'))
+                                <div class="text-right mb-4">
+                                    <a href="{{ route('admin.index') }}" class="bg-blue-600 text-sm rounded-md text-black px-3 py-2 hover:bg-blue-500 transition-colors uppercase">
+                                        Admin Dashboard
+                                    </a>
+                                </div>
+                            @endif
+                        @endauth
+                        
                     </ul>
                 </div>
             </div>
@@ -50,7 +70,7 @@
             <div class="row">
                 <div class="col">
                     <div class="title">
-                        <h5>Alamat</h5>
+                        <h5 id="alamat">Alamat</h5>
                     </div>
                     <div class="content">
                     <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d544.3376387748079!2d114.3445059!3d-8.2492684!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd15a9a3deb8e39%3A0x690a6afba6b12d2d!2sJl.%20Nangka%20No.1%2C%20Dusun%20Jurang%20Jero%2C%20Kalirejo%2C%20Kec.%20Kabat%2C%20Kabupaten%20Banyuwangi%2C%20Jawa%20Timur%2068461!5e1!3m2!1sid!2sid!4v1742567472544!5m2!1sid!2sid" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
@@ -58,7 +78,7 @@
                 </div>
                 <div class="col">
                     <div class="title">
-                        <h5>Informasi</h5>
+                        <h5 id="informasi">Informasi</h5>
                     </div>
                     <div class="content">
                         <p><i class="fa-solid fa-phone"></i>+6285730902001</p>
@@ -68,7 +88,7 @@
                 </div>
                 <div class="col">
                     <div class="title">
-                        <h5>Sosial media</h5>
+                        <h5 id="sosial media">Sosial media</h5>
                     </div>
                     <div class="content">
                         <p><i class="fa-brands fa-telegram"></i>085730902001</p>

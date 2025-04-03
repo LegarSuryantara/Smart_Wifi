@@ -19,8 +19,17 @@ class RoleSeeder extends Seeder
             'guard_name' => 'web'
         ]);
 
+        $userRole= Role::firstOrCreate([
+            'name' => 'user',
+            'guard_name' => 'web',
+        ]);
+
         // Get all permissions
         $permissions = Permission::all();
+
+        // Get permissions
+        $adminRole->syncPermissions(Permission::all());
+        $userRole->givePermissionTo('user-access');
 
         // If no permissions exist, create them first
         if ($permissions->isEmpty()) {
@@ -32,5 +41,6 @@ class RoleSeeder extends Seeder
         $adminRole->syncPermissions($permissions);
 
         $this->command->info('Admin role created with all permissions!');
+        $this->command->info('User role created with view permissions!');
     }
 }

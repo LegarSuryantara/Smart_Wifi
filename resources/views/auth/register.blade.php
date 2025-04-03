@@ -1,71 +1,118 @@
-<x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Sign Up Page | Alif Smart Wifi</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="{{ asset('css/style.css') }}" rel="stylesheet" type="text/css">
+  <style>
+    .login-container {
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+    .login-form {
+      padding: 40px;
+    }
+    .btn-block {
+      background-color: #4e73df;
+      color: white;
+      border-radius: 5px;
+      padding: 10px;
+      margin-top: 20px;
+    }
+    .btn-block:hover {
+      background-color: #3a5bc7;
+      color: white;
+    }
+    .img-fluid {
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body>
+  <div class="loginform">
+    <div class="container d-flex align-items-center justify-content-center min-vh-100">
+      <div class="row login-container bg-white">
+        <div class="col-md-6 login-form">
+          <h2 class="text-center">SIGN UP</h2>
+          <p class="text-center">Create your own account!</p>
+          
+          <form method="POST" action="{{ route('register') }}">
+            @csrf
 
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+            <!-- Name -->
+            <div class="form-group">
+              <label for="name">Username</label>
+              <input class="form-control" id="name" type="text" name="name" value="{{ old('name') }}" required autofocus/>
+              @error('name')
+                <small class="text-danger">{{ $message }}</small>
+              @enderror
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input class="form-control" id="email" type="email" name="email" value="{{ old('email') }}" required/>
+              @error('email')
+                <small class="text-danger">{{ $message }}</small>
+              @enderror
+            </div>
+
+            <!-- Phone -->
+            <div class="form-group">
+              <label for="phone">No. Telepon</label>
+              <input class="form-control" id="phone" type="tel" name="phone" value="{{ old('phone') }}" required/>
+              <small class="text-muted">Format: 081234567890</small>
+              @error('phone')
+                <small class="text-danger">{{ $message }}</small>
+              @enderror
+            </div>
+
+            <!-- Address -->
+            <div class="form-group">
+              <label for="address">Alamat</label>
+              <textarea class="form-control" id="address" name="address" rows="3">{{ old('address') }}</textarea>
+              @error('address')
+                <small class="text-danger">{{ $message }}</small>
+              @enderror
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input class="form-control" id="password" type="password" name="password" required/>
+              @error('password')
+                <small class="text-danger">{{ $message }}</small>
+              @enderror
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="form-group">
+              <label for="password_confirmation">Confirm Password</label>
+              <input class="form-control" id="password_confirmation" type="password" name="password_confirmation" required/>
+            </div>
+
+            <button class="btn btn-block" type="submit">Sign up</button>
+          </form>
+
+          <p class="mt-4 text-center">
+            Already have an account??
+            <a href="{{ route('login') }}">Log In!</a>
+          </p>
         </div>
-
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        
+        <div class="col-md-6 p-0 d-none d-md-block">
+          <img alt="A cup of coffee on a yellow background" class="img-fluid h-100" src="{{ asset('image/login.png') }}"/>
         </div>
+      </div>
+    </div>
+  </div>
 
-        <!-- Phone Number -->
-        <div class="mt-4">
-            <x-input-label for="phone" :value="__('No Hp')" />
-            <x-text-input id="phone" class="block mt-1 w-full" type="tel" name="phone" :value="old('phone')" required autocomplete="tel" />
-            <x-input-error :messages="$errors->get('phone')" class="mt-2" />
-            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-                {{ __('Format: 081234567890') }}
-            </p>
-        </div>
-
-        <!-- Address -->
-        <div class="mt-4">
-            <x-input-label for="address" :value="__('Alamat')" />
-            <textarea 
-                id="address" 
-                name="address" 
-                class="block mt-1 w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
-                rows="3"
-                autocomplete="street-address"
-            >{{ old('address') }}</textarea>
-            <x-input-error :messages="$errors->get('address')" class="mt-2" />
-        </div>
-
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-            <x-text-input id="password" class="block mt-1 w-full"
-                          type="password"
-                          name="password"
-                          required autocomplete="new-password" />
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                          type="password"
-                          name="password_confirmation" required autocomplete="new-password" />
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

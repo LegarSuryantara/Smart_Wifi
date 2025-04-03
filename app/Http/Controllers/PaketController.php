@@ -27,10 +27,10 @@ class PaketController extends Controller implements HasMiddleware
         return view('admin.pakets.list', compact('pakets'));
     }
 
-    public function home()
+    public function showGuestPackages()
     {
         $pakets = Pakets::all();
-        return view('admin.pakets.dashboard', compact('pakets'));
+        return view('guests.dashboard', compact('pakets'));
     }
 
     /**
@@ -58,17 +58,18 @@ class PaketController extends Controller implements HasMiddleware
         return redirect()->route('pakets.index')->with('success', 'Paket berhasil ditambahkan!');
     }
 
-    // /**
-    //  * Menampilkan detail paket.
-    //  */
-    // public function show(Pakets $paket)
-    // {
-    //     return view('pakets.show', compact('paket'));
-    // }
+    /**
+     * Menampilkan detail paket.
+     */
+    public function show(Pakets $paket)
+    {
+        //
+    }
 
     /**
      * Menampilkan form edit paket.
      */
+
     public function edit(Pakets $paket)
     {
         return view('admin.pakets.edit', compact('paket'));

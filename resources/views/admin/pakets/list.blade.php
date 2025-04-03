@@ -6,7 +6,7 @@
             {{ __('Paket Internet') }}
         </h2>
         <div class="flex space-x-2">
-            <a href="{{ route('pakets.home') }}" class="bg-slate-700 text-sm rounded-md text-white px-3 py-2 hover:bg-slate-600 transition-colors uppercase">
+            <a href="{{ route('user.index') }}" class="bg-slate-700 text-sm rounded-md text-white px-3 py-2 hover:bg-slate-600 transition-colors uppercase">
                 User Dashboard
             </a>
             <a href="{{ route('pakets.create') }}" class="bg-slate-700 text-sm rounded-md text-white px-3 py-2 hover:bg-slate-600 transition-colors uppercase">
@@ -25,11 +25,11 @@
                     <thead class="bg-gray-50">
                         <tr class="border-b">
                             <th class="px-6 py-3 text-left" width="60">#</th>
-                            <th class="px-6 py-3 text-left">Nama Paket</th>
-                            <th class="px-6 py-3 text-left">Kategori</th>
-                            <th class="px-6 py-3 text-left">Kecepatan</th>
-                            <th class="px-6 py-3 text-left">Harga</th>
-                            <th class="px-6 py-3 text-left" width="120">Dibuat</th>
+                            <th class="px-6 py-3 text-left">Name</th>
+                            <th class="px-6 py-3 text-left">Category</th>
+                            <th class="px-6 py-3 text-left">Speed</th>
+                            <th class="px-6 py-3 text-left">Price</th>
+                            <th class="px-6 py-3 text-left" width="120">Created</th>
                             <th class="px-6 py-3 text-center" width="180">Aksi</th>
                         </tr>
                     </thead>
@@ -53,7 +53,7 @@
                                         Rp {{ number_format($paket->harga, 0, ',', '.') }}
                                     </td>
                                     <td class="px-6 py-3 text-left">
-                                        {{ $paket->created_at->format('d/m/Y H:i') }}
+                                        {{ $paket->created_at->format('d/m/Y') }}
                                     </td>
                                     <td class="px-6 py-3 text-center">
                                         <div class="flex justify-center space-x-2">

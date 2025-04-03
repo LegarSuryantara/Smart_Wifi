@@ -36,7 +36,7 @@
                                         {{ $permission->name }}
                                     </td>
                                     <td class="px-6 py-3 text-left">
-                                        {{ $permission->created_at->format('d/m/Y H:i') }}
+                                        {{ $permission->created_at->format('d/m/Y') }}
                                     </td>
                                     <td class="px-6 py-3 text-center">
                                         <div class="flex justify-center space-x-2">

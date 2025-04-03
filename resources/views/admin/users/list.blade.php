@@ -50,7 +50,7 @@
                                     {{ $user->phone }}
                                 </td>
                                 <td class="px-6 py-3 text-left">
-                                    {{ $user->created_at->format('d/m/Y H:i') }}
+                                    {{ $user->created_at->format('d/m/Y') }}
                                 </td>
                                 <td class="px-6 py-3 text-center">
                                     <div class="flex justify-center space-x-2">

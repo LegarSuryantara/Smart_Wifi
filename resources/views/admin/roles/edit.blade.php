@@ -5,7 +5,7 @@
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
                 Roles / Edit
             </h2>
-            <a href="{{ route('roles.index') }}" class="bg-slate-700 text-sm rounded-md text-white px-5 py-3 uppercase">Back to roles</a>
+            <a href="{{ route('roles.index') }}" class="bg-slate-700 text-sm rounded-md text-white px-3 py-2 hover:bg-slate-600 transition-colors uppercase">Back to roles</a>
         </div>
     </x-slot>
 
@@ -41,7 +41,7 @@
                                 </div>
                             @endforeach
                         </div>
-                        <button class="bg-slate-700 text-sm rounded-md text-white px-5 py-3 uppercase">Update role</button>
+                        <button class="bg-slate-700 text-sm rounded-md text-white px-3 py-2 hover:bg-slate-600 transition-colors uppercase">Update role</button>
                      </div>
                     </form>
                 </div>
