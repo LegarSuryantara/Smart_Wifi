@@ -25,7 +25,7 @@ A comprehensive WiFi management system built with Laravel, featuring user authen
 - Database: MySQL 5.7+ **or** MariaDB 10.3+
 - Git
 
-## Installation
+## Installation Steps
 
 ### 1. Clone the repository
 
@@ -69,6 +69,10 @@ DB_PASSWORD=your_db_password
 php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
 ```
 
+```bash
+php artisan optimize:clear
+```
+
 ### 7. Run migrations and seeders
 
 ```bash
@@ -92,6 +96,11 @@ npm run build
 ```bash
 php artisan serve
 ```
+## Done
+
+#
+
+# Information: #
 
 ## Seeded Data
 
@@ -120,13 +129,7 @@ The system comes with pre-seeded data:
   - Paket Bisnis
   - Paket Eksekutif
 
-## Troubleshooting
-
-### Spatie Package Not Found
-
-```bash
-composer require spatie/laravel-permission
-```
+## Troubleshooting:
 
 ### Cache Issues
 
@@ -139,6 +142,7 @@ php artisan optimize:clear
 ```bash
 npm install && npm run build
 ```
+#
 
 ## Project Structure
 
@@ -151,6 +155,8 @@ Smart_Wifi/
 ├── config/            # Configuration files
 └── public/            # Publicly accessible files
 ```
+
+#
 
 ## Contributing
 
