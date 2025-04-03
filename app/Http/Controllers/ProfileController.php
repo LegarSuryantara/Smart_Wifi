@@ -26,7 +26,11 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        // Normalize phone number before saving
+        $validated = $request->validated();
+        $validated['phone'] = preg_replace('/[^0-9]/', '', $validated['phone']);
+
+        $request->user()->fill($validated);
 
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;

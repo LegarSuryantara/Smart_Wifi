@@ -4,16 +4,33 @@ namespace App\Http\Controllers;
 
 use App\Models\Pakets;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class adminPaketsController extends Controller
+class PaketController extends Controller implements HasMiddleware
 {
+    public static function middleware()
+    {
+        return[
+            new Middleware('permission:view pakets', only: ['index']),
+            new Middleware('permission:edit pakets', only: ['edit']),
+            new Middleware('permission:create pakets', only: ['create']),
+            new Middleware('permission:delete pakets', only: ['destroy']),
+        ];
+    }
     /**
      * Menampilkan daftar paket.
      */
     public function index()
     {
         $pakets = Pakets::all();
-        return view('admin.pakets.index', compact('pakets'));
+        return view('admin.pakets.list', compact('pakets'));
+    }
+
+    public function showGuestPackages()
+    {
+        $pakets = Pakets::all();
+        return view('guests.dashboard', compact('pakets'));
     }
 
     /**
@@ -41,17 +58,18 @@ class adminPaketsController extends Controller
         return redirect()->route('pakets.index')->with('success', 'Paket berhasil ditambahkan!');
     }
 
-    // /**
-    //  * Menampilkan detail paket.
-    //  */
-    // public function show(Pakets $paket)
-    // {
-    //     return view('pakets.show', compact('paket'));
-    // }
+    /**
+     * Menampilkan detail paket.
+     */
+    public function show(Pakets $paket)
+    {
+        //
+    }
 
     /**
      * Menampilkan form edit paket.
      */
+
     public function edit(Pakets $paket)
     {
         return view('admin.pakets.edit', compact('paket'));

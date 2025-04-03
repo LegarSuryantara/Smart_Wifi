@@ -16,7 +16,7 @@
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-            @include('layouts.navigation')
+            @include('layouts.admin-navigation')
 
             <!-- Page Heading -->
             @isset($header)
@@ -33,4 +33,9 @@
             </main>
         </div>
     </body>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    
+    @isset($script)
+        {{ $script }}
+    @endisset
 </html>

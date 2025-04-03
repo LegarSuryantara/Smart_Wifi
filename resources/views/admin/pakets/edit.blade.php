@@ -1,53 +1,64 @@
-<!-- resources/views/admin/pakets/edit.blade.php -->
-@extends('layouts.app_1')
+<!-- edit.blade.php -->
+<x-app-layout>
+    <x-slot name="header">
+        <div class="flex justify-between">
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+                Paket / Edit
+            </h2>
+            <a href="{{ route('pakets.index') }}" class="bg-slate-700 text-sm rounded-md text-white px-3 py-2 hover:bg-slate-600 transition-colors uppercase">Back to paket</a>
+        </div>
+    </x-slot>
 
-@section('title', 'Edit Paket')
-
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h3>Edit Paket</h3>
-                </div>
-                <div class="card-body">
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900 dark:text-gray-100">
                     <form action="{{ route('pakets.update', $paket->id) }}" method="POST">
                         @csrf
                         @method('PUT')
 
-                        <div class="mb-3">
-                            <label for="nama_paket" class="form-label">Nama Paket</label>
-                            <input type="text" class="form-control" id="nama_paket" name="nama_paket" value="{{ $paket->nama_paket }}" required>
+                        <label for="nama_paket" class="text-lg font-medium">Nama Paket</label>
+                        <div class="my-3">
+                            <input value="{{ old('nama_paket', $paket->nama_paket) }}" name="nama_paket" placeholder="Enter Nama Paket" type="text" class="text-black border-gray-300 shadow-sm max-w-1/2 rounded-lg">
+                            @error('nama_paket')
+                            <p class="text-red-400 font-medium">{{ $message }}</p>
+                            @enderror
                         </div>
 
-                        <div class="mb-3">
-                            <label for="kategori" class="form-label">Kategori</label>
-                            <select class="form-select" id="kategori" name="kategori" required>
+                        <label for="kategori" class="text-lg font-medium">Kategori</label>
+                        <div class="my-3">
+                            <select name="kategori" class="text-black border-gray-300 shadow-sm max-w-1/2 rounded-lg">
                                 <option value="" disabled>Pilih Kategori</option>
                                 <option value="Dasar" {{ $paket->kategori == 'Dasar' ? 'selected' : '' }}>Dasar</option>
                                 <option value="Reguler" {{ $paket->kategori == 'Reguler' ? 'selected' : '' }}>Reguler</option>
                                 <option value="Bisnis" {{ $paket->kategori == 'Bisnis' ? 'selected' : '' }}>Bisnis</option>
                                 <option value="Eksekutif" {{ $paket->kategori == 'Eksekutif' ? 'selected' : '' }}>Eksekutif</option>
                             </select>
+                            @error('kategori')
+                            <p class="text-red-400 font-medium">{{ $message }}</p>
+                            @enderror
                         </div>
 
-                        <div class="mb-3">
-                            <label for="harga" class="form-label">Harga</label>
-                            <input type="number" class="form-control" id="harga" name="harga" value="{{ $paket->harga }}" required>
+                        <label for="harga" class="text-lg font-medium">Harga</label>
+                        <div class="my-3">
+                            <input value="{{ old('harga', $paket->harga) }}" name="harga" placeholder="Enter Harga" type="number" class="text-black border-gray-300 shadow-sm max-w-1/2 rounded-lg">
+                            @error('harga')
+                            <p class="text-red-400 font-medium">{{ $message }}</p>
+                            @enderror
                         </div>
 
-                        <div class="mb-3">
-                            <label for="kecepatan" class="form-label">Kecepatan</label>
-                            <input type="text" class="form-control" id="kecepatan" name="kecepatan" value="{{ $paket->kecepatan }}" required>
+                        <label for="kecepatan" class="text-lg font-medium">Kecepatan</label>
+                        <div class="my-3">
+                            <input value="{{ old('kecepatan', $paket->kecepatan) }}" name="kecepatan" placeholder="Enter Kecepatan" type="text" class="text-black border-gray-300 shadow-sm max-w-1/2 rounded-lg">
+                            @error('kecepatan')
+                            <p class="text-red-400 font-medium">{{ $message }}</p>
+                            @enderror
                         </div>
 
-                        <button type="submit" class="btn btn-primary">Update</button>
-                        <a href="{{ route('pakets.index') }}" class="btn btn-secondary">Batal</a>
+                        <button class="bg-slate-700 text-sm rounded-md text-white px-3 py-2 hover:bg-slate-600 transition-colors uppercase">Update Paket</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-</div>
-@endsection
+</x-app-layout>
