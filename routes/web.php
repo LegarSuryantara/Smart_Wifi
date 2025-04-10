@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     AdminDashboardController,
+    EditpasswordController,
     UserDashboardController,
     ProfileController,
     PermissionController,
@@ -64,9 +65,11 @@ Route::middleware(['auth', 'role:admin', 'verified'])->group(function () {
 
 // Route yang bisa diakses oleh semua user yang login (termasuk user biasa)
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile/destroy', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/password/edit', [EditpasswordController::class, 'index'])->name('password.index');
 });
 
 require __DIR__.'/auth.php';
