@@ -31,6 +31,7 @@ class ProfileUpdateRequest extends FormRequest
                 'max:15', 
                 Rule::unique(User::class)->ignore($this->user()->id), 'regex:/^[0-9]{10,15}$/'],
             'address' => ['nullable', 'string', 'max:500'],
+            'profile_photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
         ];
     }
 }

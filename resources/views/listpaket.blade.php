@@ -12,7 +12,7 @@
     <header>
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
             <div class="container">
-                <a class="navbar-brand" href="#">
+                <a class="navbar-brand" href="{{ route('profile') }}">
                     <img src="image/profile.jpg" alt="profile" width="50" class="rounded-circle">
                     Alif Smart Wifi
                   </a>
