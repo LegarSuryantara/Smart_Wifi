@@ -4,18 +4,6 @@
 
 @section('content')
 <div class="profile-card mt-5">
-    <div class="d-flex align-items-center mb-4">
-        <div class="profile-img rounded-circle bg-success text-white d-flex justify-content-center align-items-center position-relative" style="width: 100px; height: 100px;">
-            N
-            <a href="#" class="position-absolute" style="bottom: 0; right: 0;">
-                <i class="fa fa-pencil text-white bg-dark rounded-circle p-1"></i>
-            </a>
-        </div>
-        <div class="profile-info ml-3">
-            <h2>Nogi</h2>
-            <p>Nogi123@gmail.com</p>
-        </div>
-    </div>
     <form enctype="multipart/form-data" method="POST" action="{{ route('profile.update') }}">
         @csrf
         <div class="form-group row">
@@ -40,6 +28,12 @@
             <label for="address" class="col-sm-4 col-form-label">Alamat</label>
             <div class="col-sm-8">
                 <input type="text" class="form-control" id="address" name="address" value="Jawa Timur">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="profile_photo" class="col-sm-4 col-form-label">Foto Profil</label>
+            <div class="col-sm-8">
+                <input type="file" class="form-control-file" id="profile_photo" name="profile_photo">
             </div>
         </div>
         <button class="btn btn-primary" type="submit">Submit</button>
