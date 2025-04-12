@@ -32,9 +32,14 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        // Normalize phone number before saving
         $validated = $request->validated();
-        $validated['phone'] = preg_replace('/[^0-9]/', '', $validated['phone']);
+
+        if ($request->hasFile('profile_photo')) {
+            $file = $request->file('profile_photo');
+            $path = $file->store('profile_photos', 'public');
+
+            $validated['profile_photo'] = $path;
+        }
 
         $request->user()->fill($validated);
 
