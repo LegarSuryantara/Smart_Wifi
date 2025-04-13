@@ -29,13 +29,8 @@ class AdminUserSeeder extends Seeder
             'guard_name' => 'web'
         ]);
 
-        $userRole = Role::firstOrCreate([
-            'name' => 'user', 
-            'guard_name' => 'web'
-        ]);
-
         // 3. Assign role ke user
-        $admin->assignRole($adminRole, $userRole);
+        $admin->assignRole($adminRole);
 
         $this->command->warn('Role: ADMIN');
         $this->command->info('Default admin user created!');
