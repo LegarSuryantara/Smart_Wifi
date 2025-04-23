@@ -7,7 +7,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-6 model">
-                <!-- Gambar atau ilustrasi bisa ditambahkan di sini -->
+
             </div>
             <div class="col-6">
                 <h2>Mari Bergabung Bersama Kami</h2>
@@ -40,7 +40,7 @@
     </div>
 </section>
 
-<!-- Menampilkan paket -->
+
 <section class="package-section p-4">
     <div class="container">
         <h2 id="paket internet">Paket Internet</h2>

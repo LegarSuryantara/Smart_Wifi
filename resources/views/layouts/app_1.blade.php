@@ -62,7 +62,7 @@
     </header>
 
     <main>
-        @yield('content') <!-- Konten utama akan diisi oleh view lain -->
+        @yield('content')
     </main>
 
     <footer>
@@ -102,6 +102,6 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    @stack('scripts') <!-- Untuk menambahkan script khusus di view lain -->
+    @stack('scripts')
 </body>
 </html>
