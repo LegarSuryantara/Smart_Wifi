@@ -31,12 +31,14 @@ public function update(ProfileUpdateRequest $request): RedirectResponse
 
     // Handle file upload
     if ($request->hasFile('profile_photo')) {
+        $user = $request->user(); // Get user instance once to avoid multiple calls
+        
         // Delete old photo if exists
-        if ($request->user()->profile_photo) {
-            Storage::delete('public/' . $request->user()->profile_photo);
+        if ($user->profile_photo) {
+            $oldPhotoPath = str_replace('storage/', '', $user->profile_photo);
+            Storage::disk('public')->delete($oldPhotoPath);
         }
-
-        // Store new photo
+    
         $path = $request->file('profile_photo')->store('profile-photos', 'public');
         $validated['profile_photo'] = $path;
     }
