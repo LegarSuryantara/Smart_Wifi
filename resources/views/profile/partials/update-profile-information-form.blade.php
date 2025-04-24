@@ -13,9 +13,41 @@
         @csrf
     </form>
 
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6" enctype="multipart/form-data">
         @csrf
         @method('patch')
+        
+        <div class="mb-8">
+            <x-input-label for="profile_photo" :value="__('Foto Profil')" />
+            
+            <div class="flex flex-col items-center mt-4">
+                @if($user->profile_photo)
+                    <img src="{{ asset('storage/'.$user->profile_photo) }}" 
+                        class="w-32 h-32 rounded-full object-cover border-2 border-gray-200 dark:border-gray-600 mb-4">
+                @else
+                    <div class="w-32 h-32 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center border-2 border-gray-200 dark:border-gray-600 mb-4">
+                        <span class="text-gray-500 dark:text-gray-300 text-4xl font-medium">
+                            {{ substr($user->name, 0, 1) }}
+                        </span>
+                    </div>
+                @endif
+                
+                <div class="w-full max-w-xs text-center">
+                    <label for="profile_photo" class="cursor-pointer">
+                        <span class="inline-flex items-center px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 dark:focus:ring-indigo-800 rounded-lg font-medium text-white transition duration-200 shadow-md">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                            </svg>
+                            {{ __('Upload') }}
+                        </span>
+                        <input id="profile_photo" name="profile_photo" type="file" class="hidden" onchange="displayFileName(this)">
+                    </label>
+                    <p id="file-name" class="mt-2 text-sm text-gray-600 dark:text-gray-400 text-center"></p>
+                </div>
+            </div>
+            
+            <x-input-error class="mt-2" :messages="$errors->get('profile_photo')" />
+        </div>
 
         <div>
             <x-input-label for="name" :value="__('Name')" />
@@ -47,7 +79,6 @@
             @endif
         </div>
 
-        <!-- Phone Number Field -->
         <div>
             <x-input-label for="phone" :value="__('No Hp')" />
             <x-text-input id="phone" name="phone" type="tel" class="mt-1 block w-full" 
@@ -58,7 +89,6 @@
             </p>
         </div>
 
-        <!-- Address Field -->
         <div>
             <x-input-label for="address" :value="__('Alamat')" />
             <x-textarea id="address" name="address" class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" 
@@ -67,7 +97,9 @@
         </div>
 
         <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Save') }}</x-primary-button>
+            <x-primary-button class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 dark:focus:ring-indigo-800 rounded-lg font-medium text-white transition duration-200 shadow-md">
+                {{ __('Save') }}
+            </x-primary-button>
 
             @if (session('status') === 'profile-updated')
                 <p
@@ -81,3 +113,14 @@
         </div>
     </form>
 </section>
+
+<script>
+    function displayFileName(input) {
+        const fileNameElement = document.getElementById('file-name');
+        if (input.files.length > 0) {
+            fileNameElement.textContent = input.files[0].name;
+        } else {
+            fileNameElement.textContent = '';
+        }
+    }
+</script>

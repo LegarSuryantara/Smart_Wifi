@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
@@ -14,38 +15,41 @@ class ProfileController extends Controller
     /**
      * Display the user's profile form.
      */
-    public function index(Request $request): View
-    {
-        return view('profile');
-    }
     public function edit(Request $request): View
     {
-        // return view('profile.edit', [
-        //     'user' => $request->user(),
-        // ]);
-
-        return view('profile_edit');
+        return view('profile.edit', [
+            'user' => $request->user(),
+        ]);
     }
 
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
-    {
-        // Normalize phone number before saving
-        $validated = $request->validated();
-        $validated['phone'] = preg_replace('/[^0-9]/', '', $validated['phone']);
+public function update(ProfileUpdateRequest $request): RedirectResponse
+{
+    $validated = $request->validated();
 
-        $request->user()->fill($validated);
-
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+    // Handle file upload
+    if ($request->hasFile('profile_photo')) {
+        // Delete old photo if exists
+        if ($request->user()->profile_photo) {
+            Storage::delete('public/' . $request->user()->profile_photo);
         }
 
-        $request->user()->save();
-
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        // Store new photo
+        $path = $request->file('profile_photo')->store('profile-photos', 'public');
+        $validated['profile_photo'] = $path;
     }
+    $request->user()->fill($validated);
+
+    if ($request->user()->isDirty('email')) {
+        $request->user()->email_verified_at = null;
+    }
+
+    $request->user()->save();
+
+    return Redirect::route('profile.edit')->with('status', 'profile-updated');
+}
 
     /**
      * Delete the user's account.
@@ -57,6 +61,11 @@ class ProfileController extends Controller
         ]);
 
         $user = $request->user();
+
+        // Hapus foto profil saat akun dihapus
+        if ($user->profile_photo) {
+            Storage::delete('public/' . $user->profile_photo);
+        }
 
         Auth::logout();
 
