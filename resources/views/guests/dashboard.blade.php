@@ -13,7 +13,8 @@
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
             <div class="container">
                 <a class="navbar-brand" href="#">
-                    <img src="image/profile.jpg" alt="profile" width="50" class="rounded-circle">
+                    <img src="image/profile.jpg
+                    " alt="profile" width="50" class="rounded-circle">
                     Alif Smart Wifi
                   </a>
               <div class="collapse navbar-collapse" id="navbarNav">
