@@ -33,15 +33,25 @@
                 @endif
                 
                 <div class="w-full max-w-xs text-center">
-                    <label for="profile_photo" class="cursor-pointer">
-                        <span class="inline-flex items-center px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 dark:focus:ring-indigo-800 rounded-lg font-medium text-white transition duration-200 shadow-md">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                    <div class="flex items-center justify-center space-x-2">
+                        <label for="profile_photo" class="cursor-pointer">
+                            <span class="inline-flex items-center px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 dark:focus:ring-indigo-800 rounded-lg font-medium text-white transition duration-200 shadow-md">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                </svg>
+                                {{ __('Upload') }}
+                            </span>
+                            <input id="profile_photo" name="profile_photo" type="file" class="hidden" onchange="displayFileName(this)">
+                        </label>
+                        
+                        @if($user->profile_photo)
+                        <button type="button" onclick="confirmDeleteProfilePhoto()" class="inline-flex items-center px-4 py-2.5 bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 dark:focus:ring-red-800 rounded-lg font-medium text-white transition duration-200 shadow-md">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                             </svg>
-                            {{ __('Upload') }}
-                        </span>
-                        <input id="profile_photo" name="profile_photo" type="file" class="hidden" onchange="displayFileName(this)">
-                    </label>
+                        </button>
+                        @endif
+                    </div>
                     <p id="file-name" class="mt-2 text-sm text-gray-600 dark:text-gray-400 text-center"></p>
                 </div>
             </div>
@@ -121,6 +131,29 @@
             fileNameElement.textContent = input.files[0].name;
         } else {
             fileNameElement.textContent = '';
+        }
+    }
+
+    function confirmDeleteProfilePhoto() {
+        if (confirm('Are you sure you want to delete your profile photo?')) {
+            // You'll need to add a route and method to handle the deletion
+            fetch('{{ route("profile.delete-photo") }}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.reload();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
         }
     }
 </script>

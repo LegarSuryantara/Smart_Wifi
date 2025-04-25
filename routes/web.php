@@ -60,13 +60,14 @@ Route::middleware(['auth', 'role:admin', 'verified'])->group(function () {
     Route::get('/pakets/{paket}/edit', [PaketController::class, 'edit'])->name('pakets.edit');
     Route::put('/pakets/{paket}', [PaketController::class, 'update'])->name('pakets.update');
     Route::delete('/pakets/{paket}', [PaketController::class, 'destroy'])->name('pakets.destroy');
-
+   
 });
 
 // Route yang bisa diakses oleh semua user yang login (termasuk user biasa)
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/profile/delete-photo', [ProfileController::class, 'deletePhoto'])->name('profile.delete-photo');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
