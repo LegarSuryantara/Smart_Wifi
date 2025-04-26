@@ -17,7 +17,7 @@ class AdminDashboardController extends Controller implements HasMiddleware
      public static function middleware()
      {
          return [
-             new Middleware('role:admin'),
+             new Middleware('permission:admin-access'),
          ];
      }
 

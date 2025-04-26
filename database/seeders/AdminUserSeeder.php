@@ -11,37 +11,100 @@ class AdminUserSeeder extends Seeder
 {
     public function run()
     {
-        // 1. Buat user admin
-        $admin = User::firstOrCreate(
-            ['email' => 'admin@wifi.com'],
-            [
-                'name' => 'Administrator',
-                'phone' => '081234567890', // Nomor HP default
-                'address' => 'Jl. Admin No. 1, Kota Administrasi', // Alamat default
-                'password' => Hash::make('administrator_defaults11890'), // Password default
-                'email_verified_at' => now()
-            ]
-        );
-
-        // 2. Pastikan role admin sudah ada
         $adminRole = Role::firstOrCreate([
             'name' => 'admin',
             'guard_name' => 'web'
         ]);
 
-        $userRole = Role::firstOrCreate([
-            'name' => 'user', 
-            'guard_name' => 'web'
-        ]);
+        // User admin utama
+        $admin = User::firstOrCreate(
+            ['email' => 'admin@wifi.com'],
+            [
+                'name' => 'Administrator',
+                'phone' => '081234567890',
+                'address' => 'Jl. Admin No. 1, Kota Administrasi',
+                'password' => Hash::make('administrator_default'),
+                'email_verified_at' => now()
+            ]
+        );
+        $admin->assignRole($adminRole);
 
-        // 3. Assign role ke user
-        $admin->assignRole($adminRole, $userRole);
+        // admin 1
+        $admin1 = User::firstOrCreate(
+            ['email' => 'admin1@wifi.com'],
+            [
+                'name' => 'Admin Satu',
+                'phone' => '081234567891',
+                'address' => 'Jl. Admin No. 2, Kota Administrasi',
+                'password' => Hash::make('admin1@wifi.com'),
+                'email_verified_at' => now()
+            ]
+        );
+        $admin1->assignRole($adminRole);
 
-        $this->command->warn('Role: ADMIN');
-        $this->command->info('Default admin user created!');
+        // admin 2
+        $admin2 = User::firstOrCreate(
+            ['email' => 'admin2@wifi.com'],
+            [
+                'name' => 'Admin Dua',
+                'phone' => '081234567892',
+                'address' => 'Jl. Admin No. 3, Kota Administrasi',
+                'password' => Hash::make('admin2@wifi.com'),
+                'email_verified_at' => now()
+            ]
+        );
+        $admin2->assignRole($adminRole);
+
+        // admin 3
+        $admin3 = User::firstOrCreate(
+            ['email' => 'admin3@wifi.com'],
+            [
+                'name' => 'Admin Tiga',
+                'phone' => '081234567893',
+                'address' => 'Jl. Admin No. 4, Kota Administrasi',
+                'password' => Hash::make('admin3@wifi.com'),
+                'email_verified_at' => now()
+            ]
+        );
+        $admin3->assignRole($adminRole);
+
+        $this->command->info('============================================');
+        $this->command->info('ADMIN ACCOUNTS CREATED SUCCESSFULLY');
+        $this->command->info('============================================');
+        
+        $this->command->warn('MAIN ADMIN ACCOUNT:');
+        $this->command->info('Name: Administrator');
         $this->command->warn('Email: admin@wifi.com');
-        $this->command->warn('Password: administrator_defaults11890');
-        $this->command->warn('Nomor HP: 081234567890');
-        $this->command->warn('Alamat: Jl. Admin No. 1, Kota Administrasi');
+        $this->command->warn('Password: administrator_default');
+        $this->command->warn('Phone: 081234567890');
+        $this->command->warn('Address: Jl. Admin No. 1, Kota Administrasi');
+        $this->command->info('--------------------------------------------');
+        
+        $this->command->warn('ADMIN 1 ACCOUNT:');
+        $this->command->info('Name: Admin Satu');
+        $this->command->warn('Email: admin1@wifi.com');
+        $this->command->warn('Password: admin1@wifi.com');
+        $this->command->warn('Phone: 081234567891');
+        $this->command->warn('Address: Jl. Admin No. 2, Kota Administrasi');
+        $this->command->info('--------------------------------------------');
+        
+        $this->command->warn('ADMIN 2 ACCOUNT:');
+        $this->command->info('Name: Admin Dua');
+        $this->command->warn('Email: admin2@wifi.com');
+        $this->command->warn('Password: admin2@wifi.com');
+        $this->command->warn('Phone: 081234567892');
+        $this->command->warn('Address: Jl. Admin No. 3, Kota Administrasi');
+        $this->command->info('--------------------------------------------');
+        
+        $this->command->warn('ADMIN 3 ACCOUNT:');
+        $this->command->info('Name: Admin Tiga');
+        $this->command->warn('Email: admin3@wifi.com');
+        $this->command->warn('Password: admin3@wifi.com');
+        $this->command->warn('Phone: 081234567893');
+        $this->command->warn('Address: Jl. Admin No. 4, Kota Administrasi');
+        $this->command->info('============================================');
+        
+        $this->command->warn('NOTE: All accounts have been assigned the "admin" role');
+        $this->command->warn('All email verification dates have been set to current time');
     }
 }

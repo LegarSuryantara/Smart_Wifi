@@ -25,33 +25,38 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-public function update(ProfileUpdateRequest $request): RedirectResponse
-{
-    $validated = $request->validated();
+    public function update(ProfileUpdateRequest $request): RedirectResponse
+    {
+        $validated = $request->validated();
+        $user = $request->user();
 
-    // Handle file upload
-    if ($request->hasFile('profile_photo')) {
-        $user = $request->user(); // Get user instance once to avoid multiple calls
-        
-        // Delete old photo if exists
-        if ($user->profile_photo) {
-            $oldPhotoPath = str_replace('storage/', '', $user->profile_photo);
-            Storage::disk('public')->delete($oldPhotoPath);
+        // Handle file upload
+        if ($request->hasFile('profile_photo')) {
+            // Delete old photo if exists
+            if ($user->profile_photo) {
+                $this->deleteProfilePhoto($user);
+            }
+
+            // Create user-specific folder and store new photo
+            $folderName = 'user-' . $user->id;
+            $path = $request->file('profile_photo')->store(
+                "profile-photos/{$folderName}", 
+                'public'
+            );
+            
+            $validated['profile_photo'] = $path;
         }
-    
-        $path = $request->file('profile_photo')->store('profile-photos', 'public');
-        $validated['profile_photo'] = $path;
+
+        $user->fill($validated);
+
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
+
+        $user->save();
+
+        return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
-    $request->user()->fill($validated);
-
-    if ($request->user()->isDirty('email')) {
-        $request->user()->email_verified_at = null;
-    }
-
-    $request->user()->save();
-
-    return Redirect::route('profile.edit')->with('status', 'profile-updated');
-}
 
     /**
      * Delete the user's account.
@@ -64,35 +69,30 @@ public function update(ProfileUpdateRequest $request): RedirectResponse
 
         $user = $request->user();
 
-        // Hapus foto profil saat akun dihapus
+        // Delete entire user's profile photo folder
         if ($user->profile_photo) {
-            Storage::delete('public/' . $user->profile_photo);
+            $folderName = 'user-' . $user->id;
+            Storage::disk('public')->deleteDirectory("profile-photos/{$folderName}");
         }
 
         Auth::logout();
-
         $user->delete();
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
     }
+
+    /**
+     * Delete the user's profile photo.
+     */
     public function deletePhoto(Request $request)
     {
         $user = $request->user();
         
         if ($user->profile_photo) {
             try {
-                // Hapus 'storage/' dari path jika ada
-                $oldPhotoPath = str_replace('storage/', '', $user->profile_photo);
-                
-                // Hapus file dari storage
-                Storage::disk('public')->delete($oldPhotoPath);
-                
-                // Update database
-                $user->profile_photo = null;
-                $user->save();
+                $this->deleteProfilePhoto($user);
                 
                 return response()->json(['success' => true]);
                 
@@ -108,5 +108,18 @@ public function update(ProfileUpdateRequest $request): RedirectResponse
             'success' => false,
             'message' => 'Tidak ada foto profil yang bisa dihapus'
         ], 400);
+    }
+
+    /**
+     * Helper method to delete profile photo
+     */
+    private function deleteProfilePhoto($user)
+    {
+        if ($user->profile_photo) {
+            $oldPhotoPath = str_replace('storage/', '', $user->profile_photo);
+            Storage::disk('public')->delete($oldPhotoPath);
+            $user->profile_photo = null;
+            $user->save();
+        }
     }
 }

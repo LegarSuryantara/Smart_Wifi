@@ -24,20 +24,16 @@ class RoleSeeder extends Seeder
             'guard_name' => 'web',
         ]);
 
-        // Get all permissions
         $permissions = Permission::all();
 
-        // Get permissions
         $adminRole->syncPermissions(Permission::all());
         $userRole->givePermissionTo('user-access');
 
-        // If no permissions exist, create them first
         if ($permissions->isEmpty()) {
             $this->call(PermissionSeeder::class);
             $permissions = Permission::all();
         }
 
-        // Assign all permissions to admin role
         $adminRole->syncPermissions($permissions);
 
         $this->command->info('Admin role created with all permissions!');
