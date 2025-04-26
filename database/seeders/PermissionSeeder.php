@@ -37,8 +37,9 @@ class PermissionSeeder extends Seeder
         'create pakets',
         'delete pakets',
 
-        // Users permissions
+        // Access permissions
         'user-access',
+        'admin-access',
         
     ];
 

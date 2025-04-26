@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     AdminDashboardController,
-    EditpasswordController,
     UserDashboardController,
     ProfileController,
     PermissionController,
@@ -25,7 +24,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('user.index');
 });
 
-Route::middleware(['auth', 'role:admin', 'verified'])->group(function () {
+Route::middleware(['auth', 'permission:admin-access', 'verified'])->group(function () {
 
     Route::get('/admin-dashboard', [AdminDashboardController::class, 'index'])->name('admin.index');
     
@@ -67,7 +66,7 @@ Route::middleware(['auth', 'role:admin', 'verified'])->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::post('/profile/delete-photo', [ProfileController::class, 'deletePhoto'])->name('profile.delete-photo');
+    Route::delete('/profile/profile-photos', [ProfileController::class, 'deletePhoto'])->name('profile.delete-photo');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 

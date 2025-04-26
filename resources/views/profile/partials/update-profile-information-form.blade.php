@@ -43,12 +43,16 @@
                             </span>
                             <input id="profile_photo" name="profile_photo" type="file" class="hidden" onchange="displayFileName(this)">
                         </label>
-                        
                         @if($user->profile_photo)
-                        <button type="button" onclick="confirmDeleteProfilePhoto()" class="inline-flex items-center px-4 py-2.5 bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 dark:focus:ring-red-800 rounded-lg font-medium text-white transition duration-200 shadow-md">
+                        <button type="button" 
+                            onclick="confirmDeleteProfilePhoto()" 
+                            class="inline-flex items-center px-4 py-2.5 bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 dark:focus:ring-red-800 rounded-lg font-medium text-white transition duration-200 shadow-md"
+                            aria-label="{{ __('Delete profile photo') }}"
+                            title="{{ __('Delete profile photo') }}">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                             </svg>
+                            <span class="sr-only">{{ __('Delete') }}</span>
                         </button>
                         @endif
                     </div>
@@ -135,25 +139,27 @@
     }
 
     function confirmDeleteProfilePhoto() {
-        if (confirm('Are you sure you want to delete your profile photo?')) {
-            // You'll need to add a route and method to handle the deletion
-            fetch('{{ route("profile.delete-photo") }}', {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({})
-            })
-            .then(response => {
-                if (response.ok) {
-                    window.location.reload();
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+    if (!confirm('Are you sure you want to delete your profile photo?')) {
+        return;
+    }
+
+    fetch('{{ route("profile.delete-photo") }}', {
+        method: 'DELETE',
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json'
         }
+    })
+    .then(async response => {
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.message || 'Failed to delete photo');
+        }
+        window.location.reload();
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert(error.message);
+    });
     }
 </script>

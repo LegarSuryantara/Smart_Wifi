@@ -1,184 +1,157 @@
 # Smart WiFi Management System - Laravel
 
 ![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
-
-![MySQL](https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white) **OR**
+![MySQL](https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white)
 ![MariaDB](https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=mariadb&logoColor=white)
-
 ![Breeze](https://img.shields.io/badge/Laravel_Breeze-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)
+![Spatie](https://img.shields.io/badge/Spatie-4A154B?style=for-the-badge)
 
-![Spatie](https://img.shields.io/badge/Spatie_Permission-4A154B?style=for-the-badge)
+## 📝 Deskripsi Sistem
+Sistem manajemen WiFi berbasis web yang dibangun dengan Laravel untuk mengelola:
+- User management dengan autentikasi
+- Role-based access control
+- Manajemen paket WiFi
 
-A comprehensive WiFi management system built with Laravel, featuring user authentication with Laravel Breeze and role-based permissions with Spatie.
+## 🛠️ Teknologi Utama
+- **Framework**: Laravel 12
+- **Database**: MySQL/MariaDB
+- **Autentikasi**: Laravel Breeze
+- **Authorization**: Spatie 
 
-## Features
+## 🚀 Panduan Instalasi
 
-- User authentication system
-- Role-based access control (Admin, User)
-- Database seeding with sample data
+### Prasyarat
+- PHP 8.1+
+- Composer 2.5+
+- Node.js 18+
+- Database server (MySQL 8+/MariaDB 10.6+)
 
-## Prerequisites
+### Langkah-langkah Instalasi
 
-- PHP 8.0+
-- Composer
-- Node.js 14+
-- Database: MySQL 5.7+ **or** MariaDB 10.3+
-- Git
-
-## Installation Steps
-
-### 1. Clone the repository
-
+1. **Clone Repository**
 ```bash
-git clone https://github.com/yourusername/Smart_Wifi.git
-cd Smart_Wifi
+git clone https://github.com/LegarSuryantara/Smart_Wifi.git
 ```
 
-### 2. Install PHP dependencies
-
+2. **Install Dependencies**
 ```bash
 composer install
-```
-
-### 3. Install JavaScript dependencies
-
-```bash
 npm install
 ```
 
-### 4. Configure environment
-
+3. **Konfigurasi Environment**
 ```bash
 cp .env.example .env
 php artisan key:generate
 ```
 
-### 5. Database setup
-
-Create a MySQL database named `Smart_Wifi` and update your `.env` file:
-
+4. **Setup Database**
+- Buat database baru di MySQL/MariaDB
+- Update konfigurasi di `.env`:
 ```ini
-DB_DATABASE=Smart_Wifi
-DB_USERNAME=your_db_username
-DB_PASSWORD=your_db_password
+DB_DATABASE=smart_wifi
+DB_USERNAME=root
+DB_PASSWORD=
 ```
 
-### 6. Set up Spatie Permissions
-
+5. **Migrasi Database**
 ```bash
-php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider"
+ php artisan migrate:fresh --seed
 ```
 
+6. **Setup Storage Link**
 ```bash
-php artisan optimize:clear
+php artisan storage:link
 ```
 
-### 7. Run migrations and seeders
+7. **Build Assets**
 
-```bash
-php artisan migrate:fresh --seed
-```
-
-### 8. Compile assets
-
-For development:
-```bash
-npm run dev
-```
-
-For production:
+jalanakan ini secara berkala:
 ```bash
 npm run build
 ```
 
-### 9. Start the development server
+-------------
 
+```bash
+npm run dev  -(optional)-
+```
+
+8. **Jalankan Aplikasi**
 ```bash
 php artisan serve
 ```
-## Done
 
-#
+ ## *Jangan lupa untuk melakukan pull berkala tiap kali ada perubahan.*
 
-# Information: #
+## 🔐 Akun Default Utama
+**Admin**
+- Email: admin@wifi.com
+- Password: administrator_default
 
-## Seeded Data
+**User Biasa**
+- Email: user@wifi.com
+- Password: user_default
 
-The system comes with pre-seeded data:
+## 🏗️ Struktur Projek
+```
+smart_wifi/
+├── app/
+│   ├── Models/         # Model database
+│   ├── Http/          # Controller & Middleware
+│   └── Providers/     # Service providers
+├── config/            # File konfigurasi
+├── database/          # Migrasi & seeder
+├── public/            # Assets publik
+├── resources/         # View & assets frontend
+├── routes/            # Definisi route
+└── tests/             # Unit testing
+```
 
-- **Roles**: Admin, User
+## 🧑‍💻 Panduan Kontribusi
 
-- **Admin User**:
-  - Email: admin@wifi.com
-  - Password: administrator_defaults11890
+### Aturan Umum
+1. Buat branch baru untuk setiap fitur
 
-- **User**:
-  - Email: user@wifi.com
-  - Password: user_default_password123
+2. Commit message yang jelas:
 
-- **Permission**:
-  - User permissions
-  - Role permissions
-  - Permission permissions
-  - Pakets permissions
-  - Users permissions
+3. Lakukan pull request ke branch main
 
-- **Paket**:
-  - Paket Dasar
-  - Paket Reguler
-  - Paket Bisnis
-  - Paket Eksekutif
+### Workflow Tim
+1. **Sebelum memulai**:
+   - Pull perubahan terbaru
+   - Diskusikan fitur besar di grup
 
-## Troubleshooting:
+2. **Selama pengembangan**:
+   - Update dokumentasi jika diperlukan
+   - Tulis unit test untuk fitur baru
 
-### Cache Issues
+3. **Setelah selesai**:
+   - Lakukan testing menyeluruh
+   - Buat PR dan minta review
+   - Merge setelah disetujui pereview
 
+## 🐛 Troubleshooting
+
+**Masalah Cache**
 ```bash
-php artisan optimize:clear
+php artisan cache:clear
+php artisan view:clear
+php artisan route:clear
 ```
 
-### Frontend Assets Not Loading
-
+**Error Migrasi**
 ```bash
-npm install && npm run build
-```
-#
-
-## Project Structure
-
-```
-Smart_Wifi/
-├── app/               # Application core
-├── database/          # Migrations and seeders
-├── resources/         # Views and assets
-├── routes/            # Application routes
-├── config/            # Configuration files
-└── public/            # Publicly accessible files
+php artisan migrate:fresh --seed
 ```
 
-#
+**Asset tidak muncul**
+```bash
+npm run build
+php artisan storage:link
+```
 
-## Contributing
+---
 
-**Untuk semua anggota tim:**
-
-1. **Clone/Pull**:
-   - Anda bebas melakukan clone/pull repository kapan saja untuk keperluan pengembangan
-
-2. **Sebelum melakukan perubahan besar**:
-   - Harap berdiskusi terlebih dahulu melalui grup tim
-   - Beritahukan terlebih dahulu untuk perubahan signifikan
-
-3. **Prosedur Merge & Commit**:
-   - Beri tahu tim sebelum melakukan merge ke branch utama
-   - Commit message dengan jelas
-   - Lakukan pull request dan minta minimal 1 review dari anggota tim
-
-4. **Branch Policy**:
-   - Buat branch baru saat diperlukan
-   - Jangan langsung commit ke branch main/master
-
-**Aturan Tambahan**:
-- Update dokumentasi jika ada perubahan penting
-- Test perubahan Anda sebelum melakukan commit dan merge
-- Komunikasikan konflik merge secepatnya
+**Tim Pengembang**  
+[Tim Smart WiFi] - © 2025
