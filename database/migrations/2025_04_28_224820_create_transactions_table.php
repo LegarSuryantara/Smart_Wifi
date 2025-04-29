@@ -1,0 +1,34 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('transactions', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('paket_id')->constrained()->onDelete('cascade');
+            $table->date('tanggal_transaksi');
+            $table->string('metode_pembayaran'); // metode pembayaran (transfer bank, e-wallet, dll)
+            $table->integer('jumlah'); // jumlah yang dibayar
+            $table->string('status')->default('pending'); // pending, success, failed
+            $table->string('bukti_pembayaran')->nullable(); // bukti pembayaran (link atau path ke file)
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('transactions');
+    }
+};
