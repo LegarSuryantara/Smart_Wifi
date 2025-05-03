@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('metode_pembayaran'); // metode pembayaran (transfer bank, e-wallet, dll)
             $table->integer('jumlah'); // jumlah yang dibayar
             $table->string('status')->default('pending'); // pending, success, failed
-            $table->string('bukti_pembayaran')->nullable(); // bukti pembayaran (link atau path ke file)
             $table->timestamps();
         });
     }
