@@ -59,6 +59,9 @@ Route::middleware(['auth', 'permission:admin-access', 'verified'])->group(functi
     Route::get('/pakets/{paket}/edit', [PaketController::class, 'edit'])->name('pakets.edit');
     Route::put('/pakets/{paket}', [PaketController::class, 'update'])->name('pakets.update');
     Route::delete('/pakets/{paket}', [PaketController::class, 'destroy'])->name('pakets.destroy');
+
+
+    
    
 });
 
@@ -68,6 +71,12 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile/profile-photos', [ProfileController::class, 'deletePhoto'])->name('profile.delete-photo');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+
+    
+    Route::get('/detaiPaket', [PaketController::class, 'detailPaket'])->name('pakets.detailPaket');
+    Route::get('/pembayaran', [PaketController::class, 'pembayaran'])->name('pakets.pembayaran');
+
 });
 
 require __DIR__.'/auth.php';

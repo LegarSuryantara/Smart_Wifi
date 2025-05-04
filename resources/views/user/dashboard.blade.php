@@ -55,7 +55,7 @@
                     <p class="text-black">Harga Bulanan</p>
                     <p class="text-danger price">Rp {{ number_format($paket['harga'], 0, ',', '.') }}</p>
                     <div class="card-footer bg-transparent">
-                        <a href="#" class="btn btn-light btn-block">
+                        <a href="{{ route('pakets.detailPaket') }}" class="btn btn-light btn-block">
                             Pilih Paket
                         </a>
                     </div>
