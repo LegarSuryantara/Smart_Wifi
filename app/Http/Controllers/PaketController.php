@@ -27,6 +27,16 @@ class PaketController extends Controller implements HasMiddleware
         return view('admin.pakets.list', compact('pakets'));
     }
 
+    
+    public function detailPaket()
+    {
+        return view('UI_disini.detail_paket');
+    }
+    public function pembayaran()
+    {
+        return view('UI_disini.halaman_pembayaran');
+    }
+
     public function showGuestPackages()
     {
         $pakets = Pakets::all();
