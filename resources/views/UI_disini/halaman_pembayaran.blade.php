@@ -24,7 +24,7 @@
             <label for="alamat" class="form-label">Alamat *contoh</label>
             <input type="text" class="form-control" id="alamat" />
           </div>
-          <button type="submit" class="btn btn-blue px-3 py-1">Lanjutkan</button>
+          <button type="submit" class="btn text-white px-3 py-1" style="background-color: #0d6efd;">Lanjutkan</button>
         </form>
       </div>
       <div class="col-12 col-md-4 d-flex flex-column gap-3">
