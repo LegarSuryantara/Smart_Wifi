@@ -53,7 +53,7 @@
             <span>1</span>
             <button type="button">+</button>
           </div>
-          <span>GB</span>
+          <span>GB </span>
         </div>
         <a href="{{ route('pakets.pembayaran')}}" class="btn btn-primary" type="button">Beli Paket</a>
       </div>

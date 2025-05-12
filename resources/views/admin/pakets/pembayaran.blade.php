@@ -32,9 +32,9 @@
           <h3>METODE PEMBAYARAN</h3>
           <p>Kami menerima metode pembayaran aman berikut:</p>
           <div class="d-flex gap-2">
-            <img src="image/danalogo.png" alt="Logo Dana payment method, blue and white text logo" height="20" width="40" />
-            <img src="image/qrislogo.jpg" alt="Logo QRIS payment method, black and white text logo" height="20" width="40" />
-            <img src="image/bnilogo.jpg" alt="Logo BNI payment method, red and orange text logo" height="20" width="40" />
+            <img src="{{ asset('image\danalogo.png') }}" alt="Logo Dana payment method, blue and white text logo" height="20" width="40" />
+            <img src="{{ asset('image\qrislogo.jpg') }}" alt="Logo QRIS payment method, black and white text logo" height="20" width="40" />
+            <img src="{{ asset('image\bnilogo.jpg') }}" alt="Logo BNI payment method, red and orange text logo" height="20" width="40" />
           </div>
         </div>
         <div class="sidebar-box">

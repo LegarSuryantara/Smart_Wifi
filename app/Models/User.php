@@ -29,8 +29,7 @@ class User extends Authenticatable
      */
     public function isAdmin(): bool
     {
-        return $this->hasAnyRole(['admin', ]); 
-        // Tambahkan role admin lainnya di sini
+        return $this->hasAnyPermission(['admin-access', ]); 
     }
 
     /**

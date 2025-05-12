@@ -15,10 +15,20 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('paket_id')->constrained()->onDelete('cascade');
+            
             $table->date('tanggal_transaksi');
-            $table->string('metode_pembayaran'); // metode pembayaran (transfer bank, e-wallet, dll)
-            $table->integer('jumlah'); // jumlah yang dibayar
-            $table->string('status')->default('pending'); // pending, success, failed
+            $table->enum('metode_pembayaran', ['bank_transfer', 'e_wallet', 'qris', 'credit_card', 'gopay', 'shopeepay']);
+            $table->integer('jumlah')->unsigned();
+            $table->enum('status', ['pending', 'success', 'failed', 'expired', 'capture', 'settlement'])->default('pending');
+            
+            // Midtrans fields
+            $table->string('order_id')->unique();
+            $table->string('snap_token')->nullable();
+            $table->json('payment_data')->nullable(); // Changed from text to json type for better handling
+            $table->string('payment_type')->nullable();
+            $table->string('bank')->nullable();
+            $table->string('va_number')->nullable();
+            
             $table->timestamps();
         });
     }

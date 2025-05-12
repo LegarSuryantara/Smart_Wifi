@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Alief Smart Wifi - @yield('title')</title>
     <link href="{{ asset('css/style.css') }}" rel="stylesheet" type="text/css" >
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -46,7 +47,7 @@
                         </form>
 
                         @auth
-                            @if(auth()->user()->hasRole('admin'))
+                            @if(auth()->user()->hasAnyPermission('admin-access'))
                                 <div class="text-right mb-4">
                                     <a href="{{ route('admin.index') }}" class="bg-blue-600 text-sm rounded-md text-black px-3 py-2 hover:bg-blue-500 transition-colors uppercase">
                                         Admin Dashboard

@@ -27,16 +27,6 @@ class PaketController extends Controller implements HasMiddleware
         return view('admin.pakets.list', compact('pakets'));
     }
 
-    
-    public function detailPaket()
-    {
-        return view('UI_disini.detail_paket');
-    }
-    public function pembayaran()
-    {
-        return view('UI_disini.halaman_pembayaran');
-    }
-
     public function showGuestPackages()
     {
         $pakets = Pakets::all();
@@ -62,24 +52,30 @@ class PaketController extends Controller implements HasMiddleware
             'harga' => 'required|integer',
             'kecepatan' => 'required|string|max:255',
         ]);
-
+        
         Pakets::create($request->all());
-
+        
         return redirect()->route('pakets.index')->with('success', 'Paket berhasil ditambahkan!');
     }
-
+    
     /**
      * Menampilkan detail paket.
      */
-    public function show(Pakets $paket)
+    public function show($id)
     {
-        //
+        $paket = Pakets::findOrFail($id);
+        return view('admin.pakets.show', compact('paket'));
     }
 
+    public function pembayaran($id)
+    {
+        $paket = Pakets::findOrFail($id);
+        return view('admin.pakets.pembayaran', compact('paket'));
+    }
+    
     /**
      * Menampilkan form edit paket.
      */
-
     public function edit(Pakets $paket)
     {
         return view('admin.pakets.edit', compact('paket'));

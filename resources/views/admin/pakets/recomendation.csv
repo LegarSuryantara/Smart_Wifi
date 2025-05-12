@@ -1,0 +1,34 @@
+    <!-- Recommendation -->
+    <!-- <div class="recommendation mt-5" style="font-size: 0.75rem; color: #4a4a4a;">
+      <div class="d-flex align-items-center mb-3">
+        <i class="fas fa-check-square me-2"></i>
+        <span>Rekomendasi paket untukmu</span>
+      </div>
+      <div class="row g-3">
+        <div class="col-sm-6">
+          <div class="paket-card paket-popular position-relative">
+            <div class="badge-popular">POPULAR</div>
+            <h2>Paket Reguler</h2>
+            <p>Internet traffic</p>
+            <p class="unlimited-reguler">Unlimited</p>
+            <p>Kecepatan Internet</p>
+            <p class="speed">20 Mbps</p>
+            <p>harga bulanan</p>
+            <p class="price">Rp 150.000</p>
+            <img src="https://storage.googleapis.com/a1aa/image/9110091d-9bbc-4fe9-bcd2-3ddf095b0a4b.jpg" alt="Image of a turtle with a brown shell and greenish background" class="paket-image" width="100" height="80" />
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="paket-card paket-bisnis position-relative">
+            <h2>Paket Bisnis</h2>
+            <p>Internet traffic</p>
+            <p class="unlimited-bisnis">Unlimited</p>
+            <p>Kecepatan Internet</p>
+            <p class="speed">40 Mbps</p>
+            <p>harga bulanan</p>
+            <p class="price">Rp 200.000</p>
+            <img src="https://storage.googleapis.com/a1aa/image/f44275a1-28ab-443d-17c6-98d6832ab21e.jpg" alt="Image of a red and white vintage van with blue windows" class="paket-image" width="100" height="80" />
+          </div>
+        </div>
+      </div>
+    </div> -->
