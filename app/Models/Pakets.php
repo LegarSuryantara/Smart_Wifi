@@ -15,9 +15,4 @@ class Pakets extends Model
         'harga',
         'kecepatan'
     ];
-
-    public function transactions()
-    {
-        return $this->hasMany(Transactions::class);
-    }
 }
