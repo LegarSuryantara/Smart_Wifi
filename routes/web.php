@@ -60,6 +60,29 @@ Route::middleware(['auth', 'permission:admin-access', 'verified'])->group(functi
     Route::put('/pakets/{paket}', [PaketController::class, 'update'])->name('pakets.update');
     Route::delete('/pakets/{paket}', [PaketController::class, 'destroy'])->name('pakets.destroy');
 
+    
+    Route::get('/dashboardHome', function(){
+        return view('UI_disini.dashboardHome');
+    })->name('dashboard.dashboardHome');
+    Route::get('/dashboardPakets', function(){
+    return view('UI_disini.dashboardPakets');
+    })->name('dashboard.dashboardPakets');
+    Route::get('/tambahPaket', function(){
+    return view('UI_disini.tambahPaket');
+    })->name('dashboard.tambahPaket');
+    Route::get('/editPaket', function(){
+    return view('UI_disini.editPaket');
+    })->name('dashboard.editPaket');
+    Route::get('/dashboardPengguna', function(){
+    return view('UI_disini.dashboardPengguna');
+    })->name('dashboard.dashboardPengguna');
+    Route::get('/dashboardCustomer', function(){
+    return view('UI_disini.dashboardCustomers');
+    })->name('dashboard.dashboardCustomer');
+    Route::get('/dashboardTransaksi', function(){
+    return view('UI_disini.dashboardTransaksi');
+    })->name('dashboard.dashboardTransaksi');
+
 
     
    
@@ -76,6 +99,8 @@ Route::middleware('auth')->group(function () {
     
     Route::get('/detaiPaket', [PaketController::class, 'detailPaket'])->name('pakets.detailPaket');
     Route::get('/pembayaran', [PaketController::class, 'pembayaran'])->name('pakets.pembayaran');
+
+
 
 });
 
