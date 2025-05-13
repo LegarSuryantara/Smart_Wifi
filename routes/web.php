@@ -8,7 +8,8 @@ use App\Http\Controllers\{
     PermissionController,
     RoleController,
     UserController,
-    PaketController
+    PaketController,
+    TransactionController
 };
 
 // Route::get('/', function () {
@@ -60,6 +61,7 @@ Route::middleware(['auth', 'permission:admin-access', 'verified'])->group(functi
     Route::put('/pakets/{paket}', [PaketController::class, 'update'])->name('pakets.update');
     Route::delete('/pakets/{paket}', [PaketController::class, 'destroy'])->name('pakets.destroy');
 
+    // Kalau mau test UI,DLL taruh dibawah sini Routenya :
     
     Route::get('/dashboardHome', function(){
         return view('UI_disini.dashboardHome');
@@ -84,8 +86,7 @@ Route::middleware(['auth', 'permission:admin-access', 'verified'])->group(functi
     })->name('dashboard.dashboardTransaksi');
 
 
-    
-   
+    // --------------------//
 });
 
 // Route yang bisa diakses oleh semua user yang login (termasuk user biasa)
@@ -96,9 +97,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
 
-    
-    Route::get('/detaiPaket', [PaketController::class, 'detailPaket'])->name('pakets.detailPaket');
-    Route::get('/pembayaran', [PaketController::class, 'pembayaran'])->name('pakets.pembayaran');
+    // Kalau mau test UI,DLL taruh di dalam sini Routenya :
+    Route::get('/paket/{id}', [PaketController::class, 'show'])->name('pakets.show');
+    Route::get('/paket/{id}/pembayaran', [PaketController::class, 'pembayaran'])->name('pakets.pembayaran');
+
+
+
+    // --------------------//
 
 
 
