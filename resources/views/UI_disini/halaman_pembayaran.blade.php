@@ -59,7 +59,7 @@
             </svg>
           </div>
           <h5 class="modal-title mb-3" id="successModalLabel">Pembayaran Berhasil!</h5>
-          <p>Terima kasih telah melakukan pembayaran. Pesanan Anda sedang diproses.</p>
+          <p>Terima kasih telah melakukan pembayaran.pesanan anda sedang di prosess.</p>
           <button type="button" class="btn btn-success px-4" data-bs-dismiss="modal">Tutup</button>
         </div>
       </div>
