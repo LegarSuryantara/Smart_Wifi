@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     AdminDashboardController,
+    OrdersController,
     UserDashboardController,
     ProfileController,
     PermissionController,
@@ -100,6 +101,8 @@ Route::middleware('auth')->group(function () {
     // Kalau mau test UI,DLL taruh di dalam sini Routenya :
     Route::get('/paket/{id}', [PaketController::class, 'show'])->name('pakets.show');
     Route::get('/paket/{id}/pembayaran', [PaketController::class, 'pembayaran'])->name('pakets.pembayaran');
+    Route::post('/Checkout', [OrdersController::class, 'checkout'])->name('pakets.checkout');
+    
 
 
 

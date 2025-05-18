@@ -15,4 +15,8 @@ class Pakets extends Model
         'harga',
         'kecepatan'
     ];
+
+    public function orders(){
+        return $this->hasMany(Orders::class);
+    }
 }
