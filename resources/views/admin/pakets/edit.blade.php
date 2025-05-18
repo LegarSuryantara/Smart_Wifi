@@ -1,62 +1,95 @@
 <!-- edit.blade.php -->
 <x-app-layout>
-    <x-slot name="header">
-        <div class="flex justify-between">
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                Paket / Edit
-            </h2>
-            <a href="{{ route('pakets.index') }}" class="bg-slate-700 text-sm rounded-md text-white px-3 py-2 hover:bg-slate-600 transition-colors uppercase">Back to paket</a>
-        </div>
-    </x-slot>
-
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-gray-100">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900">
+                    <div class="mb-6 flex justify-between items-center">
+                        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                            Paket / Edit
+                        </h2>
+                    </div>
                     <form action="{{ route('pakets.update', $paket->id) }}" method="POST">
                         @csrf
                         @method('PUT')
-
-                        <label for="nama_paket" class="text-lg font-medium">Nama Paket</label>
-                        <div class="my-3">
-                            <input value="{{ old('nama_paket', $paket->nama_paket) }}" name="nama_paket" placeholder="Enter Nama Paket" type="text" class="text-black border-gray-300 shadow-sm max-w-1/2 rounded-lg">
+                        
+                        <!-- Nama Paket Field -->
+                        <div class="mb-6">
+                            <label for="nama_paket" class="block text-lg font-medium text-gray-700 mb-2">
+                                Nama Paket
+                            </label>
+                            <input value="{{ old('nama_paket', $paket->nama_paket) }}" 
+                            name="nama_paket" 
+                            id="nama_paket" 
+                            placeholder="Enter Nama Paket" 
+                            type="text" 
+                            class="w-full md:w-1/2 h-10 text-sm text-gray-900 bg-white border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 transition px-3">
                             @error('nama_paket')
-                            <p class="text-red-400 font-medium">{{ $message }}</p>
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
-
-                        <label for="kategori" class="text-lg font-medium">Kategori</label>
-                        <div class="my-3">
-                            <select name="kategori" class="text-black border-gray-300 shadow-sm max-w-1/2 rounded-lg">
-                                <option value="" disabled>Pilih Kategori</option>
-                                <option value="Dasar" {{ $paket->kategori == 'Dasar' ? 'selected' : '' }}>Dasar</option>
-                                <option value="Reguler" {{ $paket->kategori == 'Reguler' ? 'selected' : '' }}>Reguler</option>
-                                <option value="Bisnis" {{ $paket->kategori == 'Bisnis' ? 'selected' : '' }}>Bisnis</option>
-                                <option value="Eksekutif" {{ $paket->kategori == 'Eksekutif' ? 'selected' : '' }}>Eksekutif</option>
-                            </select>
-                            @error('kategori')
-                            <p class="text-red-400 font-medium">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <label for="harga" class="text-lg font-medium">Harga</label>
-                        <div class="my-3">
-                            <input value="{{ old('harga', $paket->harga) }}" name="harga" placeholder="Enter Harga" type="number" class="text-black border-gray-300 shadow-sm max-w-1/2 rounded-lg">
-                            @error('harga')
-                            <p class="text-red-400 font-medium">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <label for="kecepatan" class="text-lg font-medium">Kecepatan</label>
-                        <div class="my-3">
-                            <input value="{{ old('kecepatan', $paket->kecepatan) }}" name="kecepatan" placeholder="Enter Kecepatan" type="text" class="text-black border-gray-300 shadow-sm max-w-1/2 rounded-lg">
-                            @error('kecepatan')
-                            <p class="text-red-400 font-medium">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <button class="bg-slate-700 text-sm rounded-md text-white px-3 py-2 hover:bg-slate-600 transition-colors uppercase">Update Paket</button>
-                    </form>
+                        
+                        <!-- Kategori Field -->
+                        <div class="mb-6">
+                            <label for="kategori" class="block text-lg font-medium text-gray-700 mb-2">
+                                Kategori
+                            </label>
+                            <select name="kategori" 
+                            id="kategori" 
+                            class="w-full md:w-1/2 h-10 text-sm text-gray-900 bg-white border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 transition px-3">
+                            <option value="" disabled>Pilih Kategori</option>
+                            <option value="Dasar" {{ $paket->kategori == 'Dasar' ? 'selected' : '' }}>Dasar</option>
+                            <option value="Reguler" {{ $paket->kategori == 'Reguler' ? 'selected' : '' }}>Reguler</option>
+                            <option value="Bisnis" {{ $paket->kategori == 'Bisnis' ? 'selected' : '' }}>Bisnis</option>
+                            <option value="Eksekutif" {{ $paket->kategori == 'Eksekutif' ? 'selected' : '' }}>Eksekutif</option>
+                        </select>
+                        @error('kategori')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    
+                    <!-- Harga Field -->
+                    <div class="mb-6">
+                        <label for="harga" class="block text-lg font-medium text-gray-700 mb-2">
+                            Harga
+                        </label>
+                        <input value="{{ old('harga', $paket->harga) }}" 
+                        name="harga" 
+                        id="harga" 
+                        placeholder="Enter Harga" 
+                        type="number" 
+                        class="w-full md:w-1/2 h-10 text-sm text-gray-900 bg-white border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 transition px-3">
+                        @error('harga')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    
+                    <!-- Kecepatan Field -->
+                    <div class="mb-6">
+                        <label for="kecepatan" class="block text-lg font-medium text-gray-700 mb-2">
+                            Kecepatan
+                        </label>
+                        <input value="{{ old('kecepatan', $paket->kecepatan) }}" 
+                        name="kecepatan" 
+                        id="kecepatan" 
+                        placeholder="Enter Kecepatan" 
+                        type="text" 
+                        class="w-full md:w-1/2 h-10 text-sm text-gray-900 bg-white border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 transition px-3">
+                        @error('kecepatan')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <div class="flex gap-3 pt-2">
+                        <button type="submit" class="bg-slate-700 text-sm rounded-md text-white px-4 py-2 hover:bg-slate-600 transition-colors uppercase">
+                            Update Paket
+                        </button>
+                        <a href="{{ route('pakets.index') }}" class="bg-gray-500 text-sm rounded-md text-white px-4 py-2 hover:bg-gray-600 transition-colors uppercase">
+                            Back to paket
+                        </a>
+                    </div>
+                </form>
                 </div>
             </div>
         </div>

@@ -18,7 +18,6 @@
 
     <div class="flex-grow-1">
   
-      @include('layouts.header')
 
 
       @yield('content')

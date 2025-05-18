@@ -1,10 +1,10 @@
 <section>
     <header>
-        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+        <h2 class="text-lg font-medium text-gray-900 dark:text-black">
             {{ __('Profile Information') }}
         </h2>
 
-        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+        <p class="mt-1 text-sm text-gray-600 dark:text-black">
             {{ __("Update your account's profile information, email address, and contact details.") }}
         </p>
     </header>
@@ -18,7 +18,7 @@
         @method('patch')
         
         <div class="mb-8">
-            <x-input-label for="profile_photo" :value="__('Foto Profil')" />
+            <x-input-label class="text-black" for="profile_photo" :value="__('Foto Profil')" />
             
             <div class="flex flex-col items-center mt-4">
                 @if($user->profile_photo)
@@ -64,14 +64,14 @@
         </div>
 
         <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
+            <x-input-label class="text-black" for="name" :value="__('Name')" />
+            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full bg-gray-100 border-gray-300 text-gray-800" :value="old('name', $user->name)" required autofocus autocomplete="name" />
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
 
         <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
+            <x-input-label class="text-black" for="email" :value="__('Email')" />
+            <x-text-input id="email" name="email" type="email" class="mt-1 block w-full bg-gray-100 border-gray-300 text-gray-800" :value="old('email', $user->email)" required autocomplete="username" />
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
 
             @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
@@ -94,8 +94,8 @@
         </div>
 
         <div>
-            <x-input-label for="phone" :value="__('No Hp')" />
-            <x-text-input id="phone" name="phone" type="tel" class="mt-1 block w-full" 
+            <x-input-label class="text-black" for="phone" :value="__('No Hp')" />
+            <x-text-input id="phone" name="phone" type="tel" class="mt-1 block w-full bg-gray-100 border-gray-300 text-gray-800" 
                 :value="old('phone', $user->phone)" required autocomplete="tel" />
             <x-input-error class="mt-2" :messages="$errors->get('phone')" />
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
@@ -104,16 +104,16 @@
         </div>
 
         <div>
-            <x-input-label for="address" :value="__('Alamat')" />
-            <x-textarea id="address" name="address" class="mt-1 block w-full border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm" 
+            <x-input-label class="text-black" for="address" :value="__('Alamat')" />
+            <x-textarea id="address" name="address" class="mt-1 block w-full bg-gray-100 border-gray-300 text-gray-800 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm" 
                 autocomplete="street-address" rows="3">{{ old('address', $user->address) }}</x-textarea>
             <x-input-error class="mt-2" :messages="$errors->get('address')" />
         </div>
 
         <div class="flex items-center gap-4">
-            <x-primary-button class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-300 dark:focus:ring-indigo-800 rounded-lg font-medium text-white transition duration-200 shadow-md">
+            <button type="submit" class="bg-gray-500 text-sm rounded-md text-white px-4 py-2 hover:bg-gray-600 transition-colors uppercase">
                 {{ __('Save') }}
-            </x-primary-button>
+            </button>
 
             @if (session('status') === 'profile-updated')
                 <p
@@ -139,27 +139,27 @@
     }
 
     function confirmDeleteProfilePhoto() {
-    if (!confirm('Are you sure you want to delete your profile photo?')) {
-        return;
-    }
+        if (!confirm('Are you sure you want to delete your profile photo?')) {
+            return;
+        }
 
-    fetch('{{ route("profile.delete-photo") }}', {
-        method: 'DELETE',
-        headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            'Accept': 'application/json'
-        }
-    })
-    .then(async response => {
-        const data = await response.json();
-        if (!response.ok) {
-            throw new Error(data.message || 'Failed to delete photo');
-        }
-        window.location.reload();
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert(error.message);
-    });
+        fetch('{{ route("profile.delete-photo") }}', {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            }
+        })
+        .then(async response => {
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.message || 'Failed to delete photo');
+            }
+            window.location.reload();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert(error.message);
+        });
     }
 </script>
