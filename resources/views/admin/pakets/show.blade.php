@@ -10,6 +10,10 @@
     <div class="paket-ekonomi">
       <div class="d-flex flex-wrap align-items-center gap-4 flex-grow-1">
         <div>
+          <p>Nama Paket</p>
+          <p>{{ $paket->nama_paket}}</p>
+        </div>
+        <div>
           <p>Internet traffic</p>
           <p>Unlimited</p>
         </div>

@@ -1,16 +1,26 @@
 <!-- resources/views/layouts/app.blade.php -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+     <!-- @TODO: replace SET_YOUR_CLIENT_KEY_HERE with your client key -->
+    <script type="text/javascript"
+      src="https://app.sandbox.midtrans.com/snap/snap.js"
+      data-client-key="{{config('midtrans.client_key')}}"></script>
+    <!-- Note: replace with src="https://app.midtrans.com/snap/snap.js" for Production environment -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Alief Smart Wifi - @yield('title')</title>
-    <link href="{{ asset('css/style.css') }}" rel="stylesheet" type="text/css" >
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"/>
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet" type="text/css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
 </head>
+
 <body>
     <header>
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
@@ -19,7 +29,8 @@
                     <img src="{{ asset('image/profile.jpg') }}" alt="profile" width="50" class="rounded-circle">
                     Alif Smart Wifi
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
@@ -37,25 +48,26 @@
                             <a class="nav-link" href="#sosial media">Hubungi Kami</a>
                         </li>
                         <form method="POST" action="{{ route('logout') }}">
-                        @csrf
+                            @csrf
 
-                        <x-responsive-nav-link :href="route('logout')"
+                            <x-responsive-nav-link :href="route('logout')"
                                 onclick="event.preventDefault();
                                             this.closest('form').submit();">
-                            {{ __('Log Out') }}
-                        </x-responsive-nav-link>
+                                {{ __('Log Out') }}
+                            </x-responsive-nav-link>
                         </form>
 
                         @auth
-                            @if(auth()->user()->hasAnyPermission('admin-access'))
+                            @if (auth()->user()->hasAnyPermission('admin-access'))
                                 <div class="text-right mb-4">
-                                    <a href="{{ route('admin.index') }}" class="bg-blue-600 text-sm rounded-md text-black px-3 py-2 hover:bg-blue-500 transition-colors uppercase">
+                                    <a href="{{ route('admin.index') }}"
+                                        class="bg-blue-600 text-sm rounded-md text-black px-3 py-2 hover:bg-blue-500 transition-colors uppercase">
                                         Admin Dashboard
                                     </a>
                                 </div>
                             @endif
                         @endauth
-                        
+
                     </ul>
                 </div>
             </div>
@@ -74,8 +86,11 @@
                         <h5 id="alamat">Alamat</h5>
                     </div>
                     <div class="content">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d544.3376387748079!2d114.3445059!3d-8.2492684!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd15a9a3deb8e39%3A0x690a6afba6b12d2d!2sJl.%20Nangka%20No.1%2C%20Dusun%20Jurang%20Jero%2C%20Kalirejo%2C%20Kec.%20Kabat%2C%20Kabupaten%20Banyuwangi%2C%20Jawa%20Timur%2068461!5e1!3m2!1sid!2sid!4v1742567472544!5m2!1sid!2sid" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-                </div>
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d544.3376387748079!2d114.3445059!3d-8.2492684!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd15a9a3deb8e39%3A0x690a6afba6b12d2d!2sJl.%20Nangka%20No.1%2C%20Dusun%20Jurang%20Jero%2C%20Kalirejo%2C%20Kec.%20Kabat%2C%20Kabupaten%20Banyuwangi%2C%20Jawa%20Timur%2068461!5e1!3m2!1sid!2sid!4v1742567472544!5m2!1sid!2sid"
+                            width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
                 </div>
                 <div class="col">
                     <div class="title">
@@ -105,4 +120,5 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     @stack('scripts')
 </body>
+
 </html>

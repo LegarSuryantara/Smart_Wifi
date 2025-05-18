@@ -1,53 +1,35 @@
 @extends('layouts.app_1')
 
-@section('title', 'halaman Pembayaran')
+@section('title', 'Checkout')
 
 @section('content')
     <div class="container py-4">
         <div class="row gx-4 gy-4">
             <div class="col-12 col-md-8 bg-white p-4 shadow-sm">
-                <h2 class="fw-semibold mb-4" style="font-size:13px;">ISI DETAIL PESANAN!</h2>
-                <form action="{{ route('pakets.checkout') }}" class="w-100" style="max-width: 320px;" id="paymentForm"
-                    method="POST">
-                    @csrf
-
-                    {{-- Hidden paket_id untuk dikirim ke database --}}
-                    <input type="hidden" name="paket_id" value="{{ $paket->id }}">
-
-                    <div class="mb-3">
-                        <label for="paketPilihan" class="form-label">Paket yang dipilih</label>
-                        <input id="paketPilihan" type="text" class="form-control" value="{{ $paket->nama_paket }}"
-                            readonly>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Nama</label>
-                        <input id="name" name="name" type="text" class="form-control" aria-describedby="name"
-                            placeholder="Masukkan nama anda" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="address" class="form-label">Alamat</label>
-                        <input type="text" class="form-control" id="address" name="address"
-                            placeholder="Masukkan alamat anda" required />
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="phone" class="form-label">Nomor Telepon</label>
-                        <input type="text" class="form-control" id="phone" name="phone"
-                            placeholder="Contoh: 08123456789" required />
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="qty" class="form-label">Jumlah</label>
-                        <input type="number" class="form-control" id="qty" name="qty"
-                            placeholder="Masukkan Jumlah" required min="1" />
-                    </div>
-
-                    <button type="submit" class="btn text-white px-3 py-1"
-                        style="background-color: #0d6efd;">Lanjutkan</button>
-                </form>
-
+                <h2 class="fw-semibold mb-4" style="font-size:13px;">Detail</h2>
+                <table>
+                    <tr>
+                        <td>Nama</td>
+                        <td> : {{ $order->name }}</td>
+                    </tr>
+                    <tr>
+                        <td>No Tlp</td>
+                        <td> : {{ $order->phone }}</td>
+                    </tr>
+                    <tr>
+                        <td>Nama Paket</td>
+                        <td> : {{ $order->paket->nama_paket }}</td>
+                    </tr>
+                    <tr>
+                        <td>qty</td>
+                        <td> : {{ $order->qty }}</td>
+                    </tr>
+                    <tr>
+                        <td>Total Harga</td>
+                        <td> : {{ $order->total_price }}</td>
+                    </tr>
+                </table>
+                <button class="btn btn-primary" id="pay-button">Bayar Sekarang</button>
             </div>
             <div class="col-12 col-md-4 d-flex flex-column gap-3">
                 <div class="sidebar-box">
@@ -119,4 +101,34 @@
       });
     });
   </script> --}}
+
+    <script type="text/javascript">
+        // For example trigger on button clicked, or any time you need
+        var payButton = document.getElementById('pay-button');
+        payButton.addEventListener('click', function() {
+            // Trigger snap popup. @TODO: Replace TRANSACTION_TOKEN_HERE with your transaction token
+            window.snap.pay('{{$snapToken}}', {
+                onSuccess: function(result) {
+                    /* You may add your own implementation here */
+                    /*alert("payment success!");*/
+                    window.location.href= '{{ route('user.index')}}'
+                    console.log(result);
+                },
+                onPending: function(result) {
+                    /* You may add your own implementation here */
+                    alert("wating your payment!");
+                    console.log(result);
+                },
+                onError: function(result) {
+                    /* You may add your own implementation here */
+                    alert("payment failed!");
+                    console.log(result);
+                },
+                onClose: function() {
+                    /* You may add your own implementation here */
+                    alert('you closed the popup without finishing the payment');
+                }
+            })
+        });
+    </script>
 @endsection
