@@ -9,6 +9,7 @@ use App\Http\Controllers\{
     RoleController,
     UserController,
     PaketController,
+    CustomerController,
     TransactionController
 };
 
@@ -52,6 +53,10 @@ Route::middleware(['auth', 'permission:admin-access', 'verified'])->group(functi
     Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
     Route::post('/users/{id}', [UserController::class, 'update'])->name('users.update');
     Route::delete('/users', [UserController::class, 'destroy'])->name('users.destroy');
+
+    // Customer route
+    Route::get('/customers', [CustomerController::class, 'index'])->name('customers.index');
+
 
     // Pakets routes
     Route::get('/pakets', [PaketController::class, 'index'])->name('pakets.index');

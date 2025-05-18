@@ -1,85 +1,99 @@
-<!-- List.blade.php -->
 <x-app-layout>
-<x-slot name="header">
-    <div class="flex justify-between items-center">
+    <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('Paket Internet') }}
         </h2>
-        <div class="flex space-x-2">
-            <a href="{{ route('user.index') }}" class="bg-slate-700 text-sm rounded-md text-white px-3 py-2 hover:bg-slate-600 transition-colors uppercase">
-                User Dashboard
-            </a>
-            <a href="{{ route('pakets.create') }}" class="bg-slate-700 text-sm rounded-md text-white px-3 py-2 hover:bg-slate-600 transition-colors uppercase">
-                Tambah Paket
-            </a>
-        </div>
-    </div>
-</x-slot>
+    </x-slot>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <x-message></x-message>
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900">
+                    <!-- Header with Action Buttons inside white box -->
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-lg font-medium text-gray-900">Daftar Paket Internet</h3>
+                        <div class="flex gap-6">
+                            <a href="{{ route('user.index') }}" 
+                            class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md transition-all flex items-center shadow-md">
+                                <i class="fas fa-user mr-3"></i> User Dashboard
+                            </a>
+                            <a href="{{ route('pakets.create') }}" 
+                            class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all flex items-center shadow-md">
+                                <i class="fas fa-plus mr-3"></i> Tambah Paket
+                            </a>
+                        </div>
+                    </div>
 
-            <div class="overflow-hidden rounded-lg shadow">
-                <table class="w-full rounded-lg overflow-hidden">
-                    <thead class="bg-gray-50">
-                        <tr class="border-b">
-                            <th class="px-6 py-3 text-left" width="60">#</th>
-                            <th class="px-6 py-3 text-left">Name</th>
-                            <th class="px-6 py-3 text-left">Category</th>
-                            <th class="px-6 py-3 text-left">Speed</th>
-                            <th class="px-6 py-3 text-left">Price</th>
-                            <th class="px-6 py-3 text-left" width="120">Created</th>
-                            <th class="px-6 py-3 text-center" width="180">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white">
-                        @if ($pakets->isNotEmpty())
-                            @foreach ($pakets as $paket)
-                                <tr class="border-b">
-                                    <td class="px-6 py-3 text-left">
-                                        {{ $loop->iteration }}
-                                    </td>
-                                    <td class="px-6 py-3 text-left">
-                                        {{ $paket->nama_paket }}
-                                    </td>
-                                    <td class="px-6 py-3 text-left">
-                                        {{ $paket->kategori }}
-                                    </td>
-                                    <td class="px-6 py-3 text-left">
-                                        {{ $paket->kecepatan }} Mbps
-                                    </td>
-                                    <td class="px-6 py-3 text-left">
-                                        Rp {{ number_format($paket->harga, 0, ',', '.') }}
-                                    </td>
-                                    <td class="px-6 py-3 text-left">
-                                        {{ $paket->created_at->format('d/m/Y') }}
-                                    </td>
-                                    <td class="px-6 py-3 text-center">
-                                        <div class="flex justify-center space-x-2">
-                                            <a href="{{ route('pakets.edit', $paket->id) }}" class="bg-slate-700 text-sm rounded-md text-white px-3 py-2 hover:bg-slate-600 transition-colors uppercase">
-                                                Edit
-                                            </a>
-                                            <form action="{{ route('pakets.destroy', $paket->id) }}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="bg-red-600 text-sm rounded-md text-white px-3 py-2 hover:bg-red-500 transition-colors uppercase" onclick="return confirm('Apakah Anda yakin ingin menghapus?')">Delete</button>
-                                            </form>
-                                        </div>
-                                    </td>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-200">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Paket</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kategori</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kecepatan</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Harga</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dibuat</th>
+                                    <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                                 </tr>
-                            @endforeach
-                        @else
-                            <tr>
-                                <td colspan="7" class="px-6 py-4 text-center text-gray-500">
-                                    Tidak ada data paket
-                                </td>
-                            </tr>
-                        @endif
-                    </tbody>
-                </table>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                @forelse ($pakets as $paket)
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $loop->iteration }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                            {{ $paket->nama_paket }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                                {{ $paket->kategori }}
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                                {{ $paket->kecepatan }} Mbps
+                                            </span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                            Rp {{ number_format($paket->harga, 0, ',', '.') }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            {{ $paket->created_at->format('d/m/Y') }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
+                                            <div class="flex justify-center gap-4">
+                                                <a href="{{ route('pakets.edit', $paket->id) }}" 
+                                                class="inline-flex items-center justify-center w-8 h-8 text-indigo-600 bg-indigo-50 rounded-full hover:bg-indigo-100 transition-colors"
+                                                title="Edit">
+                                                    <i class="fas fa-edit text-sm"></i>
+                                                </a>
+                                                <form action="{{ route('pakets.destroy', $paket->id) }}" method="POST" class="inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" 
+                                                            class="inline-flex items-center justify-center w-8 h-8 text-red-600 bg-red-50 rounded-full hover:bg-red-100 transition-colors"
+                                                            title="Hapus"
+                                                            onclick="return confirm('Apakah Anda yakin ingin menghapus paket ini?')">
+                                                        <i class="fas fa-trash-alt text-sm"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500">
+                                            Tidak ada data paket
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Pagination -->
+                </div>
             </div>
         </div>
     </div>
-
 </x-app-layout>

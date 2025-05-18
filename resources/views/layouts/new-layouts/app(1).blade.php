@@ -22,14 +22,17 @@
 </head>
 <body class="font-sans antialiased">
     <div class="dashboard-admin-wrapper">
+        <!-- Sidebar Navigation -->
         @include('layouts.admin-navigation')
 
         <div class="main-content-wrapper">
+            <!-- Header -->
             @include('layouts.header')
 
+            <!-- Main Content -->
             <main class="main-content">
-                    @yield('content')
-                    {{ $slot }}
+                @yield('content')
+                {{ $slot }}
             </main>
         </div>
     </div>
@@ -43,10 +46,47 @@
     @isset($script)
         {{ $script }}
     @endisset
+
     <style>
-    .dashboard-admin-wrapper {
-        background-color:rgb(128, 152, 187);
-    }
+        /* Layout Styles */
+        .dashboard-admin-wrapper {
+            display: flex;
+            min-height: 100vh;
+            background-color: #f8fafc;
+        }
+
+        .main-content-wrapper {
+            flex: 1;
+            margin-left: 250px; /* Sesuaikan dengan lebar sidebar */
+            transition: margin-left 0.3s ease;
+        }
+
+        .main-content {
+            padding: 20px;
+            min-height: calc(100vh - 60px); /* Sesuaikan dengan tinggi header */
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .main-content-wrapper {
+                margin-left: 0;
+            }
+            
+            .admin-navigation {
+                transform: translateX(-100%);
+                position: fixed;
+                z-index: 1000;
+            }
+            
+            .admin-navigation.active {
+                transform: translateX(0);
+            }
+        }
+
+        /* Dark Mode Support */
+        .dark .dashboard-admin-wrapper {
+            background-color: #0f172a;
+        }
     </style>
 </body>
 </html>
