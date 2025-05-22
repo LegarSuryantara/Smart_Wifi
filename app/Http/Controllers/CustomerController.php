@@ -4,9 +4,27 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\PDF;
+use Pest\ArchPresets\Custom;
+use App\Models\Customer;
 
 class CustomerController extends Controller
 {
+
+    public function exportPdf()
+    {
+        // Fetch all customers from the database
+        $customers = User::whereHas('roles', function($q) {
+            $q->where('name', 'user');
+        })->get();
+
+        // Load the view and pass the customers data
+        $pdf = Pdf::loadView('admin.customers.pdf', compact('customers'));
+
+        // Download the PDF file
+        return $pdf->stream('customer-list.pdf');
+    }
+
     /**
      * Display a listing of the resource.
      */
