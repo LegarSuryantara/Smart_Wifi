@@ -11,19 +11,51 @@ class PaketController extends Controller implements HasMiddleware
 {
     public static function middleware()
     {
-        return[
+        return [
             new Middleware('permission:view pakets', only: ['index']),
             new Middleware('permission:edit pakets', only: ['edit']),
             new Middleware('permission:create pakets', only: ['create']),
             new Middleware('permission:delete pakets', only: ['destroy']),
         ];
     }
+
     /**
      * Menampilkan daftar paket.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $pakets = Pakets::all();
+        // Ambil parameter pencarian
+        $search = $request->input('search');
+        
+        // Query dasar
+        $query = Pakets::query();
+        
+        // Filter pencarian
+        if ($search) {
+            $query->where('nama_paket', 'like', '%'.$search.'%');
+        }
+        
+        // Filter urutan
+        $sort = $request->input('sort', 'newest');
+        
+        switch ($sort) {
+            case 'oldest':
+                $query->oldest();
+                break;
+            case 'name_asc':
+                $query->orderBy('nama_paket', 'asc');
+                break;
+            case 'name_desc':
+                $query->orderBy('nama_paket', 'desc');
+                break;
+            default: // newest
+                $query->latest();
+                break;
+        }
+        
+        // Paginasi hasil
+        $pakets = $query->paginate(10);
+        
         return view('admin.pakets.list', compact('pakets'));
     }
 
