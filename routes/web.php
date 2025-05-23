@@ -57,6 +57,7 @@ Route::middleware(['auth', 'permission:admin-access', 'verified'])->group(functi
 
     // Customer route
     Route::get('/customers', [CustomerController::class, 'index'])->name('customers.index');
+    Route::get('/admin/customers/pdf', [CustomerController::class, 'exportPdf'])->name('customers.pdf');
 
 
     // Pakets routes

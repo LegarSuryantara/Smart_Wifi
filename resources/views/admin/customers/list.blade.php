@@ -12,6 +12,12 @@
                     <div class="mb-6">
                         <h3 class="text-lg font-medium text-gray-900">Customer List</h3>
                     </div>
+                    <div style="margin-bottom: 16px;">
+        <a href="{{ route('customers.pdf') }}" target="_blank"
+           style="display: inline-block; padding: 8px 16px; background: #2563eb; color: #fff; border-radius: 4px; text-decoration: none;">
+            Cetak PDF
+        </a>
+    </div>
 
                     <x-message></x-message>
 
