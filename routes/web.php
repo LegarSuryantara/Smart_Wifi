@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\{
     AdminDashboardController,
     OrdersController,
@@ -11,7 +12,9 @@ use App\Http\Controllers\{
     UserController,
     PaketController,
     CustomerController,
-    TransactionController
+    MessageController,
+    DeviceController,
+
 };
 
 // Route::get('/', function () {
@@ -67,30 +70,40 @@ Route::middleware(['auth', 'permission:admin-access', 'verified'])->group(functi
     Route::get('/pakets/{paket}/edit', [PaketController::class, 'edit'])->name('pakets.edit');
     Route::put('/pakets/{paket}', [PaketController::class, 'update'])->name('pakets.update');
     Route::delete('/pakets/{paket}', [PaketController::class, 'destroy'])->name('pakets.destroy');
+    
+    // Fonnte routes
+    Route::resource('messages', MessageController::class);
+    Route::resource('devices', DeviceController::class);
+    
+    Route::post('send-message', [DeviceController::class, 'sendMessage'])->name('send.message');
+    Route::post('devices/status', [DeviceController::class, 'checkDeviceStatus']);
+    Route::post('devices/activate', [DeviceController::class, 'activateDevice'])->name('devices.activate');
+    Route::post('devices/disconnect', [DeviceController::class, 'disconnect'])->name('devices.disconnect');
 
+    
     // Kalau mau test UI,DLL taruh dibawah sini Routenya :
     
-    Route::get('/dashboardHome', function(){
-        return view('UI_disini.dashboardHome');
-    })->name('dashboard.dashboardHome');
-    Route::get('/dashboardPakets', function(){
-    return view('UI_disini.dashboardPakets');
-    })->name('dashboard.dashboardPakets');
-    Route::get('/tambahPaket', function(){
-    return view('UI_disini.tambahPaket');
-    })->name('dashboard.tambahPaket');
-    Route::get('/editPaket', function(){
-    return view('UI_disini.editPaket');
-    })->name('dashboard.editPaket');
-    Route::get('/dashboardPengguna', function(){
-    return view('UI_disini.dashboardPengguna');
-    })->name('dashboard.dashboardPengguna');
-    Route::get('/dashboardCustomer', function(){
-    return view('UI_disini.dashboardCustomers');
-    })->name('dashboard.dashboardCustomer');
-    Route::get('/dashboardTransaksi', function(){
-    return view('UI_disini.dashboardTransaksi');
-    })->name('dashboard.dashboardTransaksi');
+    // Route::get('/dashboardHome', function(){
+    //     return view('UI_disini.dashboardHome');
+    // })->name('dashboard.dashboardHome');
+    // Route::get('/dashboardPakets', function(){
+    // return view('UI_disini.dashboardPakets');
+    // })->name('dashboard.dashboardPakets');
+    // Route::get('/tambahPaket', function(){
+    // return view('UI_disini.tambahPaket');
+    // })->name('dashboard.tambahPaket');
+    // Route::get('/editPaket', function(){
+    // return view('UI_disini.editPaket');
+    // })->name('dashboard.editPaket');
+    // Route::get('/dashboardPengguna', function(){
+    // return view('UI_disini.dashboardPengguna');
+    // })->name('dashboard.dashboardPengguna');
+    // Route::get('/dashboardCustomer', function(){
+    // return view('UI_disini.dashboardCustomers');
+    // })->name('dashboard.dashboardCustomer');
+    // Route::get('/dashboardTransaksi', function(){
+    // return view('UI_disini.dashboardTransaksi');
+    // })->name('dashboard.dashboardTransaksi');
 
 
     // --------------------//
@@ -103,19 +116,29 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile/profile-photos', [ProfileController::class, 'deletePhoto'])->name('profile.delete-photo');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-
-    // Kalau mau test UI,DLL taruh di dalam sini Routenya :
     Route::get('/paket/{id}', [PaketController::class, 'show'])->name('pakets.show');
     Route::get('/paket/{id}/pembayaran', [PaketController::class, 'pembayaran'])->name('pakets.pembayaran');
     Route::post('/Checkout', [OrdersController::class, 'checkout'])->name('pakets.checkout');
-    
 
+    // Kalau mau test UI,DLL taruh di dalam sini Routenya :
+    
 
 
     // --------------------//
 
 
 
+});
+
+Route::get('send-wa',function(){
+    $response = Http::withHeaders([
+        'Authorization' => 'HAxiVJoJKhw9QDWU3UdA',
+    ])->post('https://api.fonnte.com/send',[
+        'target' => '08980925226',
+        'message' => "Wifi anda hampir mendekati waktu tenggat pembayaran 5/25/2025"
+    ]);
+
+    dd(json_decode($response,true));
 });
 
 require __DIR__.'/auth.php';
