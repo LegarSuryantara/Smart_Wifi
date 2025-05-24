@@ -28,15 +28,42 @@ class CustomerController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $customers = User::whereHas('roles', function($q) {
+        $query = User::whereHas('roles', function($q) {
             $q->where('name', 'user');
-        })->paginate(10);
+        });
+
+        // Add search functionality
+        if ($request->has('search')) {
+            $search = $request->input('search');
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('phone', 'like', "%{$search}%")
+                  ->orWhere('address', 'like', "%{$search}%");
+            });
+        }
+
+        // Add sorting functionality
+        switch ($request->input('sort', 'newest')) {
+            case 'oldest':
+                $query->orderBy('created_at', 'asc');
+                break;
+            case 'name_asc':
+                $query->orderBy('name', 'asc');
+                break;
+            case 'name_desc':
+                $query->orderBy('name', 'desc');
+                break;
+            default:
+                $query->orderBy('created_at', 'desc');
+        }
+
+        $customers = $query->paginate(10);
 
         return view('admin.customers.list', compact('customers'));
     }
-
 
     /**
      * Show the form for creating a new resource.

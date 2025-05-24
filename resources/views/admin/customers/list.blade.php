@@ -10,7 +10,35 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                     <div class="mb-6">
-                        <h3 class="text-lg font-medium text-gray-900">Customer List</h3>
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-lg font-medium text-gray-900">Customer List</h3>
+                            <div class="flex space-x-2">
+                                <form method="GET" action="" class="flex items-center">
+                                    <div class="relative">
+                                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                                            </svg>
+                                        </div>
+                                        <input type="text" name="search" value="{{ request('search') }}" 
+                                               class="border rounded-md pl-10 pr-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                                               placeholder="Search customers...">
+                                    </div>
+                                    <button type="submit" class="ml-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md transition duration-300">
+                                        Search
+                                    </button>
+                                </form>
+                                <form method="GET" action="">
+                                    <input type="hidden" name="search" value="{{ request('search') }}">
+                                    <select name="sort" onchange="this.form.submit()" class="border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                        <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Newest</option>
+                                        <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Oldest</option>
+                                        <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>A-Z</option>
+                                        <option value="name_desc" {{ request('sort') == 'name_desc' ? 'selected' : '' }}>Z-A</option>
+                                    </select>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                     <div style="margin-bottom: 16px;">
         <a href="{{ route('customers.pdf') }}" target="_blank"
@@ -58,7 +86,7 @@
 
                     @if($customers->hasPages())
                         <div class="px-6 py-3 bg-gray-50 border-t border-gray-200 mt-4">
-                            {{ $customers->links() }}
+                            {{ $customers->appends(request()->query())->links() }}
                         </div>
                     @endif
                 </div>

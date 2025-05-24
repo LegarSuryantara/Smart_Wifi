@@ -9,12 +9,44 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <!-- Header with Create Button inside white box -->
-                    <div class="flex justify-between items-center mb-6">
+                    <!-- Header with Create Button and Search/Sort -->
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                         <h3 class="text-lg font-medium text-gray-900">Permissions List</h3>
-                        <a href="{{ route('permissions.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors flex items-center">
-                            <i class="fas fa-plus mr-2"></i>Create Permission
-                        </a>
+                        
+                        <div class="flex flex-col md:flex-row gap-4 w-full md:w-auto">
+                            <!-- Search Form -->
+                            <form method="GET" action="{{ route('permissions.index') }}" class="flex items-center w-full md:w-auto">
+                                <div class="relative flex-grow">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-search text-gray-400"></i>
+                                    </div>
+                                    <input type="text" name="search" value="{{ request('search') }}" 
+                                           class="block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm" 
+                                           placeholder="Search permissions...">
+                                </div>
+                                <button type="submit" class="ml-2 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors flex items-center">
+                                    <i class="fas fa-search mr-2"></i> Search
+                                </button>
+                            </form>
+                            
+                            <!-- Sort and Create Button -->
+                            <div class="flex gap-2">
+                                <form method="GET" action="{{ route('permissions.index') }}">
+                                    <input type="hidden" name="search" value="{{ request('search') }}">
+                                    <select name="sort" onchange="this.form.submit()" 
+                                            class="border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Newest</option>
+                                        <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Oldest</option>
+                                        <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>A-Z</option>
+                                        <option value="name_desc" {{ request('sort') == 'name_desc' ? 'selected' : '' }}>Z-A</option>
+                                    </select>
+                                </form>
+                                
+                                <a href="{{ route('permissions.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-colors flex items-center">
+                                    <i class="fas fa-plus mr-2"></i>Create
+                                </a>
+                            </div>
+                        </div>
                     </div>
 
                     <x-message></x-message>
@@ -32,7 +64,7 @@
                             <tbody class="bg-white divide-y divide-gray-200">
                                 @forelse ($permissions as $permission)
                                     <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $loop->iteration }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ ($permissions->currentPage() - 1) * $permissions->perPage() + $loop->iteration }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
                                                 {{ $permission->name }}
@@ -69,7 +101,7 @@
                     <!-- Pagination -->
                     @if($permissions->hasPages())
                     <div class="px-6 py-3 bg-gray-50 border-t border-gray-200 mt-4">
-                        {{ $permissions->links() }}
+                        {{ $permissions->appends(request()->query())->links() }}
                     </div>
                     @endif
                 </div>
