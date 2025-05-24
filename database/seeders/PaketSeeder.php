@@ -44,5 +44,6 @@ class PaketSeeder extends Seeder
         }
 
         $this->command->info('Successfully created '.count($pakets).' internet packages!');
+        $this->command->info("Card Number : 4811 1111 1111 1114 \nCVV : 123 \nEXP : 05/25");
     }
 }

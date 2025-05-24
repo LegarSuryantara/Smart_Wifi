@@ -41,4 +41,8 @@ return [
         'is_production' => env('MIDTRANS_IS_PRODUCTION', false),
     ],
 
+    'fonnte' => [
+        'account_token' => env('ACCOUNT_TOKEN'),
+    ],
+
 ];

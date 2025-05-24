@@ -13,13 +13,14 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            $table->string('midtrans_order_id')->unique();
             $table->foreignId('paket_id')->constrained('pakets')->onDelete('cascade'); // relasi ke tabel pakets
             $table->string('name');
             $table->text('address');
             $table->string('phone');
             $table->string('qty');
             $table->bigInteger('total_price');
-            $table->enum('status', ['Unpaid', 'Paid']);
+            $table->enum('status', ['Unpaid', 'Paid'])->default('Unpaid');
             $table->timestamps();
         });
     }

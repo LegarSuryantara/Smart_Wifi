@@ -23,19 +23,19 @@
                     <div class="mb-3">
                         <label for="name" class="form-label">Nama</label>
                         <input id="name" name="name" type="text" class="form-control" aria-describedby="name"
-                            placeholder="Masukkan nama anda" required>
+                            value="{{ auth()->user()->name }}" required>
                     </div>
 
                     <div class="mb-3">
                         <label for="address" class="form-label">Alamat</label>
                         <input type="text" class="form-control" id="address" name="address"
-                            placeholder="Masukkan alamat anda" required />
+                            value="{{ auth()->user()->address }}" required />
                     </div>
 
                     <div class="mb-3">
                         <label for="phone" class="form-label">Nomor Telepon</label>
                         <input type="text" class="form-control" id="phone" name="phone"
-                            placeholder="Contoh: 08123456789" required />
+                            value="{{ auth()->user()->phone }}" required />
                     </div>
 
                     <div class="mb-3">
@@ -47,9 +47,9 @@
                     <button type="submit" class="btn text-white px-3 py-1"
                         style="background-color: #0d6efd;">Lanjutkan</button>
                 </form>
-
             </div>
             <div class="col-12 col-md-4 d-flex flex-column gap-3">
+                <!-- Bagian metode pembayaran tetap sama -->
                 <div class="sidebar-box">
                     <h3>METODE PEMBAYARAN</h3>
                     <p>Kami menerima metode pembayaran aman berikut:</p>
@@ -94,29 +94,4 @@
             </div>
         </div>
     </div>
-
-    {{-- <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const paymentForm = document.getElementById('paymentForm');
-      const successModal = new bootstrap.Modal(document.getElementById('successModal'));
-      
-      paymentForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        
-        // Validasi form sebelum menampilkan modal
-        const alamat = document.getElementById('address').value;
-        
-        if (!alamat) {
-          alert('Silakan isi alamat terlebih dahulu');
-          return;
-        }
-        
-        // Tampilkan modal sukses
-        successModal.show();
-        
-        // Optional: Reset form setelah submit
-        // paymentForm.reset();
-      });
-    });
-  </script> --}}
 @endsection
