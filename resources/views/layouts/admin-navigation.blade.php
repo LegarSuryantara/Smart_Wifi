@@ -38,6 +38,12 @@
             <i class="fas fa-box-open"></i>
             <span>Pakets</span>
         </a>
+        
+        <a class="menu-item {{ request()->routeIs('devices.index') ? 'active' : '' }}" href="{{ route('devices.index') }}">
+            <i class="fas fa-phone"></i>
+            <span>Devices</span>
+        </a>
+
     </div>
 
     <!-- Footer Menu -->
