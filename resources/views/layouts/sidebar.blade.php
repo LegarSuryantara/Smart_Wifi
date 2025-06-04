@@ -26,6 +26,10 @@
                 href="{{ route('dashboard.dashboardPengguna') }}">
                 <i class="fas fa-user-circle"></i> Pengguna
             </a>
+            <a class="nav-link {{ request()->routeIs('dashboard.dashboardMonitring') ? 'active' : '' }}"
+                href="{{ route('dashboard.dashboardMonitring') }}">
+                <i class="fa-solid fa-signal"></i> Monitoring
+            </a>
 
         </div>
     </div>

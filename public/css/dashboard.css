@@ -624,3 +624,94 @@
       .dark .dashboard-admin-wrapper {
           background-color: #0f172a;
       }
+
+
+      /* Monitorin */
+
+     .chart-container {
+      position: relative;
+      height: 260px;
+      padding-left: 40px;
+    }
+
+    .y-axis {
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: #999;
+    }
+
+    .y-axis div {
+      text-align: right;
+    }
+
+    .chart-grid {
+      position: absolute;
+      top: 0;
+      left: 40px;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .chart-grid .line {
+      border-top: 1px solid #eee;
+      height: 1px;
+    }
+
+    .bar-chart {
+      position: relative;
+      height: 100%;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-around;
+      padding: 0 10px;
+      z-index: 1;
+      gap: 50px;
+    }
+
+    .bar-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .bar-pair {
+      display: flex;
+      gap: 4px;
+      align-items: flex-end;
+    }
+
+    .bar-uptime {
+      width: 12px;
+      background-color: #3b32f1;
+      border-radius: 6px 6px 0 0;
+    }
+
+    .bar-downtime {
+      width: 12px;
+      background-color: #cfcaf4;
+      border-radius: 6px 6px 0 0;
+    }
+
+    .month-label {
+      font-size: 0.75rem;
+      color: #555;
+    }
+
+    .bar-tooltip {
+      font-size: 0.7rem;
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
