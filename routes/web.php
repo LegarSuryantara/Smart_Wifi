@@ -83,30 +83,35 @@ Route::middleware(['auth', 'permission:admin-access', 'verified'])->group(functi
     
     // Kalau mau test UI,DLL taruh dibawah sini Routenya :
     
-    // Route::get('/dashboardHome', function(){
-    //     return view('UI_disini.dashboardHome');
-    // })->name('dashboard.dashboardHome');
-    // Route::get('/dashboardPakets', function(){
-    // return view('UI_disini.dashboardPakets');
-    // })->name('dashboard.dashboardPakets');
-    // Route::get('/tambahPaket', function(){
-    // return view('UI_disini.tambahPaket');
-    // })->name('dashboard.tambahPaket');
-    // Route::get('/editPaket', function(){
-    // return view('UI_disini.editPaket');
-    // })->name('dashboard.editPaket');
-    // Route::get('/dashboardPengguna', function(){
-    // return view('UI_disini.dashboardPengguna');
-    // })->name('dashboard.dashboardPengguna');
-    // Route::get('/dashboardCustomer', function(){
-    // return view('UI_disini.dashboardCustomers');
-    // })->name('dashboard.dashboardCustomer');
-    // Route::get('/dashboardTransaksi', function(){
-    // return view('UI_disini.dashboardTransaksi');
-    // })->name('dashboard.dashboardTransaksi');
+    Route::get('/dashboardHome', function(){
+        return view('UI_disini.dashboardHome');
+    })->name('dashboard.dashboardHome');
+    Route::get('/dashboardPakets', function(){
+    return view('UI_disini.dashboardPakets');
+    })->name('dashboard.dashboardPakets');
+    Route::get('/tambahPaket', function(){
+    return view('UI_disini.tambahPaket');
+    })->name('dashboard.tambahPaket');
+    Route::get('/editPaket', function(){
+    return view('UI_disini.editPaket');
+    })->name('dashboard.editPaket');
+    Route::get('/dashboardPengguna', function(){
+    return view('UI_disini.dashboardPengguna');
+    })->name('dashboard.dashboardPengguna');
+    Route::get('/dashboardCustomer', function(){
+    return view('UI_disini.dashboardCustomers');
+    })->name('dashboard.dashboardCustomer');
+    Route::get('/dashboardTransaksi', function(){
+    return view('UI_disini.dashboardTransaksi');
+    })->name('dashboard.dashboardTransaksi');
 
 
     // --------------------//
+    
+    Route::get('/dashboardMonitoring', function() {
+        return view('UI_disini.monitoring');
+    })->name('dashboard.dashboardMonitring');
+
 });
 
 // Route yang bisa diakses oleh semua user yang login (termasuk user biasa)
