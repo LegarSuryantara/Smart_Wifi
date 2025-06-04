@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->DATE('tanggal');
             $table->string('status');
-            $table->timestamps('uptime');
-            $table->timestamps('downtime');
+            $table->time('uptime');
+            $table->time('downtime');
             $table->string('keterangan');
             $table->timestamps();
         });
