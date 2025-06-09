@@ -25,7 +25,7 @@
         </a>
         
         <a class="menu-item {{ request()->routeIs('users.index') ? 'active' : '' }}" href="{{ route('users.index') }}">
-            <i class="fas fa-users"></i>
+            <i class="fas fa-user"></i>
             <span>Users</span>
         </a>
 
@@ -42,6 +42,11 @@
         <a class="menu-item {{ request()->routeIs('devices.index') ? 'active' : '' }}" href="{{ route('devices.index') }}">
             <i class="fas fa-phone"></i>
             <span>Devices</span>
+        </a>
+
+        <a class="menu-item {{ request()->routeIs('monitorings.index') ? 'active' : '' }}" href="{{ route('monitorings.index') }}">
+            <i class="fas fa-book"></i>
+            <span>Monitoring</span>
         </a>
 
     </div>

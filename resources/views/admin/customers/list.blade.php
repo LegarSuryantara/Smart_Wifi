@@ -55,10 +55,12 @@
                                 <tr>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">IP</th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Address</th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone</th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
                                 </tr>
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
@@ -68,10 +70,20 @@
                                             {{ ($customers->currentPage() - 1) * $customers->perPage() + $loop->iteration }}
                                         </td>
                                         <td class="px-6 py-4 text-sm font-medium text-gray-900">{{ $user->name }}</td>
+                                        <td class="px-6 py-4 text-sm text-gray-500">{{ $user->ip_address }}</td>
                                         <td class="px-6 py-4 text-sm text-gray-500">{{ $user->email }}</td>
                                         <td class="px-6 py-4 text-sm text-gray-500">{{ $user->address ?? '-' }}</td>
                                         <td class="px-6 py-4 text-sm text-gray-500">{{ $user->phone ?? '-' }}</td>
                                         <td class="px-6 py-4 text-sm text-gray-500">{{ $user->created_at->format('d/m/Y') }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
+                                            <div class="flex justify-center gap-4">
+                                                <a href="{{ route('users.edit', $user->id) }}" 
+                                                class="inline-flex items-center justify-center w-8 h-8 text-indigo-600 bg-indigo-50 rounded-full hover:bg-indigo-100 transition-colors"
+                                                title="Edit">
+                                                    <i class="fas fa-edit text-sm"></i>
+                                                </a>
+                                            </div>
+                                        </td>
                                     </tr>
                                 @empty
                                     <tr>

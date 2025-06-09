@@ -14,6 +14,7 @@ use App\Http\Controllers\{
     CustomerController,
     MessageController,
     DeviceController,
+    MonitoringController,
 
 };
 
@@ -81,37 +82,45 @@ Route::middleware(['auth', 'permission:admin-access', 'verified'])->group(functi
     Route::post('devices/disconnect', [DeviceController::class, 'disconnect'])->name('devices.disconnect');
 
     
-    // Kalau mau test UI,DLL taruh dibawah sini Routenya :
+    // Kalau mau test UI,DLL taruh didalam sini Routenya :
     
     Route::get('/dashboardHome', function(){
         return view('UI_disini.dashboardHome');
     })->name('dashboard.dashboardHome');
+
     Route::get('/dashboardPakets', function(){
-    return view('UI_disini.dashboardPakets');
+        return view('UI_disini.dashboardPakets');
     })->name('dashboard.dashboardPakets');
+
     Route::get('/tambahPaket', function(){
-    return view('UI_disini.tambahPaket');
+        return view('UI_disini.tambahPaket');
     })->name('dashboard.tambahPaket');
+
     Route::get('/editPaket', function(){
-    return view('UI_disini.editPaket');
+        return view('UI_disini.editPaket');
     })->name('dashboard.editPaket');
+
     Route::get('/dashboardPengguna', function(){
-    return view('UI_disini.dashboardPengguna');
+        return view('UI_disini.dashboardPengguna');
     })->name('dashboard.dashboardPengguna');
+
     Route::get('/dashboardCustomer', function(){
-    return view('UI_disini.dashboardCustomers');
+        return view('UI_disini.dashboardCustomers');
     })->name('dashboard.dashboardCustomer');
+
     Route::get('/dashboardTransaksi', function(){
-    return view('UI_disini.dashboardTransaksi');
+        return view('UI_disini.dashboardTransaksi');
     })->name('dashboard.dashboardTransaksi');
-
-
-    // --------------------//
     
     Route::get('/dashboardMonitoring', function() {
         return view('UI_disini.monitoring');
     })->name('dashboard.dashboardMonitring');
-
+    
+    // --------------------//
+    Route::get('/monitorings', [MonitoringController::class, 'index'])->name('monitorings.index');
+    Route::get('/monitorings/create', [MonitoringController::class, 'create'])->name('monitorings.create');
+    Route::post('/monitorings', [MonitoringController::class, 'store'])->name('monitorings.store');
+    
 });
 
 // Route yang bisa diakses oleh semua user yang login (termasuk user biasa)
@@ -133,17 +142,6 @@ Route::middleware('auth')->group(function () {
 
 
 
-});
-
-Route::get('send-wa',function(){
-    $response = Http::withHeaders([
-        'Authorization' => 'HAxiVJoJKhw9QDWU3UdA',
-    ])->post('https://api.fonnte.com/send',[
-        'target' => '08980925226',
-        'message' => "Wifi anda hampir mendekati waktu tenggat pembayaran 5/25/2025"
-    ]);
-
-    dd(json_decode($response,true));
 });
 
 require __DIR__.'/auth.php';
