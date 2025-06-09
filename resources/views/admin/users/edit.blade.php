@@ -25,6 +25,16 @@
                                 @enderror
                             </div>
 
+                            <!-- IP address Field -->
+                            <div>
+                                <label for="ip_address" class="block text-sm font-medium text-black dark:text-gray-300 mb-1">IP</label>
+                                <input value="{{ old('ip_address',$user->ip_address) }}" name="ip_address" placeholder="Enter Name" type="text" 
+                                    class="w-full md:w-1/2 h-10 text-sm text-black border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 transition px-3">
+                                @error('ip_address')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
                             <!-- Email Field -->
                             <div>
                                 <label for="email" class="block text-sm font-medium text-black dark:text-gray-300 mb-1">Email</label>

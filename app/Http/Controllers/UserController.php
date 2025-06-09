@@ -81,10 +81,11 @@ class UserController extends Controller
         $user->phone = $request->phone;
         $user->address = $request->address;
         $user->password = Hash::make($request->password);
+        $user->ip_address = '0.0.0.0';
         $user->save();
 
         $user->syncRoles($request->role);
-        return redirect()->route('users.index')->with('success', 'User  added successfully');
+        return redirect()->route('users.index')->with('success', 'User added successfully');
     }
 
     /**
@@ -111,6 +112,7 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:3',
+            'ip_address' => 'nullable|ip',
             'email' => 'required|email|unique:users,email,' . $id . ',id',
             'phone' => 'required|unique:users,phone,' . $id,
             'address' => 'nullable|string',
@@ -124,10 +126,11 @@ class UserController extends Controller
         $user->email = $request->email;
         $user->phone = $request->phone;
         $user->address = $request->address;
+        $user->ip_address = $request->ip_address;
         $user->save();
 
         $user->syncRoles($request->role);
-        return redirect()->route('users.index')->with('success', 'User  updated successfully');
+        return redirect()->route('users.index')->with('success', 'User updated successfully');
     }
 
     /**
