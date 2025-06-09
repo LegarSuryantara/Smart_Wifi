@@ -27,7 +27,7 @@
 
                 <!-- Chart Area -->
                 <div class="chart-container mb-4" style="padding: 0 5px;">
-                    <canvas id="networkChart" height="150" style="width: 100%;"></canvas>
+                    <canvas id="networkChart" height="250px" style="width: 100%;"></canvas>
                 </div>
                 <!-- CDN Chart.js -->
                 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

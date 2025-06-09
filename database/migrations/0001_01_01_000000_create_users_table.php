@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->ipAddress('ip_address')->nullable()->default(null);
+            $table->string('ip_address')->default('0.0.0.0');
             $table->string('email')->unique();
             $table->string('profile_photo')->nullable();
             $table->string('phone', 15)->unique();
