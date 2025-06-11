@@ -26,11 +26,19 @@ class PaketController extends Controller implements HasMiddleware
     {
         /// Ambil parameter pencarian
         $search = $request->input('search');
+        
         $sort = $request->input('sort', 'newest');
 
     // Query dengan Eloquent
         $pakets = Pakets::query()
-            ->when($search, fn ($query) => $query->where('nama_paket', 'like', "%{$search}%"))
+            ->when($search, function ($query) use ($search) {
+                // Validasi sederhana agar search hanya huruf, angka, spasi, dan strip
+                if (preg_match('/^[a-zA-Z0-9\s\-]+$/', $search)) {
+                    return $query->where('nama_paket', 'like', "%{$search}%");
+                }
+                // Jika tidak valid, abaikan filter search
+                return $query;
+            })
             ->when($sort === 'oldest', fn ($query) => $query->oldest())
             ->when($sort === 'name_asc', fn ($query) => $query->orderBy('nama_paket', 'asc'))
             ->when($sort === 'name_desc', fn ($query) => $query->orderBy('nama_paket', 'desc'))
@@ -59,6 +67,8 @@ class PaketController extends Controller implements HasMiddleware
      */
     public function store(Request $request)
     {
+        // Validasi input
+
         $request->validate([
             'nama_paket' => 'required|string|max:255',
             'kategori' => 'required|string|max:255',
