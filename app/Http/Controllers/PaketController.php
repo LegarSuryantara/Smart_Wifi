@@ -24,37 +24,26 @@ class PaketController extends Controller implements HasMiddleware
      */
     public function index(Request $request)
     {
-        // Ambil parameter pencarian
+        /// Ambil parameter pencarian
         $search = $request->input('search');
         
-        // Query dasar
-        $query = Pakets::query();
-        
-        // Filter pencarian
-        if ($search) {
-            $query->where('nama_paket', 'like', '%'.$search.'%');
-        }
-        
-        // Filter urutan
         $sort = $request->input('sort', 'newest');
-        
-        switch ($sort) {
-            case 'oldest':
-                $query->oldest();
-                break;
-            case 'name_asc':
-                $query->orderBy('nama_paket', 'asc');
-                break;
-            case 'name_desc':
-                $query->orderBy('nama_paket', 'desc');
-                break;
-            default: // newest
-                $query->latest();
-                break;
-        }
-        
-        // Paginasi hasil
-        $pakets = $query->paginate(10);
+
+    // Query dengan Eloquent
+        $pakets = Pakets::query()
+            ->when($search, function ($query) use ($search) {
+                // Validasi sederhana agar search hanya huruf, angka, spasi, dan strip
+                if (preg_match('/^[a-zA-Z0-9\s\-]+$/', $search)) {
+                    return $query->where('nama_paket', 'like', "%{$search}%");
+                }
+                // Jika tidak valid, abaikan filter search
+                return $query;
+            })
+            ->when($sort === 'oldest', fn ($query) => $query->oldest())
+            ->when($sort === 'name_asc', fn ($query) => $query->orderBy('nama_paket', 'asc'))
+            ->when($sort === 'name_desc', fn ($query) => $query->orderBy('nama_paket', 'desc'))
+            ->when($sort === 'newest', fn ($query) => $query->latest())
+            ->paginate(10);
         
         return view('admin.pakets.list', compact('pakets'));
     }
@@ -78,6 +67,8 @@ class PaketController extends Controller implements HasMiddleware
      */
     public function store(Request $request)
     {
+        // Validasi input
+
         $request->validate([
             'nama_paket' => 'required|string|max:255',
             'kategori' => 'required|string|max:255',
