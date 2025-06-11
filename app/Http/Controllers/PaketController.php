@@ -24,37 +24,18 @@ class PaketController extends Controller implements HasMiddleware
      */
     public function index(Request $request)
     {
-        // Ambil parameter pencarian
+        /// Ambil parameter pencarian
         $search = $request->input('search');
-        
-        // Query dasar
-        $query = Pakets::query();
-        
-        // Filter pencarian
-        if ($search) {
-            $query->where('nama_paket', 'like', '%'.$search.'%');
-        }
-        
-        // Filter urutan
         $sort = $request->input('sort', 'newest');
-        
-        switch ($sort) {
-            case 'oldest':
-                $query->oldest();
-                break;
-            case 'name_asc':
-                $query->orderBy('nama_paket', 'asc');
-                break;
-            case 'name_desc':
-                $query->orderBy('nama_paket', 'desc');
-                break;
-            default: // newest
-                $query->latest();
-                break;
-        }
-        
-        // Paginasi hasil
-        $pakets = $query->paginate(10);
+
+    // Query dengan Eloquent
+        $pakets = Pakets::query()
+            ->when($search, fn ($query) => $query->where('nama_paket', 'like', "%{$search}%"))
+            ->when($sort === 'oldest', fn ($query) => $query->oldest())
+            ->when($sort === 'name_asc', fn ($query) => $query->orderBy('nama_paket', 'asc'))
+            ->when($sort === 'name_desc', fn ($query) => $query->orderBy('nama_paket', 'desc'))
+            ->when($sort === 'newest', fn ($query) => $query->latest())
+            ->paginate(10);
         
         return view('admin.pakets.list', compact('pakets'));
     }
