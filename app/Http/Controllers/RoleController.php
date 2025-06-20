@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class RoleController extends Controller implements HasMiddleware
 {
@@ -16,8 +16,8 @@ class RoleController extends Controller implements HasMiddleware
     {
         return [
             new Middleware('permission:view roles', only: ['index']),
-            new Middleware('permission:edit roles', only: ['edit']),
-            new Middleware('permission:create roles', only: ['create']),
+            new Middleware('permission:edit roles', only: ['edit', 'update']),
+            new Middleware('permission:create roles', only: ['create', 'store']),
             new Middleware('permission:delete roles', only: ['destroy']),
         ];
     }
@@ -27,30 +27,29 @@ class RoleController extends Controller implements HasMiddleware
      */
     public function index(Request $request)
     {
-        $search = $request->query('search');
-        $sort = $request->query('sort', 'newest');
-        
+        $validated = $request->validate([
+            'search' => 'nullable|string|max:100|regex:/^[\w\s\-]+$/',
+            'sort' => 'nullable|in:newest,oldest,name_asc,name_desc'
+        ]);
+
         $roles = Role::with('permissions')
-            ->when($search, function ($query) use ($search) {
-                $query->where('name', 'like', '%'.$search.'%');
+            ->when($validated['search'] ?? null, function ($query, $search) {
+                $query->where('name', 'like', '%'.addslashes($search).'%');
             })
-            ->when($sort, function ($query) use ($sort) {
+            ->when($validated['sort'] ?? 'name_asc', function ($query, $sort) {
                 switch ($sort) {
-                    case 'oldest':
-                        return $query->oldest();
-                    case 'name_asc':
-                        return $query->orderBy('name', 'asc');
-                    case 'name_desc':
-                        return $query->orderBy('name', 'desc');
-                    default: // newest
-                        return $query->latest();
+                    case 'newest': return $query->latest();
+                    case 'oldest': return $query->oldest();
+                    case 'name_desc': return $query->orderByDesc('name');
+                    default: return $query->orderBy('name');
                 }
             })
             ->paginate(10)
             ->withQueryString();
-        
+
         return view('admin.roles.list', [
-            'roles' => $roles
+            'roles' => $roles,
+            'filters' => $validated
         ]);
     }
 
@@ -59,9 +58,8 @@ class RoleController extends Controller implements HasMiddleware
      */
     public function create()
     {
-        $permissions = Permission::orderBy('name','ASC')->get();
         return view('admin.roles.create', [
-            'permissions' => $permissions
+            'permissions' => Permission::orderBy('name')->get()
         ]);
     }
 
@@ -71,45 +69,42 @@ class RoleController extends Controller implements HasMiddleware
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|unique:roles|min:3',
-            'permissions' => 'nullable|array',
-            'permissions.*' => 'exists:permissions,id'
+            'name' => [
+                'required',
+                'string',
+                'min:3',
+                'max:255',
+                'unique:roles,name',
+                'regex:/^[\w\s\-]+$/'
+            ],
+            'permission' => 'nullable|array',
+            'permission.*' => [
+                'string',
+                Rule::exists('permissions', 'name')
+            ]
         ]);
 
-        if ($validator->passes()) {
-            try {
-                DB::beginTransaction();
-                
-                $role = Role::create(['name' => $request->name]);
-
-                if (!empty($request->permissions)) {
-                    $role->syncPermissions($request->permissions);
-                }
-                
-                DB::commit();
-                
-                return redirect()->route('roles.index')->with('success', 'Role added successfully.');
-                
-            } catch (\Exception $e) {
-                DB::rollBack();
-                return redirect()->route('roles.create')
-                    ->withInput()
-                    ->with('error', 'Failed to create role: '.$e->getMessage());
-            }
-        } else {
+        if ($validator->fails()) {
             return redirect()->route('roles.create')
                 ->withInput()
                 ->withErrors($validator);
         }
-    }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        $role = Role::findOrFail($id);
-        return view('admin.roles.show', compact('role'));
+        try {
+            $role = Role::create(['name' => $request->name]);
+            
+            if (!empty($request->permission)) {
+                $role->syncPermissions($request->permission);
+            }
+
+            return redirect()->route('roles.index')
+                ->with('success', 'Role created successfully.');
+                
+        } catch (\Exception $e) {
+            return redirect()->route('roles.create')
+                ->withInput()
+                ->with('error', 'Failed to create role: '.$e->getMessage());
+        }
     }
 
     /**
@@ -118,56 +113,56 @@ class RoleController extends Controller implements HasMiddleware
     public function edit($id)
     {
         $role = Role::findOrFail($id);
-        $hasPermissions = $role->permissions->pluck('name')->toArray();
-        $permissions = Permission::orderBy('name','ASC')->get();
-
+        
         return view('admin.roles.edit', [
-            'permissions' => $permissions,
-            'hasPermissions' => $hasPermissions,
-            'role' => $role
+            'role' => $role,
+            'permissions' => Permission::orderBy('name')->get(),
+            'hasPermissions' => $role->permissions->pluck('name')
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
         $role = Role::findOrFail($id);
         
         $validator = Validator::make($request->all(), [
-            'name' => 'required|unique:roles,name,'.$id.',id|min:3',
-            'permissions' => 'nullable|array',
-            'permissions.*' => 'exists:permissions,id'
+            'name' => [
+                'required',
+                'string',
+                'min:3',
+                'max:255',
+                Rule::unique('roles', 'name')->ignore($id),
+                'regex:/^[\w\s\-]+$/'
+            ],
+            'permission' => 'nullable|array',
+            'permission.*' => [
+                'string',
+                Rule::exists('permissions', 'name')
+            ]
         ]);
 
-        if ($validator->passes()) {
-            try {
-                DB::beginTransaction();
-                
-                $role->name = $request->name;
-                $role->save();
-
-                if (!empty($request->permissions)) {
-                    $role->syncPermissions($request->permissions);
-                } else {
-                    $role->syncPermissions([]);
-                }
-                
-                DB::commit();
-                
-                return redirect()->route('roles.index')->with('success', 'Role updated successfully.');
-                
-            } catch (\Exception $e) {
-                DB::rollBack();
-                return redirect()->route('roles.edit', $id)
-                    ->withInput()
-                    ->with('error', 'Failed to update role: '.$e->getMessage());
-            }
-        } else {
+        if ($validator->fails()) {
             return redirect()->route('roles.edit', $id)
                 ->withInput()
                 ->withErrors($validator);
+        }
+
+        try {
+            $role->name = $request->name;
+            $role->save();
+            
+            $role->syncPermissions($request->permission ?? []);
+
+            return redirect()->route('roles.index')
+                ->with('success', 'Role updated successfully.');
+                
+        } catch (\Exception $e) {
+            return redirect()->route('roles.edit', $id)
+                ->withInput()
+                ->with('error', 'Failed to update role: '.$e->getMessage());
         }
     }
 
@@ -179,25 +174,24 @@ class RoleController extends Controller implements HasMiddleware
         $request->validate([
             'id' => 'required|exists:roles,id'
         ]);
-        
+
         try {
             $role = Role::findOrFail($request->id);
             
-            // Prevent deletion of admin role or roles with users
             if ($role->name === 'admin') {
                 return response()->json([
                     'status' => false,
                     'message' => 'Cannot delete admin role.'
                 ], 403);
             }
-            
+
             if ($role->users()->exists()) {
                 return response()->json([
                     'status' => false,
                     'message' => 'Cannot delete role with assigned users.'
                 ], 403);
             }
-            
+
             $role->delete();
             
             return response()->json([
