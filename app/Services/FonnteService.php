@@ -4,8 +4,10 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class FonnteService
+class FonnteService implements HasMiddleware
 {
     protected $account_token;
 
@@ -20,6 +22,13 @@ class FonnteService
         'disconnect'    => 'https://api.fonnte.com/disconnect',
 
     ];
+
+    public static function middleware()
+    {
+        return [
+            new Middleware('permission:fonnte-service'),
+        ];
+    }
 
     public function __construct()
     {

@@ -6,44 +6,53 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Role;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Hash;
 
-class UserController extends Controller
+class UserController extends Controller implements HasMiddleware
 {
+    public static function middleware()
+    {
+        return [
+            new Middleware('permission:view users', only: ['index']),
+            new Middleware('permission:edit users', only: ['edit']),
+            new Middleware('permission:create users', only: ['create']),
+            new Middleware('permission:delete users', only: ['destroy']),
+        ];
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        $query = User::query();
+        $validated = $request->validate([
+            'search' => 'nullable|string|max:100',
+            'role' => 'nullable|exists:roles,id',
+            'sort' => 'nullable|in:name_asc,name_desc,newest,oldest'
+        ]);
 
-        // Search functionality
-        if ($request->filled('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%')
-                  ->orWhere('email', 'like', '%' . $request->search . '%');
-        }
+        $users = User::with('roles')
+            ->when($validated['search'] ?? null, function($query, $search) {
+                $query->where(function($q) use ($search) {
+                    $q->where('name', 'like', '%'.$search.'%')
+                    ->orWhere('email', 'like', '%'.$search.'%')
+                    ->orWhere('phone', 'like', '%'.$search.'%');
+                });
+            })
+            ->when($validated['role'] ?? null, function($query, $role) {
+                $query->whereHas('roles', fn($q) => $q->where('id', $role));
+            })
+            ->orderBy($validated['sort'] ?? 'created_at', 
+                    str_contains($validated['sort'] ?? '', 'name_') ? 'asc' : 'desc')
+            ->paginate(10);
 
-        // Sorting functionality
-        if ($request->filled('sort')) {
-            switch ($request->sort) {
-                case 'newest':
-                    $query->orderBy('created_at', 'desc');
-                    break;
-                case 'oldest':
-                    $query->orderBy('created_at', 'asc');
-                    break;
-                case 'name_asc':
-                    $query->orderBy('name', 'asc');
-                    break;
-                case 'name_desc':
-                    $query->orderBy('name', 'desc');
-                    break;
-            }
-        }
-
-        $users = $query->paginate(10);
-
-        return view('admin.users.list', compact('users'));
+        return view('admin.users.list', [
+            'users' => $users,
+            'roles' => Role::orderBy('name')->get(),
+            'filters' => $validated
+        ]);
     }
 
     /**
@@ -51,7 +60,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        $roles = Role::orderBy('name', 'ASC')->get();
+        $roles = Role::orderBy('name','ASC')->get();
         return view('admin.users.create', [
             'roles' => $roles,
         ]);
@@ -66,13 +75,13 @@ class UserController extends Controller
             'name' => 'required|min:3',
             'email' => 'required|email|unique:users,email',
             'phone' => 'required|unique:users,phone',
-            'address' => 'nullable|string',
+            'address' => 'nullable',
             'password' => 'required|min:5|same:confirm_password',
             'confirm_password' => 'required'
         ]);
 
         if ($validator->fails()) {
-            return redirect()->route('users.create')->withInput()->withErrors($validator);
+            return redirect()->route('users.create')->withInput()->withErrors($validator); 
         }
 
         $user = new User();
@@ -81,7 +90,6 @@ class UserController extends Controller
         $user->phone = $request->phone;
         $user->address = $request->address;
         $user->password = Hash::make($request->password);
-        $user->ip_address = '0.0.0.0';
         $user->save();
 
         $user->syncRoles($request->role);
@@ -94,7 +102,7 @@ class UserController extends Controller
     public function edit(string $id)
     {
         $user = User::findOrFail($id);
-        $roles = Role::orderBy('name', 'ASC')->get();
+        $roles = Role::orderBy('name','ASC')->get();
         $hasRoles = $user->roles->pluck('id');
 
         return view('admin.users.edit', [
@@ -112,21 +120,19 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $validator = Validator::make($request->all(), [
             'name' => 'required|min:3',
-            'ip_address' => 'nullable|ip',
-            'email' => 'required|email|unique:users,email,' . $id . ',id',
-            'phone' => 'required|unique:users,phone,' . $id,
-            'address' => 'nullable|string',
+            'email' => 'required|email|unique:users,email,'.$id.',id',
+            'phone' => 'required|unique:users,phone,'.$id,
+            'address' => 'nullable',
         ]);
 
         if ($validator->fails()) {
-            return redirect()->route('users.edit', $id)->withInput()->withErrors($validator);
+            return redirect()->route('users.edit', $id)->withInput()->withErrors($validator); 
         }
 
         $user->name = $request->name;
         $user->email = $request->email;
         $user->phone = $request->phone;
         $user->address = $request->address;
-        $user->ip_address = $request->ip_address;
         $user->save();
 
         $user->syncRoles($request->role);
@@ -143,15 +149,15 @@ class UserController extends Controller
         if (!$user) {
             return response()->json([
                 'status' => false,
-                'message' => 'User  not found',
+                'message' => 'User not found'
             ]);
         }
 
         $user->delete();
-
+        
         return response()->json([
             'status' => true,
-            'message' => 'User  deleted successfully',
+            'message' => 'User deleted successfully'
         ]);
     }
 }

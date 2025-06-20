@@ -5,24 +5,38 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Pest\ArchPresets\Custom;
-use App\Models\Customer;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class CustomerController extends Controller
+class CustomerController extends Controller implements HasMiddleware
 {
+    public static function middleware()
+    {
+        return [
+            new Middleware('permission:view users', only: ['index']),
+        ];
+    }
 
+    /**
+     * Export customers to PDF
+     */
     public function exportPdf()
     {
-        // Fetch all customers from the database
-        $customers = User::whereHas('roles', function($q) {
-            $q->where('name', 'user');
-        })->get();
+        try {
+            $customers = User::whereHas('roles', function($q) {
+                $q->where('name', 'user');
+            })->get();
 
-        // Load the view and pass the customers data
-        $pdf = Pdf::loadView('admin.customers.pdf', compact('customers'));
+            $pdf = Pdf::loadView('admin.customers.pdf', [
+                'customers' => $customers
+            ]);
 
-        // Download the PDF file
-        return $pdf->stream('customer-list.pdf');
+            return $pdf->stream('customer-list-'.date('Ymd-His').'.pdf');
+            
+        } catch (\Exception $e) {
+            return redirect()->route('customers.index')
+                ->with('error', 'Failed to generate PDF: '.$e->getMessage());
+        }
     }
 
     /**
@@ -30,13 +44,18 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
+        $validated = $request->validate([
+            'search' => 'nullable|string|max:100|regex:/^[\p{L}\p{N}\s\-@.]+$/u',
+            'sort' => 'nullable|in:newest,oldest,name_asc,name_desc'
+        ]);
+
         $query = User::whereHas('roles', function($q) {
             $q->where('name', 'user');
         });
 
-        // Add search functionality
-        if ($request->has('search')) {
-            $search = $request->input('search');
+        // Search functionality
+        if (!empty($validated['search'])) {
+            $search = addslashes($validated['search']);
             $query->where(function($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
                   ->orWhere('email', 'like', "%{$search}%")
@@ -45,24 +64,27 @@ class CustomerController extends Controller
             });
         }
 
-        // Add sorting functionality
-        switch ($request->input('sort', 'newest')) {
+        // Sorting functionality
+        switch ($validated['sort'] ?? 'newest') {
             case 'oldest':
-                $query->orderBy('created_at', 'asc');
+                $query->oldest();
                 break;
             case 'name_asc':
-                $query->orderBy('name', 'asc');
+                $query->orderBy('name');
                 break;
             case 'name_desc':
-                $query->orderBy('name', 'desc');
+                $query->orderByDesc('name');
                 break;
             default:
-                $query->orderBy('created_at', 'desc');
+                $query->latest();
         }
 
         $customers = $query->paginate(10);
 
-        return view('admin.customers.list', compact('customers'));
+        return view('admin.customers.list', [
+            'customers' => $customers,
+            'filters' => $validated
+        ]);
     }
 
     /**
@@ -70,7 +92,7 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        //
+        // Implementation if needed
     }
 
     /**
@@ -78,7 +100,7 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Implementation if needed
     }
 
     /**
@@ -86,7 +108,7 @@ class CustomerController extends Controller
      */
     public function show(string $id)
     {
-        //
+        // Implementation if needed
     }
 
     /**
@@ -94,7 +116,7 @@ class CustomerController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        // Implementation if needed
     }
 
     /**
@@ -102,7 +124,7 @@ class CustomerController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        // Implementation if needed
     }
 
     /**
@@ -110,6 +132,6 @@ class CustomerController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        // Implementation if needed
     }
 }

@@ -13,12 +13,12 @@ class UserDashboardController extends Controller implements HasMiddleware
      * Display a listing of the resource.
      */
 
-     public static function middleware()
-     {
+    public static function middleware()
+    {
          return[
             new Middleware('permission:user-access', only: ['index']),
          ];
-     }
+    }
     public function index()
     {
         $pakets = Pakets::all();
