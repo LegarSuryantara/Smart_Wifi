@@ -18,13 +18,12 @@ class MonitoringController extends Controller
                 SUM(TIME_TO_SEC(uptime)) as total_uptime_seconds, 
                 SUM(TIME_TO_SEC(downtime)) as total_downtime_seconds
             ")
-            ->whereYear('tanggal', now()->year) // Filter: hanya data tahun ini
+            ->whereYear('tanggal', now()->year)
             ->groupBy('year', 'month')
             ->orderBy('year')
             ->orderBy('month')
             ->get();
 
-        // Siapkan data chart untuk JavaScript
         $chartLabels = [];
         $uptimeData = [];
         $downtimeData = [];
