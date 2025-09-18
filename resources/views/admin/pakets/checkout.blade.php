@@ -3,10 +3,10 @@
 @section('title', 'Checkout')
 
 @section('content')
-    <div class="container py-4">
+    <div class="container py-4 mt-4">
         <div class="row gx-4 gy-4">
             <div class="col-12 col-md-8 bg-white p-4 shadow-sm">
-                <h2 class="fw-semibold mb-4" style="font-size:13px;">Detail</h2>
+                <h4 class="fw-semibold mb-4" >Detail Pesanan</h4>
                 <table>
                     <tr>
                         <td>Nama</td>

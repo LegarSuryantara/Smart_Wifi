@@ -1,24 +1,205 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 body {
     font-family: "Poppins", sans-serif;
+    overflow-x: hidden; /* Mencegah scroll horizontal karena animasi */
 }
 
 .hero-section {
-    background-image: url(../image/Herosectionbackground.png);
+    background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url(../image/Herosectionbackground.png);
     background-repeat: no-repeat;
+    backdrop-filter: brightness(1);
     background-size: cover;
-    padding: 50px 0;
+    margin-top: 50px;
+    position: relative;
+    color: #333;
+    padding: 80px 0;
+    height: 50vh;
+    overflow: hidden; /* Penting untuk menampung animasi card */
+    min-height: 550px;
+    display: flex;
+    align-items: center;
 }
 
-.hero-section img {
-    height: 300px;
-    width: 200px;
+.hero-content {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    padding: 20px 0;
 }
 
-.hero-section h2 {
-    font-size: 1.25rem;
+.hero-content h2 {
+    font-size: 1rem;
+    font-weight: 400;
+    margin-bottom: 10px;
+    color: #ffffff;
+}
+
+.hero-content h1 {
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 20px;
+    color: #ffffff;
+}
+
+.hero-image-model {
+    position: absolute;
+    bottom: 0;
+    left: -100px;
+    z-index: 1;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+}
+
+.hero-image-model img {
+    height: 100%;
+    width: auto;
+    object-fit: contain;
+    transform: scaleX(-1);
+    max-height: 550px;
+}
+
+/* --- Card Fitur Animasi --- */
+.animated-cards-container {
+    position: absolute;
+    bottom: 50px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    z-index: 3;
+}
+
+.animated-card-wrapper {
+    display: inline-block;
+    animation: slideCards 40s linear infinite;
+}
+
+.feature-card {
+    display: inline-flex;
+    align-items: center;
+    background-color: white;
+    border-radius: 50px;
+    padding: 10px 25px;
+    margin: 0 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    color: #333;
+    font-size: 0.95rem;
+    height: 60px;
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+}
+
+.feature-card i {
+    font-size: 1.5rem;
+    margin-right: 15px;
+    color: #007bff;
+}
+
+.feature-card .text-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.feature-card .title {
     font-weight: bold;
+    margin-bottom: 2px;
 }
+
+.feature-card .description {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+@keyframes slideCards {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-50%); }
+}
+
+@media (max-width: 768px) {
+
+    .hero-section {
+        height: 100vh;
+        background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(../image/Herosectionbackground.png);
+        background-position: 17% center;
+        
+        
+        
+    }
+    .navbar-collapse .navbar-nav .nav-item {
+        
+        text-align: center;
+    }
+
+   
+    .navbar-collapse .d-flex {
+        margin-top: 1rem; 
+        flex-direction: column; 
+        align-items: center; 
+        gap: 0.5rem; 
+    }
+
+    .navbar-collapse .d-flex .btn {
+       
+        width: 75%;
+    }
+
+    .navbar-collapse .dropdown-menu {
+       
+        text-align: center;
+        border: none; 
+    }
+  .hero-content h1 {
+    font-size: 1.5rem;
+  
+
+  }
+}
+/* --- Responsive untuk Hero Section --- */
+@media (min-width: 991.98px) {
+
+  
+    .hero-section {
+        padding: 60px 0 120px;
+        min-height: auto;
+    }
+    .hero-content h1 {
+        font-size: 2.5rem;
+    }
+    .hero-image-model {
+        position: relative;
+        left: 0;
+        bottom: auto;
+        width: 80%;
+        margin: 20px auto 0 auto;
+        height: auto;
+    }
+    .hero-image-model img {
+        height: auto;
+        max-height: 300px;
+        transform: scaleX(1);
+    }
+    .animated-cards-container {
+        bottom: 10px;
+        height: 100px;
+    }
+    .feature-card {
+        padding: 8px 15px;
+        margin: 0 8px;
+        height: 50px;
+        font-size: 0.8rem;
+    }
+    .feature-card i {
+        font-size: 1.2rem;
+        margin-right: 10px;
+    }
+}
+/* --- AKHIR DARI HERO SECTION --- */
+
 
 .hero-section p {
     font-size: 1rem;
@@ -78,6 +259,7 @@ iframe {
     border-radius: 15px;
 }
 
+/* --- Login & Profile --- */
 .login-container {
     max-width: 900px;
     margin: auto;
@@ -194,6 +376,7 @@ iframe {
     background-size: cover;
 }
 
+
 .profile-card {
     max-width: 1000px;
     margin: auto;
@@ -266,6 +449,7 @@ iframe {
 
 /* detail pakets css */
 
+/* --- Detail Paket CSS --- */
 .paket-ekonomi {
     background-color: #d0f9d9;
     border-radius: 0.375rem;
@@ -276,6 +460,7 @@ iframe {
     justify-content: space-between;
     gap: 1rem;
 }
+
 
 .paket-ekonomi>div>p:first-child {
     font-size: 0.75rem;
@@ -290,6 +475,7 @@ iframe {
     color: #1a9aff;
     margin-bottom: 0;
 }
+
 
 .desc-paket i {
     color: #4a4a4a;
@@ -310,6 +496,7 @@ iframe {
 .desc-paket ul li {
     margin-bottom: 0.25rem;
 }
+
 
 .purchase-box {
     border: 1px solid #d1d5db;
@@ -361,6 +548,7 @@ iframe {
     border: none;
     border-radius: 0.375rem;
 }
+
 
 .recommendation i {
     color: #4a4a4a;
@@ -458,8 +646,7 @@ iframe {
     }
 }
 
-
-/* halaman pembayaran css */
+/* --- Halaman Pembayaran CSS --- */
 
 .custom-select {
     appearance: none;
@@ -490,7 +677,7 @@ iframe {
     padding: 1rem;
     box-shadow: 0 0.125rem 0.25rem rgb(0 0 0 / 0.075);
 }
-
+  
 .sidebar-box h3 {
     font-weight: 600;
     font-size: 13px;
@@ -518,7 +705,7 @@ iframe {
 .form-label {
     font-size: 11px;
 }
-
 .form-control {
     font-size: 11px;
 }
+
