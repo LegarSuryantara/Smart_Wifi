@@ -1,0 +1,121 @@
+@extends('layouts.app_1')
+
+@section('title', 'Detail Paket')
+
+@section('content')
+<div class="container py-4">
+    <h1 class="fw-bold fs-6 mb-3">Pembayaran Paket Internet</h1>
+
+    <!-- Paket yang dipilih -->
+    <div class="paket-ekonomi">
+        <div class="d-flex flex-wrap align-items-center gap-4 flex-grow-1">
+            <div>
+                <p>Nama Paket</p>
+                <p>{{ $paket->nama_paket }}</p>
+            </div>
+            <div>
+                <p>Kecepatan Internet</p>
+                <p>{{ $paket->kecepatan }}</p>
+            </div>
+            <div>
+                <p>Harga bulanan</p>
+                <p>Rp {{ number_format($paket->harga, 0, ',', '.') }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Pembayaran -->
+    <div class="d-flex flex-column flex-sm-row justify-content-between gap-4 mt-4">
+        <div class="flex-grow-1" style="font-size: 0.75rem; color: #4a4a4a;">
+            <form action="{{ route('pakets.checkout') }}" method="POST" class="w-100">
+                @csrf
+                <!-- Sembunyikan data user sebagai input hidden -->
+                <input type="hidden" name="paket_id" value="{{ $paket->id }}">
+                <input type="hidden" name="name" value="{{ auth()->user()->name }}">
+                <input type="hidden" name="address" value="{{ auth()->user()->address }}">
+                <input type="hidden" name="phone" value="{{ auth()->user()->phone }}">
+
+                <!-- Tampilkan data user -->
+                <div class="mb-3">
+                    <label class="form-label">Nama</label>
+                    <div class="form-control bg-light">{{ auth()->user()->name }}</div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Alamat</label>
+                    <div class="form-control bg-light">{{ auth()->user()->address }}</div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Nomor Telepon</label>
+                    <div class="form-control bg-light">{{ auth()->user()->phone }}</div>
+                </div>
+
+                    <div class="mb-3">
+                        <label for="qty" class="form-label">Jumlah Bulan</label>
+                        <div class="d-flex align-items-center gap-2">
+                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="decrementQty()">-</button>
+                            <input type="number" class="form-control text-center" id="qty" name="qty" 
+                                value="1" min="1" style="width: 60px; -moz-appearance: textfield;" required readonly onkeydown="return false">
+                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="incrementQty()">+</button>
+                        </div>
+                    </div>
+
+                <div class="subtotal mb-3">
+                    <span>Total Pembayaran</span>
+                    <span id="totalAmount">Rp {{ number_format($paket->harga, 0, ',', '.') }}</span>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Lanjutkan Pembayaran</button>
+            </form>
+        </div>
+
+        <!-- Metode Pembayaran -->
+        <div class="purchase-box" style="max-width: 300px;">
+            <div class="mb-3">
+                <h3>METODE PEMBAYARAN</h3>
+                <p>Kami menerima metode pembayaran aman berikut:</p>
+                <div class="d-flex gap-2 mb-3">
+                    <img src="{{ asset('image/danalogo.png') }}" alt="Dana" height="30">
+                    <img src="{{ asset('image/qrislogo.jpg') }}" alt="QRIS" height="30">
+                    <img src="{{ asset('image/bnilogo.jpg') }}" alt="BNI" height="30">
+                </div>
+            </div>
+
+            <div>
+                <h3>METODE PEMBAYARAN OFFLINE</h3>
+                <p>Anda dapat melakukan pembayaran secara langsung</p>
+                <button type="button" class="btn btn-outline-secondary w-100">
+                    <img src="https://storage.googleapis.com/a1aa/image/ba986f73-56d2-4f98-2d82-92fa6f83e58c.jpg" 
+                         alt="Offline payment" height="25">
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function incrementQty() {
+        const qtyInput = document.getElementById('qty');
+        qtyInput.value = parseInt(qtyInput.value) + 1;
+        updateTotal();
+    }
+
+    function decrementQty() {
+        const qtyInput = document.getElementById('qty');
+        if (qtyInput.value > 1) {
+            qtyInput.value = parseInt(qtyInput.value) - 1;
+            updateTotal();
+        }
+    }
+
+    function updateTotal() {
+        const qty = document.getElementById('qty').value;
+        const price = {{ $paket->harga }};
+        const total = qty * price;
+        document.getElementById('totalAmount').textContent = 'Rp ' + total.toLocaleString('id-ID');
+    }
+
+    document.getElementById('qty').addEventListener('change', updateTotal);
+</script>
+@endsection

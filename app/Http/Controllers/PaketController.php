@@ -100,17 +100,24 @@ class PaketController extends Controller implements HasMiddleware
     /**
      * Menampilkan detail paket.
      */
-    public function show($id)
-    {
-        $paket = Pakets::findOrFail($id);
-        return view('admin.pakets.show', compact('paket'));
-    }
 
-    public function pembayaran($id)
+         public function show($id)
     {
         $paket = Pakets::findOrFail($id);
         return view('admin.pakets.pembayaran', compact('paket'));
     }
+
+    // public function show($id)
+    // {
+    //     $paket = Pakets::findOrFail($id);
+    //     return view('admin.pakets.show', compact('paket'));
+    // }
+
+    // public function pembayaran($id)
+    // {
+    //     $paket = Pakets::findOrFail($id);
+    //     return view('admin.pakets.pembayaran', compact('paket'));
+    // }
     
     /**
      * Menampilkan form edit paket.
