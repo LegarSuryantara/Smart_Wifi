@@ -3,26 +3,26 @@
 @section('title', 'Detail Paket')
 
 @section('content')
-<div class="container py-4">
-    <h1 class="fw-bold fs-6 mb-3">Paket Internet</h1>
+<div class="container py-5 mt-5">
+    <h1 class="fw-bold fs-5 mb-4">Detail Paket</h1>
 
     <!-- Paket yang dipilih -->
     <div class="paket-ekonomi">
       <div class="d-flex flex-wrap align-items-center gap-4 flex-grow-1">
         <div>
-          <p>Nama Paket</p>
+          <h5>Nama Paket</h5>
           <p>{{ $paket->nama_paket}}</p>
         </div>
         <div>
-          <p>Internet traffic</p>
+          <h5>Internet traffic</h5>
           <p>Unlimited</p>
         </div>
         <div>
-          <p>Kecepatan Internet</p>
+          <h5>Kecepatan Internet</h5>
           <p>{{ $paket->kecepatan }}</p>
         </div>
         <div>
-          <p>harga bulanan</p>
+          <h5>harga bulanan</h5>
           <p>Rp {{ number_format($paket->harga, 0, ',', '.') }}</p>
         </div>
       </div>

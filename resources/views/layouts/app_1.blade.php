@@ -1,32 +1,35 @@
-<!-- resources/views/layouts/app.blade.php -->
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-     <!-- @TODO: replace SET_YOUR_CLIENT_KEY_HERE with your client key -->
-    <script type="text/javascript"
-      src="https://app.sandbox.midtrans.com/snap/snap.js"
-      data-client-key="{{config('midtrans.client_key')}}"></script>
-    <!-- Note: replace with src="https://app.midtrans.com/snap/snap.js" for Production environment -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Alief Smart Wifi - @yield('title')</title>
-    <link href="{{ asset('css/style.css') }}" rel="stylesheet" type="text/css">
+
+    <title>Alif Smart Wifi - @yield('title', 'Solusi Internet Cepat')</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+
+    <script type="text/javascript"
+        src="{{ config('midtrans.is_production') ? 'https://app.midtrans.com/snap/snap.js' : 'https://app.sandbox.midtrans.com/snap/snap.js' }}"
+        data-client-key="{{ config('midtrans.client_key') }}"></script>
 </head>
 
-<body>
+<body class="d-flex flex-column min-vh-100">
     <header>
-        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <nav class="navbar navbar-expand-lg bg-body-tertiary shadow-sm fixed-top">
             <div class="container">
-                <a class="navbar-brand" href="#">
-                    <img src="{{ asset('image/profile.jpg') }}" alt="profile" width="50" class="rounded-circle">
+                <a class="navbar-brand fw-bold" href="{{ url('/') }}">
+                    <img src="{{ asset('image/profile.jpg') }}" alt="profile" width="40"
+                        class="rounded-circle me-2">
                     Alif Smart Wifi
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -34,90 +37,122 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
-                    <ul class="navbar-nav ms-auto">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#paket internet">Paket</a>
+                            <a class="nav-link" href="#paket-internet">Paket</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#informasi">Informasi</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Tentang Kami</a>
+                            <a class="nav-link" href="#tentang-kami">Tentang Kami</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#sosial media">Hubungi Kami</a>
+                            <a class="nav-link" href="#sosial-media">Hubungi Kami</a>
                         </li>
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-
-                            <x-responsive-nav-link :href="route('logout')" type="button" class="btn btn-danger"
-                                onclick="event.preventDefault();
-                                            this.closest('form').submit();">
-                                {{ __('Log Out') }}
-                            </x-responsive-nav-link>
-                        </form>
-
-                        @auth
-                            @if (auth()->user()->hasAnyPermission('admin-access'))
-                                <div class="text-right mb-4">
-                                    <a href="{{ route('admin.index') }}"
-                                        class="bg-blue-600 text-sm rounded-md text-black px-3 py-2 hover:bg-blue-500 transition-colors uppercase">
-                                        Admin Dashboard
-                                    </a>
-                                </div>
-                            @endif
-                        @endauth
-
                     </ul>
+
+                    <div class="d-flex align-items-center">
+                        @guest
+                            <a href="{{ route('login') }}" class="btn btn-outline-primary me-2">Log In</a>
+                            @if (Route::has('register'))
+                                <a href="{{ route('register') }}" class="btn btn-primary">Daftar</a>
+                            @endif
+                        @else
+                            <div class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    {{ Auth::user()->name }}
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    @if (auth()->user()->hasAnyPermission('admin-access'))
+                                        <li><a class="dropdown-item" href="{{ route('admin.index') }}">Admin Dashboard</a>
+                                        </li>
+                                    @else
+                                        <li><a class="dropdown-item" href="{{ route('user.index') }}">My Profile</a></li>
+                                    @endif
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item text-danger" href="{{ route('logout') }}"
+                                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                            {{ __('Log Out') }}
+                                        </a>
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                            class="d-none">
+                                            @csrf
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        @endguest
+                    </div>
                 </div>
             </div>
         </nav>
     </header>
 
-    <main>
-        @yield('content')
-    </main>
+    <div>
+        <main class="flex-shrink-0">
+            @yield('content')
+        </main>
+    </div>
 
-    <footer>
-        <div class="container-fluid text-left">
+    <footer class="py-5 bg-dark text-white">
+        <div class="container">
             <div class="row">
-                <div class="col">
-                    <div class="title">
-                        <h5 id="alamat">Alamat</h5>
-                    </div>
-                    <div class="content">
+                <div id="alamat" class="col-lg-4 col-md-6 mb-4">
+                    <h5>Alamat</h5>
+                    <div class="ratio ratio-16x9">
                         <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d544.3376387748079!2d114.3445059!3d-8.2492684!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd15a9a3deb8e39%3A0x690a6afba6b12d2d!2sJl.%20Nangka%20No.1%2C%20Dusun%20Jurang%20Jero%2C%20Kalirejo%2C%20Kec.%20Kabat%2C%20Kabupaten%20Banyuwangi%2C%20Jawa%20Timur%2068461!5e1!3m2!1sid!2sid!4v1742567472544!5m2!1sid!2sid"
-                            width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
-                            referrerpolicy="no-referrer-when-downgrade"></iframe>
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15795.74839818817!2d114.358296!3d-8.209192!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2dd145f4702f3a69%3A0x33355348d28a3473!2sBanyuwangi%2C%20East%20Java!5e0!3m2!1sen!2sid!4v1663412345678!5m2!1sen!2sid"
+                            loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                     </div>
                 </div>
-                <div class="col">
-                    <div class="title">
-                        <h5 id="informasi">Informasi</h5>
-                    </div>
-                    <div class="content">
-                        <p><i class="fa-solid fa-phone"></i>+6285730902001</p>
-                        <p><i class="fa-solid fa-envelope"></i>Faturalief15@gmail.com</p>
-                        <p><i class="fa-solid fa-location-dot"></i>Perumahan Pakis Kalirejo Blok N no 1</p>
-                    </div>
+
+                <div id="informasi" class="col-lg-4 col-md-6 mb-4">
+                    <h5>Informasi</h5>
+                    <ul class="list-unstyled">
+                        <li>
+                            <p><i class="fa-solid fa-phone me-2"></i>+6285730902001</p>
+                        </li>
+                        <li>
+                            <p><i class="fa-solid fa-envelope me-2"></i>Faturalief15@gmail.com</p>
+                        </li>
+                        <li>
+                            <p><i class="fa-solid fa-location-dot me-2"></i>Perumahan Pakis Kalirejo Blok N no 1</p>
+                        </li>
+                    </ul>
                 </div>
-                <div class="col">
-                    <div class="title">
-                        <h5 id="sosial media">Sosial media</h5>
-                    </div>
-                    <div class="content">
-                        <p><i class="fa-brands fa-telegram"></i>085730902001</p>
-                        <p><i class="fa-brands fa-facebook"></i>faturalief17@yahoo.com</p>
-                        <p><i class="fa-brands fa-twitter"></i>aliefcahyono15@yahoo.com</p>
-                        <p><i class="fa-brands fa-instagram"></i>aliefchn203</p>
-                    </div>
+
+                <div id="sosial-media" class="col-lg-4 col-12 mb-4">
+                    <h5>Sosial Media</h5>
+                    <ul class="list-unstyled">
+                        <li>
+                            <p><i class="fa-brands fa-telegram me-2"></i>085730902001</p>
+                        </li>
+                        <li>
+                            <p><i class="fa-brands fa-facebook me-2"></i>faturalief17</p>
+                        </li>
+                        <li>
+                            <p><i class="fa-brands fa-twitter me-2"></i>aliefcahyono15</p>
+                        </li>
+                        <li>
+                            <p><i class="fa-brands fa-instagram me-2"></i>aliefchn203</p>
+                        </li>
+                    </ul>
                 </div>
+            </div>
+            <div class="text-center pt-3 border-top border-secondary">
+                <p>© {{ date('Y') }} Alif Smart Wifi. All Rights Reserved.</p>
             </div>
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+    </script>
     @stack('scripts')
 </body>
 
