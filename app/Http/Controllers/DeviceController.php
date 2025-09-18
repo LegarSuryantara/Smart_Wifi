@@ -8,10 +8,19 @@ use App\Services\FonnteService;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
 
-class DeviceController extends Controller
+class DeviceController extends Controller implements HasMiddleware
 {
     protected $fonnteService;
+
+            public static function middleware()
+    {
+        return [
+            new Middleware('permission:fonnte-service'),
+        ];
+    }
 
     public function __construct(FonnteService $fonnteService)
     {

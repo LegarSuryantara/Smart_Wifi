@@ -116,7 +116,10 @@ Route::middleware(['auth', 'permission:admin-access', 'verified'])->group(functi
         return view('UI_disini.monitoring');
     })->name('dashboard.dashboardMonitring');
     
-    // --------------------//
+    // -------------------- //
+
+
+    // ----Experimental---- //
     Route::get('/monitorings', [MonitoringController::class, 'index'])->name('monitorings.index');
     Route::get('/monitorings/create', [MonitoringController::class, 'create'])->name('monitorings.create');
     Route::post('/monitorings', [MonitoringController::class, 'store'])->name('monitorings.store');

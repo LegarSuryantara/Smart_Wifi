@@ -40,6 +40,7 @@ class PermissionSeeder extends Seeder
         // Access permissions
         'user-access',
         'admin-access',
+        'fonnte-service'
         
     ];
 

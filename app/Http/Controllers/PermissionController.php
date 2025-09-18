@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
 
 class PermissionController extends Controller implements HasMiddleware
 {
@@ -14,8 +16,8 @@ class PermissionController extends Controller implements HasMiddleware
     {
         return [
             new Middleware('permission:view permissions', only: ['index']),
-            new Middleware('permission:edit permissions', only: ['edit']),
-            new Middleware('permission:create permissions', only: ['create']),
+            new Middleware('permission:edit permissions', only: ['edit', 'update']),
+            new Middleware('permission:create permissions', only: ['create', 'store']),
             new Middleware('permission:delete permissions', only: ['destroy']),
         ];
     }
@@ -25,39 +27,30 @@ class PermissionController extends Controller implements HasMiddleware
      */
     public function index(Request $request)
     {
-        // Get search parameter
-        $search = $request->input('search');
-        
-        // Base query
-        $query = Permission::query();
-        
-        // Apply search filter
-        if ($search) {
-            $query->where('name', 'like', '%'.$search.'%');
-        }
-        
-        // Apply sorting
-        $sort = $request->input('sort', 'newest');
-        
-        switch ($sort) {
-            case 'oldest':
-                $query->oldest();
-                break;
-            case 'name_asc':
-                $query->orderBy('name', 'asc');
-                break;
-            case 'name_desc':
-                $query->orderBy('name', 'desc');
-                break;
-            default: // newest
-                $query->latest();
-                break;
-        }
-        
-        // Paginate results
-        $permissions = $query->paginate(10);
-        
-        return view('admin.permissions.list', compact('permissions'));
+        $validated = $request->validate([
+            'search' => 'nullable|string|max:100|regex:/^[\w\s\-]+$/',
+            'sort' => 'nullable|in:newest,oldest,name_asc,name_desc'
+        ]);
+
+        $permissions = Permission::query()
+            ->when($validated['search'] ?? null, function ($query, $search) {
+                $query->where('name', 'like', '%'.addslashes($search).'%');
+            })
+            ->when($validated['sort'] ?? 'name_asc', function ($query, $sort) {
+                switch ($sort) {
+                    case 'newest': return $query->latest();
+                    case 'oldest': return $query->oldest();
+                    case 'name_desc': return $query->orderByDesc('name');
+                    default: return $query->orderBy('name');
+                }
+            })
+            ->paginate(10)
+            ->withQueryString();
+
+        return view('admin.permissions.list', [
+            'permissions' => $permissions,
+            'filters' => $validated
+        ]);
     }
 
     /**
@@ -74,24 +67,38 @@ class PermissionController extends Controller implements HasMiddleware
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|unique:permissions|min:3'
+            'name' => [
+                'required',
+                'string',
+                'min:3',
+                'max:255',
+                'unique:permissions,name',
+                'regex:/^[\w\s\-]+$/'
+            ]
         ]);
-        if ($validator->passes()) {
-            Permission::create([
-                'name' => $request->name  
-            ]);
-            return redirect()->route('permissions.index')->with('Success', 'Permission Added Successfully.');
-        } else {
-            return redirect()->route('permissions.create')->withInput()->withErrors($validator); 
-        }
-    }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+        if ($validator->fails()) {
+            return redirect()->route('permissions.create')
+                ->withInput()
+                ->withErrors($validator);
+        }
+
+        try {
+            DB::beginTransaction();
+            
+            Permission::create(['name' => $request->name]);
+            
+            DB::commit();
+            
+            return redirect()->route('permissions.index')
+                ->with('success', 'Permission created successfully.');
+                
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->route('permissions.create')
+                ->withInput()
+                ->with('error', 'Failed to create permission: '.$e->getMessage());
+        }
     }
 
     /**
@@ -111,16 +118,40 @@ class PermissionController extends Controller implements HasMiddleware
     public function update(Request $request, $id)
     {
         $permission = Permission::findOrFail($id);
+        
         $validator = Validator::make($request->all(), [
-            'name' => 'required|min:3|unique:permissions,name,'.$id.',id'
+            'name' => [
+                'required',
+                'string',
+                'min:3',
+                'max:255',
+                Rule::unique('permissions', 'name')->ignore($id),
+                'regex:/^[\w\s\-]+$/'
+            ]
         ]);
-        if ($validator->passes()) {
+
+        if ($validator->fails()) {
+            return redirect()->route('permissions.edit', $id)
+                ->withInput()
+                ->withErrors($validator);
+        }
+
+        try {
+            DB::beginTransaction();
+            
             $permission->name = $request->name;
             $permission->save();
-
-            return redirect()->route('permissions.index')->with('Success', 'Permission Updated Successfully.');
-        } else {
-            return redirect()->route('permissions.edit', $id)->withInput()->withErrors($validator); 
+            
+            DB::commit();
+            
+            return redirect()->route('permissions.index')
+                ->with('success', 'Permission updated successfully.');
+                
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->route('permissions.edit', $id)
+                ->withInput()
+                ->with('error', 'Failed to update permission: '.$e->getMessage());
         }
     }
 
@@ -129,21 +160,33 @@ class PermissionController extends Controller implements HasMiddleware
      */
     public function destroy(Request $request)
     {
-        $id = $request->id;
-        $permission = Permission::find($id);
-    
-        if (!$permission) {
+        $request->validate([
+            'id' => 'required|exists:permissions,id'
+        ]);
+
+        try {
+            $permission = Permission::findOrFail($request->id);
+            
+            // Check if permission is assigned to any role
+            if ($permission->roles()->exists()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Cannot delete permission assigned to roles.'
+                ], 403);
+            }
+
+            $permission->delete();
+            
+            return response()->json([
+                'status' => true,
+                'message' => 'Permission deleted successfully'
+            ]);
+            
+        } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
-                'message' => 'Permission not found'
-            ]);
+                'message' => 'Failed to delete permission: '.$e->getMessage()
+            ], 500);
         }
-    
-        $permission->delete();
-    
-        return response()->json([
-            'status' => true,
-            'message' => 'Permission deleted successfully'
-        ]);
     }
 }
