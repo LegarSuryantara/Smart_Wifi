@@ -65,11 +65,6 @@
                         <button type="submit" class="btn btn-primary btn-block mb-2">{{ __('Log in') }}</button>
 
                         <a href="{{ route('register') }}" class="btn btn-outline-primary btn-block mb-2">{{ __('Create account') }}</a>
-
-                        <a href="{{ route('login') }}" class="btn btn-light border btn-block d-flex align-items-center justify-content-center" style="gap: 8px;">
-                            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" width="18" height="18"/>
-                            <span>{{ __('Continue with Google') }}</span>
-                        </a>
                     </form>
 
                     <p class="mt-4 text-center">
