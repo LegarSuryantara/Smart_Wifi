@@ -13,7 +13,7 @@
         <div class="container d-flex align-items-center justify-content-center min-vh-100">
             <div class="row login-container bg-white">
                 <div class="col-md-6 p-0 d-none d-md-block">
-                    <img alt="Network cables with fiber optic background" class="img-fluid h-100 w-100" src="image/login.png" style="object-fit: cover;"/>
+                    <img alt="Network cables with fiber optic background" class="img-fluid h-100 w-100" src="{{ asset('image/login.png') }}" style="object-fit: cover;"/>
                 </div>
                 <div class="col-md-6 login-form d-flex flex-column justify-content-center">
                     <h2 class="text-center mb-1">Login to your account</h2>
@@ -64,13 +64,17 @@
 
                         <button type="submit" class="btn btn-primary btn-block mb-2">{{ __('Log in') }}</button>
 
-                        <a href="{{ route('register') }}" class="btn btn-outline-primary btn-block mb-2">{{ __('Create account') }}</a>
+                        @if (Route::has('register'))
+                            <a href="{{ route('register') }}" class="btn btn-outline-primary btn-block mb-2">{{ __('Create account') }}</a>
+                        @endif
                     </form>
 
-                    <p class="mt-4 text-center">
-                        Don't have an account?
-                        <a href="{{ route('register') }}">{{ __('Sign up for free!') }}</a>
-                    </p>
+                    @if (Route::has('register'))
+                        <p class="mt-4 text-center">
+                            Don't have an account?
+                            <a href="{{ route('register') }}">{{ __('Sign up for free!') }}</a>
+                        </p>
+                    @endif
                 </div>
             </div>
         </div>

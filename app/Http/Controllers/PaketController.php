@@ -14,7 +14,7 @@ class PaketController extends Controller implements HasMiddleware
     public static function middleware()
     {
         return [
-            new Middleware('permission:view pakets', only: ['index', 'show', 'pembayaran']),
+            new Middleware('permission:view pakets', only: ['index']),
             new Middleware('permission:edit pakets', only: ['edit', 'update']),
             new Middleware('permission:create pakets', only: ['create', 'store']),
             new Middleware('permission:delete pakets', only: ['destroy']),
