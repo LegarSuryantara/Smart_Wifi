@@ -14,7 +14,8 @@ class PaketController extends Controller implements HasMiddleware
     public static function middleware()
     {
         return [
-            new Middleware('permission:view pakets', only: ['index', 'show', 'pembayaran']),
+            new Middleware('permission:user-access', only:['index','show']),
+            new Middleware('permission:view pakets', only: ['index']),
             new Middleware('permission:edit pakets', only: ['edit', 'update']),
             new Middleware('permission:create pakets', only: ['create', 'store']),
             new Middleware('permission:delete pakets', only: ['destroy']),
@@ -101,23 +102,11 @@ class PaketController extends Controller implements HasMiddleware
      * Menampilkan detail paket.
      */
 
-         public function show($id)
+    public function show($id)
     {
         $paket = Pakets::findOrFail($id);
         return view('admin.pakets.pembayaran', compact('paket'));
     }
-
-    // public function show($id)
-    // {
-    //     $paket = Pakets::findOrFail($id);
-    //     return view('admin.pakets.show', compact('paket'));
-    // }
-
-    // public function pembayaran($id)
-    // {
-    //     $paket = Pakets::findOrFail($id);
-    //     return view('admin.pakets.pembayaran', compact('paket'));
-    // }
     
     /**
      * Menampilkan form edit paket.

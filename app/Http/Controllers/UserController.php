@@ -37,15 +37,15 @@ class UserController extends Controller implements HasMiddleware
             ->when($validated['search'] ?? null, function($query, $search) {
                 $query->where(function($q) use ($search) {
                     $q->where('name', 'like', '%'.$search.'%')
-                    ->orWhere('email', 'like', '%'.$search.'%')
-                    ->orWhere('phone', 'like', '%'.$search.'%');
+                        ->orWhere('email', 'like', '%'.$search.'%')
+                        ->orWhere('phone', 'like', '%'.$search.'%');
                 });
             })
-            ->when($validated['role'] ?? null, function($query, $role) {
+            ->when($validated['role'] ?? null,function($query, $role) {
                 $query->whereHas('roles', fn($q) => $q->where('id', $role));
             })
-            ->orderBy($validated['sort'] ?? 'created_at', 
-                    str_contains($validated['sort'] ?? '', 'name_') ? 'asc' : 'desc')
+            ->orderBy($validated['sort'] ?? 'created_at',
+                str_contains($validated['sort'] ?? '', 'name_') ? 'asc' : 'desc')
             ->paginate(10);
 
         return view('admin.users.list', [
@@ -75,13 +75,13 @@ class UserController extends Controller implements HasMiddleware
             'name' => 'required|min:3',
             'email' => 'required|email|unique:users,email',
             'phone' => 'required|unique:users,phone',
-            'address' => 'nullable',
-            'password' => 'required|min:5|same:confirm_password',
+            'address' => 'required',
+            'password' => 'required|min:8|same:confirm_password',
             'confirm_password' => 'required'
         ]);
 
         if ($validator->fails()) {
-            return redirect()->route('users.create')->withInput()->withErrors($validator); 
+            return redirect()->route('users.create')->withInput()->withErrors($validator);
         }
 
         $user = new User();
@@ -126,7 +126,7 @@ class UserController extends Controller implements HasMiddleware
         ]);
 
         if ($validator->fails()) {
-            return redirect()->route('users.edit', $id)->withInput()->withErrors($validator); 
+            return redirect()->route('users.edit', $id)->withInput()->withErrors($validator);
         }
 
         $user->name = $request->name;
@@ -154,7 +154,7 @@ class UserController extends Controller implements HasMiddleware
         }
 
         $user->delete();
-        
+
         return response()->json([
             'status' => true,
             'message' => 'User deleted successfully'

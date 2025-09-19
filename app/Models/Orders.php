@@ -14,9 +14,18 @@ class Orders extends Model
         'address',
         'phone',
         'qty',
-        'total_price',
-        'status',
-        'midtrans_order_id'
+        'trasnstatus',
+        'midtrans_order_id',
+        'transaction_id',
+        'payment_type',
+        'transaction_status',
+        'fraud_status',
+        'gross_amount',
+        'va_bank',
+        'va_number',
+        'ewallet_type',
+        'bill_key',
+        'biller_code',
     ];
 
     public function paket(){
