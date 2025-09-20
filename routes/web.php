@@ -15,7 +15,6 @@ use App\Http\Controllers\{
     MessageController,
     DeviceController,
     MonitoringController,
-
 };
 
 // Route::get('/', function () {
@@ -34,7 +33,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::middleware(['auth', 'permission:admin-access', 'verified'])->group(function () {
 
     Route::get('/admin-dashboard', [AdminDashboardController::class, 'index'])->name('admin.index');
-    
+
     // Permission routes
     Route::get('/permissions', [PermissionController::class, 'index'])->name('permissions.index');
     Route::get('/permissions/create', [PermissionController::class, 'create'])->name('permissions.create');
@@ -71,59 +70,66 @@ Route::middleware(['auth', 'permission:admin-access', 'verified'])->group(functi
     Route::get('/pakets/{paket}/edit', [PaketController::class, 'edit'])->name('pakets.edit');
     Route::put('/pakets/{paket}', [PaketController::class, 'update'])->name('pakets.update');
     Route::delete('/pakets/{paket}', [PaketController::class, 'destroy'])->name('pakets.destroy');
-    
+
+    //Transaction
+    Route::get('/transactions', [OrdersController::class, 'transactions'])->name('transactions');
+    Route::get('/transactions/{orderId}', [OrdersController::class, 'detailTransaction']);
+    Route::get('/transactions/sync/{id}', [OrdersController::class, 'syncTransaction'])->name('transactions.sync');
+
+
     // Fonnte routes
     Route::resource('messages', MessageController::class);
     Route::resource('devices', DeviceController::class);
-    
+
     Route::post('send-message', [DeviceController::class, 'sendMessage'])->name('send.message');
     Route::post('devices/status', [DeviceController::class, 'checkDeviceStatus']);
     Route::post('devices/activate', [DeviceController::class, 'activateDevice'])->name('devices.activate');
     Route::post('devices/disconnect', [DeviceController::class, 'disconnect'])->name('devices.disconnect');
 
-    
+
     // Kalau mau test UI,DLL taruh didalam sini Routenya :
-    
-    Route::get('/dashboardHome', function(){
+
+    Route::get('/dashboardHome', function () {
         return view('UI_disini.dashboardHome');
     })->name('dashboard.dashboardHome');
 
-    Route::get('/dashboardPakets', function(){
+    Route::get('/dashboardPakets', function () {
         return view('UI_disini.dashboardPakets');
     })->name('dashboard.dashboardPakets');
 
-    Route::get('/tambahPaket', function(){
+    Route::get('/tambahPaket', function () {
         return view('UI_disini.tambahPaket');
     })->name('dashboard.tambahPaket');
 
-    Route::get('/editPaket', function(){
+    Route::get('/editPaket', function () {
         return view('UI_disini.editPaket');
     })->name('dashboard.editPaket');
 
-    Route::get('/dashboardPengguna', function(){
+    Route::get('/dashboardPengguna', function () {
         return view('UI_disini.dashboardPengguna');
     })->name('dashboard.dashboardPengguna');
 
-    Route::get('/dashboardCustomer', function(){
+    Route::get('/dashboardCustomer', function () {
         return view('UI_disini.dashboardCustomers');
     })->name('dashboard.dashboardCustomer');
 
-    Route::get('/dashboardTransaksi', function(){
+    Route::get('/dashboardTransaksi', function () {
         return view('UI_disini.dashboardTransaksi');
     })->name('dashboard.dashboardTransaksi');
-    
-    Route::get('/dashboardMonitoring', function() {
+
+    Route::get('/dashboardMonitoring', function () {
         return view('UI_disini.monitoring');
     })->name('dashboard.dashboardMonitring');
-    
+
     // -------------------- //
 
 
     // ----Experimental---- //
+
     Route::get('/monitorings', [MonitoringController::class, 'index'])->name('monitorings.index');
-    Route::get('/monitorings/create', [MonitoringController::class, 'create'])->name('monitorings.create');
-    Route::post('/monitorings', [MonitoringController::class, 'store'])->name('monitorings.store');
-    
+    // Route::get('/monitorings/create', [MonitoringController::class, 'create'])->name('monitorings.create');
+    // Route::post('/monitorings', [MonitoringController::class, 'store'])->name('monitorings.store');
+
 });
 
 // Route yang bisa diakses oleh semua user yang login (termasuk user biasa)
@@ -138,7 +144,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/Checkout', [OrdersController::class, 'checkout'])->name('pakets.checkout');
 
     // Kalau mau test UI,DLL taruh di dalam sini Routenya :
-    
+
 
 
     // --------------------//
@@ -147,4 +153,4 @@ Route::middleware('auth')->group(function () {
 
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

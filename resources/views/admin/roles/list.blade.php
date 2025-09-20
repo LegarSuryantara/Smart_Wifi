@@ -58,7 +58,6 @@
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">#</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                                     <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Permissions</th>
-                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
                                     <th scope="col" class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                                 </tr>
                             </thead>
@@ -78,7 +77,6 @@
                                                 </span>
                                             @endforeach
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $role->created_at->format('d/m/Y') }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
                                             <div class="flex justify-center gap-4">
                                                 <a href="{{ route('roles.edit', $role->id) }}" 
@@ -87,7 +85,7 @@
                                                     <i class="fas fa-edit text-sm"></i>
                                                 </a>
                                                 <a href="javascript:void(0);" 
-                                                onclick="deleteRole({{ $role->id }})" 
+                                                onclick="deleteRole('{{ $role->id }}')" 
                                                 class="inline-flex items-center justify-center w-8 h-8 text-red-600 bg-red-50 rounded-full hover:bg-red-100 transition-colors"
                                                 title="Delete">
                                                     <i class="fas fa-trash-alt text-sm"></i>

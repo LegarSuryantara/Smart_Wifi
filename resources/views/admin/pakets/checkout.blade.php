@@ -26,7 +26,7 @@
                     </tr>
                     <tr>
                         <td>Total Harga</td>
-                        <td> : {{ $order->total_price }}</td>
+                        <td> : {{ $order->gross_amount }}</td>
                     </tr>
                 </table>
                 <button class="btn btn-primary" id="pay-button">Bayar Sekarang</button>
@@ -111,7 +111,7 @@
                 onSuccess: function(result) {
                     /* You may add your own implementation here */
                     /*alert("payment success!");*/
-                    window.location.href= '{{ route('user.index')}}'
+                    window.location.href= "{{ route('user.index')}}"
                     console.log(result);
                 },
                 onPending: function(result) {

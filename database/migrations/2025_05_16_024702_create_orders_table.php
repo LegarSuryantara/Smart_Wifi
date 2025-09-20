@@ -13,14 +13,29 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->string('midtrans_order_id')->unique();
-            $table->foreignId('paket_id')->constrained('pakets')->onDelete('cascade'); // relasi ke tabel pakets
+
+            // Data order internal
+            $table->foreignId('paket_id')->constrained()->onDelete('cascade');
             $table->string('name');
-            $table->text('address');
+            $table->string('address');
             $table->string('phone');
-            $table->string('qty');
-            $table->bigInteger('total_price');
-            $table->enum('status', ['Unpaid', 'Paid'])->default('Unpaid');
+            $table->integer('qty');
+
+            // Data Midtrans
+            $table->string('midtrans_order_id')->unique(); // ORDER-xxx
+            $table->string('transaction_id')->nullable();  // dari Midtrans
+            $table->string('payment_type')->nullable();    // bank_transfer, gopay, shopeepay, dll
+            $table->string('transaction_status')->default('unpaid'); // settlement, pending, cancel, expire
+            $table->string('fraud_status')->nullable();    // accept, challenge, deny
+            $table->decimal('gross_amount', 12, 2)->nullable();
+
+            // Extra info VA / e-wallet
+            $table->string('va_bank')->nullable();
+            $table->string('va_number')->nullable();
+            $table->string('ewallet_type')->nullable();    // contoh: gopay/shopeepay
+            $table->string('bill_key')->nullable();        // untuk indosat/mandiri
+            $table->string('biller_code')->nullable();
+
             $table->timestamps();
         });
     }
