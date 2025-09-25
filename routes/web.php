@@ -89,37 +89,37 @@ Route::middleware(['auth', 'permission:admin-access', 'verified'])->group(functi
 
     // Kalau mau test UI,DLL taruh didalam sini Routenya :
 
-    Route::get('/dashboardHome', function () {
-        return view('UI_disini.dashboardHome');
-    })->name('dashboard.dashboardHome');
+    // Route::get('/dashboardHome', function () {
+    //     return view('UI_disini.dashboardHome');
+    // })->name('dashboard.dashboardHome');
 
-    Route::get('/dashboardPakets', function () {
-        return view('UI_disini.dashboardPakets');
-    })->name('dashboard.dashboardPakets');
+    // Route::get('/dashboardPakets', function () {
+    //     return view('UI_disini.dashboardPakets');
+    // })->name('dashboard.dashboardPakets');
 
-    Route::get('/tambahPaket', function () {
-        return view('UI_disini.tambahPaket');
-    })->name('dashboard.tambahPaket');
+    // Route::get('/tambahPaket', function () {
+    //     return view('UI_disini.tambahPaket');
+    // })->name('dashboard.tambahPaket');
 
-    Route::get('/editPaket', function () {
-        return view('UI_disini.editPaket');
-    })->name('dashboard.editPaket');
+    // Route::get('/editPaket', function () {
+    //     return view('UI_disini.editPaket');
+    // })->name('dashboard.editPaket');
 
-    Route::get('/dashboardPengguna', function () {
-        return view('UI_disini.dashboardPengguna');
-    })->name('dashboard.dashboardPengguna');
+    // Route::get('/dashboardPengguna', function () {
+    //     return view('UI_disini.dashboardPengguna');
+    // })->name('dashboard.dashboardPengguna');
 
-    Route::get('/dashboardCustomer', function () {
-        return view('UI_disini.dashboardCustomers');
-    })->name('dashboard.dashboardCustomer');
+    // Route::get('/dashboardCustomer', function () {
+    //     return view('UI_disini.dashboardCustomers');
+    // })->name('dashboard.dashboardCustomer');
 
-    Route::get('/dashboardTransaksi', function () {
-        return view('UI_disini.dashboardTransaksi');
-    })->name('dashboard.dashboardTransaksi');
+    // Route::get('/dashboardTransaksi', function () {
+    //     return view('UI_disini.dashboardTransaksi');
+    // })->name('dashboard.dashboardTransaksi');
 
-    Route::get('/dashboardMonitoring', function () {
-        return view('UI_disini.monitoring');
-    })->name('dashboard.dashboardMonitring');
+    // Route::get('/dashboardMonitoring', function () {
+    //     return view('UI_disini.monitoring');
+    // })->name('dashboard.dashboardMonitring');
 
     // -------------------- //
 
@@ -127,6 +127,8 @@ Route::middleware(['auth', 'permission:admin-access', 'verified'])->group(functi
     // ----Experimental---- //
 
     Route::get('/monitorings', [MonitoringController::class, 'index'])->name('monitorings.index');
+    Route::get('/monitorings/stats', [MonitoringController::class, 'stats'])->name('monitorings.stats');
+    Route::post('/monitorings/connect', [MonitoringController::class, 'connect'])->name('monitorings.connect');
     // Route::get('/monitorings/create', [MonitoringController::class, 'create'])->name('monitorings.create');
     // Route::post('/monitorings', [MonitoringController::class, 'store'])->name('monitorings.store');
 
