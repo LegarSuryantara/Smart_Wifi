@@ -40,7 +40,7 @@ class AdminDashboardController extends Controller implements HasMiddleware
      */
     public function store(Request $request)
     {
-        
+        //
     }
 
     /**
