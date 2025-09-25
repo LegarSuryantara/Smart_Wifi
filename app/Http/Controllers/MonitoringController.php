@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\StatusJaringan;
+
 use App\Models\RouterosAPI;
 use Illuminate\Http\Request;
 
@@ -9,9 +9,9 @@ class MonitoringController extends Controller
 {
     public function index()
     {
-        $ip_routeros = '';
-        $user_routeros = '';
-        $pass_routeros = '';
+        $ip_routeros = '192.168.101.1';
+        $user_routeros = 'alief';
+        $pass_routeros = 'alief06';
         $API_routeros = new RouterosAPI();
         $API_routeros->debug(false);
 
@@ -27,20 +27,13 @@ class MonitoringController extends Controller
             'router' => $routerModel[0]['model'],
         ];
 
-        // dd($identity);
+        dd($data);
 
-        return view('admin.monitorings.index',$data);
+        return view('admin.monitorings.index', $data);
     }
 
 
-        public function create()
-    {
+    public function create() {}
 
-    }
-
-    public function store(Request $request)
-    {
-
-    }
-
+    public function store(Request $request) {}
 }

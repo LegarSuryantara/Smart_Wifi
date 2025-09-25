@@ -71,7 +71,7 @@ class RouterosAPI extends Model
             $length = chr(0xF0) . chr(($length >> 24) & 0xFF) . chr(($length >> 16) & 0xFF) . chr(($length >> 8) & 0xFF) . chr($length & 0xFF);
         }
 
-        return $length;
+        return $length();
     }
 
 
