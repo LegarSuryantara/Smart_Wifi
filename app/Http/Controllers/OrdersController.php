@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Midtrans\Transaction;
 use Illuminate\Http\RedirectResponse;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\User;
 use Exception;
 
 class OrdersController extends Controller
@@ -142,5 +144,24 @@ class OrdersController extends Controller
     {
         $transactions = Orders::latest()->paginate(10);
         return view('admin.transactions.index', compact('transactions'));
+    }
+
+     public function exportPdf()
+    {
+        try {
+            $customers = User::whereHas('roles', function($q) {
+                $q->where('name', 'user');
+            })->get();
+
+            $pdf = Pdf::loadView('admin.customers.pdf', [
+                'customers' => $customers
+            ]);
+
+            return $pdf->stream('customer-list-'.date('Ymd-His').'.pdf');
+            
+        } catch (\Exception $e) {
+            return redirect()->route('customers.index')
+                ->with('error', 'Failed to generate PDF: '.$e->getMessage());
+        }
     }
 }
