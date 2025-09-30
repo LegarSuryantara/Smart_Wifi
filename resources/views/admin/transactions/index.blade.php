@@ -19,6 +19,11 @@
                 class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all flex items-center shadow-md">
                 <i class="fas fa-sync-alt mr-2"></i> Refresh
               </a>
+            <!-- Tambah tombol Cetak PDF -->
+             <a href="{{ route('transactions.pdf') }}" target="_blank"
+                class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md transition-all flex items-center shadow-md">
+                 <i class="fas fa-file-pdf mr-2"></i> Cetak PDF
+             </a>
             </div>
           </div>
 
