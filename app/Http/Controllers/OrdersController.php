@@ -146,22 +146,23 @@ class OrdersController extends Controller
         return view('admin.transactions.index', compact('transactions'));
     }
 
-     public function exportPdf()
-    {
-        try {
-            $customers = User::whereHas('roles', function($q) {
-                $q->where('name', 'user');
-            })->get();
+    public function exportPdf()
+{
+    try {
+        // Ambil semua transaksi, bisa tambahkan relasi jika perlu
+        $transactions = Orders::with('paket')->latest()->get();
 
-            $pdf = Pdf::loadView('admin.customers.pdf', [
-                'customers' => $customers
-            ]);
+        // Load view PDF transaksi
+        $pdf = Pdf::loadView('admin.transactions.pdf', [
+            'transactions' => $transactions
+        ]);
 
-            return $pdf->stream('customer-list-'.date('Ymd-His').'.pdf');
-            
-        } catch (\Exception $e) {
-            return redirect()->route('customers.index')
-                ->with('error', 'Failed to generate PDF: '.$e->getMessage());
-        }
+        // Tampilkan di browser
+        return $pdf->stream('transaksi-'.date('Ymd-His').'.pdf');
+        
+    } catch (\Exception $e) {
+        return redirect()->route('transactions')
+            ->with('error', 'Failed to generate PDF: '.$e->getMessage());
     }
+}
 }
