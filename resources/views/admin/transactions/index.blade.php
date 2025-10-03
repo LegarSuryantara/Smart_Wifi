@@ -26,6 +26,29 @@
              </a>
             </div>
           </div>
+          <!-- Filter Pencarian Berdasarkan Tanggal-->
+          <form method="GET" action="{{ route('transactions') }}" class="mb-6">
+            <div class="flex flex-col sm:flex-row gap-4 items-end border border-gray-200 rounded-lg p-4 bg-gray-50">
+              <div class="flex-1 min-w-0">
+                <label for="start_date" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Awal</label>
+                <input type="date" id="start_date" name="start_date"
+                       class="w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm py-2 px-3 text-sm transition-colors"
+                       value="{{ request('start_date') }}">
+              </div>
+
+              <div class="flex-1 min-w-0">
+                <label for="end_date" class="block text-sm font-medium text-gray-700 mb-1">Tanggal Akhir</label>
+                <input type="date" id="end_date" name="end_date"
+                       class="w-full rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm py-2 px-3 text-sm transition-colors"
+                       value="{{ request('end_date') }}">
+              </div>
+
+              <button type="submit"
+                      class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2.5 px-4 rounded-md transition-all flex items-center justify-center shadow-sm whitespace-nowrap h-10 min-w-[140px]">
+                <i class="fas fa-search mr-2 text-sm"></i> Terapkan
+              </button>
+            </div>
+          </form>
 
           <!-- Table -->
           <div class="overflow-x-auto">

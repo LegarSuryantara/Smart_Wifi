@@ -140,29 +140,61 @@ class OrdersController extends Controller
         }
     }
 
-    public function transactions()
+    public function transactions(Request $request)
     {
-        $transactions = Orders::latest()->paginate(10);
+        $query = Orders::query();
+
+        // 1. Filter Tanggal Mulai (start_date)
+        if ($request->filled('start_date')) {
+            // Filter: created_at >= start_date (tanggal awal hari)
+            $query->whereDate('created_at', '>=', $request->start_date);
+        }
+
+        // 2. Filter Tanggal Akhir (end_date)
+        if ($request->filled('end_date')) {
+            // Filter: created_at <= end_date (akhir hari, inklusif)
+            // Menggunakan Carbon untuk mendapatkan akhir hari (23:59:59)
+            $endDate = \Carbon\Carbon::parse($request->end_date)->endOfDay();
+            $query->where('created_at', '<=', $endDate);
+        }
+
+        // Ambil data yang sudah difilter, diurutkan, dan dipaginasi
+        $transactions = $query->latest()->paginate(10);
+
+        // Memastikan parameter filter tetap ada saat navigasi halaman
+        $transactions->appends($request->query());
         return view('admin.transactions.index', compact('transactions'));
     }
 
-    public function exportPdf()
-{
-    try {
-        // Ambil semua transaksi, bisa tambahkan relasi jika perlu
-        $transactions = Orders::with('paket')->latest()->get();
+    public function exportPdf(Request $request)
+    {
+        $query = Orders::query();
 
-        // Load view PDF transaksi
-        $pdf = Pdf::loadView('admin.transactions.pdf', [
-            'transactions' => $transactions
-        ]);
+        // Logika Filter Tanggal (Sama seperti di transactions())
+        if ($request->filled('start_date')) {
+            $query->whereDate('created_at', '>=', $request->start_date);
+        }
 
-        // Tampilkan di browser
-        return $pdf->stream('transaksi-'.date('Ymd-His').'.pdf');
-        
-    } catch (\Exception $e) {
-        return redirect()->route('transactions')
-            ->with('error', 'Failed to generate PDF: '.$e->getMessage());
+        if ($request->filled('end_date')) {
+            $endDate = \Carbon\Carbon::parse($request->end_date)->endOfDay();
+            $query->where('created_at', '<=', $endDate);
+        }
+        // Ambil semua data transaksi yang sudah difilter tanpa pagination
+        $transactions = $query->latest()->get();
+        try {
+            // Ambil semua transaksi, bisa tambahkan relasi jika perlu
+            $transactions = Orders::with('paket')->latest()->get();
+
+            // Load view PDF transaksi
+            $pdf = Pdf::loadView('admin.transactions.pdf', [
+                'transactions' => $transactions
+            ]);
+
+            // Tampilkan di browser
+            return $pdf->stream('transaksi-' . date('Ymd-His') . '.pdf');
+        } catch (\Exception $e) {
+            return redirect()->route('transactions')
+                ->with('error', 'Failed to generate PDF: ' . $e->getMessage());
+        }
     }
-}
 }
