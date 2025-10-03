@@ -9,8 +9,10 @@
         .header h1 { margin: 0 0 4px 0; font-size: 18px; }
         .header .meta { font-size: 11px; color: #555; }
         table { width: 100%; border-collapse: collapse; }
-        th, td { border: 1px solid #999; padding: 6px 8px; }
-        th { background: #f2f2f2; text-align: left; }
+        th, td { border: 1px solid #999; padding: 7px 10px; }
+        th { background: #f7f7f7; text-align: left; }
+        tbody tr:nth-child(odd) { background: #fbfbfb; }
+        tbody tr:hover { background: #f3f6ff; }
         .text-right { text-align: right; }
         .text-center { text-align: center; }
         .badge { display: inline-block; padding: 2px 6px; border-radius: 3px; font-size: 10px; }
@@ -36,6 +38,17 @@
                 'failure' => 'badge-danger',
             ];
             return $map[strtolower((string)$status)] ?? 'badge-warning';
+        }
+        function paket_jenis_short($order) {
+            $kategori = optional($order->paket)->kategori;
+            if (!empty($kategori)) return $kategori;
+            $nama = optional($order->paket)->nama_paket ?? $order->paket_name ?? $order->package_name;
+            if (!is_string($nama) || $nama === '') return '-';
+            $parts = preg_split('/\s*-\s*/', $nama);
+            $candidate = trim(end($parts));
+            if ($candidate === '' && count($parts) > 0) $candidate = trim($parts[0]);
+            $firstWord = explode(' ', $candidate)[0] ?? $candidate;
+            return $firstWord ?: '-';
         }
     @endphp
 </head>
@@ -64,7 +77,7 @@
                 <tr>
                     <td class="text-center">{{ $i + 1 }}</td>
                     <td>{{ $t->midtrans_order_id ?? $t->id }}</td>
-                    <td>{{ optional($t->paket)->nama ?? '-' }}</td>
+                    <td>{{ paket_jenis_short($t) }}</td>
                     <td>{{ $t->name }}</td>
                     <td>{{ $t->phone }}</td>
                     <td class="text-right">{{ (int) $t->qty }}</td>
@@ -73,7 +86,7 @@
                         @php $status = $t->transaction_status ?? 'unpaid'; @endphp
                         <span class="badge {{ status_badge_class($status) }}">{{ strtoupper($status) }}</span>
                     </td>
-                    <td>{{ optional($t->created_at)->format('d/m/Y H:i') }}</td>
+                    <td>{{ optional($t->created_at)->format('d/m/Y') }}</td>
                 </tr>
             @empty
                 <tr>
