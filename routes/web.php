@@ -73,7 +73,6 @@ Route::middleware(['auth', 'permission:admin-access', 'verified'])->group(functi
 
     //Transaction
     Route::get('/transactions', [OrdersController::class, 'transactions'])->name('transactions');
-    Route::get('/transactions/{orderId}', [OrdersController::class, 'detailTransaction']);
     Route::get('/transactions/sync/{id}', [OrdersController::class, 'syncTransaction'])->name('transactions.sync');
     Route::post('/transactions/notification', [OrdersController::class, 'notificationHandler']);
 
