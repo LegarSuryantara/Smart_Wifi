@@ -75,7 +75,7 @@ Route::middleware(['auth', 'permission:admin-access', 'verified'])->group(functi
     Route::get('/transactions', [OrdersController::class, 'transactions'])->name('transactions');
     Route::get('/transactions/{orderId}', [OrdersController::class, 'detailTransaction']);
     Route::get('/transactions/sync/{id}', [OrdersController::class, 'syncTransaction'])->name('transactions.sync');
-
+    Route::post('/transactions/notification', [OrdersController::class, 'notificationHandler']);
 
     // Fonnte routes
     Route::resource('messages', MessageController::class);

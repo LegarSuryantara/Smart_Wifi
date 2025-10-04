@@ -32,6 +32,7 @@
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Updated At</th>
                   <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
@@ -49,14 +50,21 @@
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm">
                     <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                                @if($trx->transaction_status == 'paid') bg-green-100 text-green-800
-                                                @elseif($trx->transaction_status == 'unpaid') bg-yellow-100 text-yellow-800
-                                                @else bg-gray-100 text-gray-800 @endif">
+                    @if($trx->transaction_status == 'paid') bg-green-100 text-green-800
+                    @elseif($trx->transaction_status == 'unpaid') bg-yellow-100 text-yellow-800
+                    @else bg-gray-100 text-gray-800 @endif">
                       {{ ucfirst($trx->transaction_status) }}
                     </span>
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {{ $trx->created_at->format('d-m-Y H:i') }}
+                    {{ $trx->created_at->timezone('Asia/Jakarta')->format('d/m/Y') }}
+                    <br>
+                    {{ $trx->created_at->timezone('Asia/Jakarta')->format('H:i:s') }}
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {{ $trx->updated_at->timezone('Asia/Jakarta')->format('d/m/Y') }}
+                    <br>
+                    {{ $trx->updated_at->timezone('Asia/Jakarta')->format('H:i:s') }}
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
                     <a href="{{ route('transactions.sync', $trx->id) }}"

@@ -31,25 +31,18 @@ class OrdersController extends Controller
         $gross_amount = $request->qty * $paket->harga;
 
         // Buat data order
-        $orderData = [
+        $order = Orders::create([
             'paket_id'           => $request->paket_id,
             'name'               => $request->name,
             'address'            => $request->address,
             'phone'              => $request->phone,
             'qty'                => $request->qty,
             'gross_amount'       => $gross_amount,
-            'transaction_status' => 'unpaid', // ✅ pakai transaction_status
+            'transaction_status' => 'unpaid',
             'midtrans_order_id'  => $uniqueOrderId
-        ];
+        ]);
 
-        $order = Orders::create($orderData);
-
-        // Konfigurasi Midtrans
-        \Midtrans\Config::$serverKey    = config('midtrans.server_key');
-        \Midtrans\Config::$isProduction = config('midtrans.is_production', false);
-        \Midtrans\Config::$isSanitized  = true;
-        \Midtrans\Config::$is3ds        = true;
-
+        // Parameter transaksi Midtrans
         $params = [
             'transaction_details' => [
                 'order_id'      => $uniqueOrderId,
@@ -78,7 +71,6 @@ class OrdersController extends Controller
                 $vaBank   = null;
                 $vaNumber = null;
 
-                // Jika metode pembayaran bank transfer (VA)
                 if (isset($request->va_numbers[0])) {
                     $vaBank   = $request->va_numbers[0]['bank'];
                     $vaNumber = $request->va_numbers[0]['va_number'];
@@ -100,21 +92,9 @@ class OrdersController extends Controller
         }
     }
 
-    public function detailTransaction($orderId)
-    {
-        \Midtrans\Config::$serverKey    = config('midtrans.server_key');
-        \Midtrans\Config::$isProduction = config('midtrans.is_production', false);
-
-        $status = Transaction::status($orderId);
-        dd($status);
-    }
-
     public function syncTransaction($id): RedirectResponse
     {
         $order = Orders::findOrFail($id);
-
-        \Midtrans\Config::$serverKey    = config('midtrans.server_key');
-        \Midtrans\Config::$isProduction = config('midtrans.is_production', false);
 
         try {
             $status = Transaction::status($order->midtrans_order_id);
@@ -133,9 +113,31 @@ class OrdersController extends Controller
                 return redirect()->back()->with('warning', 'Transaksi ada di database tapi Midtrans tidak balas status.');
             }
         } catch (Exception $e) {
-            // Kalau Midtrans kasih 404
             return redirect()->back()->with('error', 'Transaksi tidak ditemukan di Midtrans (mungkin expired atau salah env).');
         }
+    }
+
+    public function notificationHandler(Request $request)
+    {
+        $notif = new \Midtrans\Notification();
+
+        $transactionStatus = $notif->transaction_status;
+        $orderId           = $notif->order_id;
+
+        $order = Orders::where('midtrans_order_id', $orderId)->first();
+
+        if ($order) {
+            $order->update([
+                'transaction_status' => $transactionStatus
+            ]);
+        }
+        return response()->json(['success' => true]);
+    }
+
+    public function detailTransaction($orderId)
+    {
+        $status = Transaction::status($orderId);
+        dd($status);
     }
 
     public function transactions()
