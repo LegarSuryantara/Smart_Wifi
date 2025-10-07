@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Orders;
+use App\Models\User;
 use App\Models\Pakets;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Midtrans\Transaction;
 use Illuminate\Http\RedirectResponse;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
 
 class OrdersController extends Controller
@@ -84,7 +86,7 @@ class OrdersController extends Controller
 
                 $order->update([
                     'transaction_id'     => $request->transaction_id,
-                    'transaction_status' => $request->transaction_status,
+                    'transaction_status' => $request->transaction_status,   
                     'payment_type'       => $request->payment_type,
                     'gross_amount'       => $request->gross_amount,
                     'fraud_status'       => $request->fraud_status ?? null,
@@ -139,7 +141,7 @@ class OrdersController extends Controller
         }
         return response()->json(['success' => true]);
     }
-
+  
     public function markActivated($id)
     {
         $order = Orders::findOrFail($id);
@@ -152,5 +154,37 @@ class OrdersController extends Controller
     {
         $transactions = Orders::latest()->paginate(10);
         return view('admin.transactions.index', compact('transactions'));
+    }
+
+    public function exportPdf(Request $request)
+    {
+        $query = Orders::query();
+
+        // Logika Filter Tanggal (Sama seperti di transactions())
+        if ($request->filled('start_date')) {
+            $query->whereDate('created_at', '>=', $request->start_date);
+        }
+
+        if ($request->filled('end_date')) {
+            $endDate = \Carbon\Carbon::parse($request->end_date)->endOfDay();
+            $query->where('created_at', '<=', $endDate);
+        }
+        // Ambil semua data transaksi yang sudah difilter tanpa pagination
+        $transactions = $query->latest()->get();
+        try {
+            // Ambil semua transaksi, bisa tambahkan relasi jika perlu
+            $transactions = Orders::with('paket')->latest()->get();
+
+            // Load view PDF transaksi
+            $pdf = Pdf::loadView('admin.transactions.pdf', [
+                'transactions' => $transactions
+            ]);
+
+            // Tampilkan di browser
+            return $pdf->stream('transaksi-' . date('Ymd-His') . '.pdf');
+        } catch (\Exception $e) {
+            return redirect()->route('transactions')
+                ->with('error', 'Failed to generate PDF: ' . $e->getMessage());
+        }
     }
 }
