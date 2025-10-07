@@ -22,7 +22,7 @@ class UserSeeder extends Seeder
                 'name' => 'Regular User',
                 'phone' => '081234567881',
                 'address' => 'Jl. User No. 1, Kota User', 
-                'password' => Hash::make('user_default'), 
+                'password' => Hash::make('12345678'), 
                 'email_verified_at' => now()
             ]
         );
@@ -59,7 +59,7 @@ class UserSeeder extends Seeder
         $this->command->warn('USER 1 ACCOUNT:');
         $this->command->info('Name: Regular User');
         $this->command->warn('Email: user@wifi.com');
-        $this->command->warn('Password: user_default');
+        $this->command->warn('Password: 12345678');
         $this->command->warn('Phone: 081234567891');
         $this->command->warn('Address: Jl. User No. 1, Kota User');
         $this->command->info('--------------------------------------------');

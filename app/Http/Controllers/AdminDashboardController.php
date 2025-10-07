@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pakets;
+use App\Models\Orders;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -24,7 +25,14 @@ class AdminDashboardController extends Controller implements HasMiddleware
     public function index()
     {
         $pakets = Pakets::all();
-        return view('admin.dashboard', compact('pakets'));
+
+        $orders = Orders::where('transaction_status', 'settlement')
+            ->where('is_activated', 'no')
+            ->latest()
+            ->get();
+
+        // Kirim ke view
+        return view('admin.dashboard', compact('pakets', 'orders'));
     }
 
     /**

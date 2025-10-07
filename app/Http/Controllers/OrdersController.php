@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Orders;
 use App\Models\Pakets;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Midtrans\Transaction;
 use Illuminate\Http\RedirectResponse;
@@ -16,12 +17,15 @@ class OrdersController extends Controller
     {
         $request->validate([
             'paket_id' => 'required|exists:pakets,id',
-            'name'     => 'required',
-            'address'  => 'required',
-            'phone'    => 'required',
             'qty'      => 'required|integer|min:1'
         ]);
 
+        // Pastikan user login
+        $user = Auth::user();
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'Anda harus login terlebih dahulu.');
+        }
+        $user->user_id = Auth::id();
         $paket = Pakets::findOrFail($request->paket_id);
 
         // Generate unique order_id
@@ -32,26 +36,28 @@ class OrdersController extends Controller
 
         // Buat data order
         $order = Orders::create([
-            'paket_id'           => $request->paket_id,
-            'name'               => $request->name,
-            'address'            => $request->address,
-            'phone'              => $request->phone,
-            'qty'                => $request->qty,
-            'gross_amount'       => $gross_amount,
-            'transaction_status' => 'unpaid',
-            'midtrans_order_id'  => $uniqueOrderId
+            'user_id'             => $user->id,
+            'paket_id'            => $request->paket_id,
+            'qty'                 => $request->qty,
+            'gross_amount'        => $gross_amount,
+            'transaction_status'  => 'unpaid',
+            'midtrans_order_id'   => $uniqueOrderId,
         ]);
 
-        // Parameter transaksi Midtrans
+        // Parameter transaksi Midtrans (pakai data dari tabel users)
         $params = [
             'transaction_details' => [
-                'order_id'      => $uniqueOrderId,
-                'gross_amount'  => $gross_amount,
+                'order_id'     => $uniqueOrderId,
+                'gross_amount' => $gross_amount,
             ],
             'customer_details' => [
-                'first_name'    => $request->name,
-                'last_name'     => '',
-                'phone'         => $request->phone,
+                'first_name'   => $user->name,
+                'last_name'    => '',
+                'email'        => $user->email,
+                'phone'        => $user->phone,
+                'billing_address' => [
+                    'address' => $user->address,
+                ],
             ],
         ];
 
@@ -134,10 +140,12 @@ class OrdersController extends Controller
         return response()->json(['success' => true]);
     }
 
-    public function detailTransaction($orderId)
+    public function markActivated($id)
     {
-        $status = Transaction::status($orderId);
-        dd($status);
+        $order = Orders::findOrFail($id);
+        $order->update(['is_activated' => 'yes']);
+
+        return redirect()->back()->with('success', 'Paket telah diaktifkan di Mikrotik dan ditandai selesai.');
     }
 
     public function transactions()

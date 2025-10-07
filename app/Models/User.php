@@ -40,4 +40,8 @@ class User extends Authenticatable
     {
         return $this->hasRole('user');
     }
+    public function orders()
+    {
+        return $this->hasMany(Orders::class);
+    }
 }

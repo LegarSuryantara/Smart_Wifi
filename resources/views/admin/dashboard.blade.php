@@ -24,7 +24,7 @@
                                 </div>
                                 <button class="btn btn-sm text-primary bg-light rounded-2 fw-semibold px-3 py-1 dark:bg-gray-700 dark:text-primary-300" type="button">View Report</button>
                             </div>
-                            
+
                             <svg aria-label="Bar chart showing sales data from 1 to 12" class="bar-chart" fill="none" viewbox="0 0 360 100" xmlns="http://www.w3.org/2000/svg" role="img" width="100%" height="100">
                                 <rect fill="#5C5EDD" height="50" width="15" x="10" y="40"></rect>
                                 <rect fill="#B3B7F5" height="40" width="15" x="35" y="50"></rect>
@@ -39,7 +39,7 @@
                                 <rect fill="#5C5EDD" height="60" width="15" x="260" y="30"></rect>
                                 <rect fill="#5C5EDD" height="65" width="15" x="285" y="25"></rect>
                             </svg>
-                            
+
                             <div class="bar-labels">
                                 <span>01</span>
                                 <span>02</span>
@@ -54,7 +54,7 @@
                                 <span>11</span>
                                 <span>12</span>
                             </div>
-                            
+
                             <div class="legend">
                                 <div class="d-flex align-items-center gap-1">
                                     <span class="legend-dot legend-dot-1"></span> Last 6 days
@@ -63,7 +63,7 @@
                                     <span class="legend-dot legend-dot-2"></span> Last Week
                                 </div>
                             </div>
-                            
+
                             <div class="card-container p-4 d-flex flex-column flex-md-row justify-content-between gap-4">
                                 <div class="d-flex align-items-center gap-3 flex-grow-1 min-w-0">
                                     <div class="d-flex align-items-center justify-content-center rounded-circle card-icon-bg-1" style="width:56px; height:56px;">
@@ -78,7 +78,7 @@
                                         </p>
                                     </div>
                                 </div>
-                                
+
                                 <div class="d-flex align-items-center gap-3 flex-grow-1 min-w-0">
                                     <div class="d-flex align-items-center justify-content-center rounded-circle card-icon-bg-2" style="width:56px; height:56px;">
                                         <i class="fas fa-wallet fs-4"></i>
@@ -91,7 +91,7 @@
                                         </p>
                                     </div>
                                 </div>
-                                
+
                                 <div class="d-flex align-items-center gap-3 flex-grow-1 min-w-0">
                                     <div class="d-flex align-items-center justify-content-center rounded-circle card-icon-bg-3" style="width:56px; height:56px;">
                                         <i class="fas fa-lock fs-4"></i>
@@ -107,6 +107,51 @@
                             </div>
                         </div>
                     </section>
+                    <!-- Task for admin to activate the paket after status changed to settlement -->
+                    <div class="mt-6">
+                        <h3 class="text-lg font-semibold mb-3 text-dark dark:text-white">Paket Siap Diaktifkan</h3>
+
+                        @if (session('success'))
+                        <div class="mb-3 p-2 bg-green-100 text-green-800 rounded">
+                            {{ session('success') }}
+                        </div>
+                        @endif
+
+                        @if($orders->count())
+                        <table class="table-auto w-full border border-gray-300 dark:border-gray-700 text-sm">
+                            <thead>
+                                <tr class="bg-gray-100 dark:bg-gray-700 text-left">
+                                    <th class="p-2">Nama</th>
+                                    <th class="p-2">Paket</th>
+                                    <th class="p-2">Nomor HP</th>
+                                    <th class="p-2">Status</th>
+                                    <th class="p-2">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($orders as $order)
+                                <tr class="border-t border-gray-300 dark:border-gray-700">
+                                    <td class="p-2">{{ $order->user->name ?? '-' }}</td>
+                                    <td class="p-2">{{ $order->paket->nama_paket ?? '-' }}</td>
+                                    <td class="p-2">{{ $order->user->phone ?? '-' }}</td>
+                                    <td class="p-2 text-green-600 font-semibold">Pembayaran Selesai</td>
+                                    <td class="p-2">
+                                        <form method="POST" action="{{ route('admin.orders.markActivated', $order->id) }}">
+                                            @csrf
+                                            <button type="submit" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700">
+                                                Tandai Selesai
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        @else
+                        <p class="text-gray-500">Belum ada pesanan yang siap diaktifkan.</p>
+                        @endif
+                    </div>
+                    <!-- Until here -->
                 </div>
             </div>
         </div>

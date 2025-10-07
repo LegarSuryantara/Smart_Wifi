@@ -6,64 +6,83 @@
 <div class="container py-4 mt-4">
     <div class="row gx-4 gy-4">
         <div class="col-12 col-md-8 bg-white p-4 shadow-sm">
-            <h2 class="fw-semibold mb-4" style="font-size:13px;">DETAIL PESANAN!</h2>
-            <form action="{{ route('pakets.checkout') }}" class="w-100" style="max-width: 320px;" id="paymentForm"
-                method="POST">
+            <h2 class="fw-semibold mb-4" style="font-size: 13px;">DETAIL PESANAN</h2>
+
+            <form action="{{ route('pakets.checkout') }}" method="POST" id="paymentForm" class="w-100" style="max-width: 360px;">
                 @csrf
 
-                {{-- Hidden paket_id untuk dikirim ke database --}}
+                {{-- Hidden paket_id --}}
                 <input type="hidden" name="paket_id" value="{{ $paket->id }}">
+                {{-- Hidden harga satuan untuk JavaScript --}}
+                <input type="hidden" id="hargaSatuan" value="{{ $paket->harga }}">
 
+                {{-- Nama Paket --}}
                 <div class="mb-3">
-                    <label for="paketPilihan" class="form-label">Paket yang dipilih</label>
-                    <input id="paketPilihan" type="text" class="form-control" value="{{ $paket->nama_paket }}"
-                        readonly>
+                    <label for="paketPilihan" class="form-label fw-semibold">Paket yang Dipilih</label>
+                    <input id="paketPilihan" type="text" class="form-control" value="{{ $paket->nama_paket }}" readonly>
                 </div>
 
+                {{-- Harga Paket --}}
                 <div class="mb-3">
-                    <label for="name" class="form-label">Nama</label>
-                    <input id="name" name="name" type="text" class="form-control" aria-describedby="name"
-                        value="{{ auth()->user()->name }}" required readonly />
+                    <label for="hargaPaket" class="form-label fw-semibold">Harga Paket</label>
+                    <input id="hargaPaket" type="text" class="form-control"
+                        value="Rp {{ number_format($paket->harga, 0, ',', '.') }}" readonly>
                 </div>
 
+                {{-- Nama --}}
                 <div class="mb-3">
-                    <label for="address" class="form-label">Alamat</label>
+                    <label for="name" class="form-label fw-semibold">Nama</label>
+                    <input id="name" name="name" type="text" class="form-control"
+                        value="{{ auth()->user()->name }}" readonly>
+                </div>
+
+                {{-- Alamat --}}
+                <div class="mb-3">
+                    <label for="address" class="form-label fw-semibold">Alamat</label>
                     <input type="text" class="form-control" id="address" name="address"
-                        value="{{ auth()->user()->address }}" required readonly />
+                        value="{{ auth()->user()->address }}" readonly>
                 </div>
 
+                {{-- Nomor Telepon --}}
                 <div class="mb-3">
-                    <label for="phone" class="form-label">Nomor Telepon</label>
+                    <label for="phone" class="form-label fw-semibold">Nomor Telepon</label>
                     <input type="text" class="form-control" id="phone" name="phone"
-                        value="{{ auth()->user()->phone }}" required readonly />
+                        value="{{ auth()->user()->phone }}" readonly>
                 </div>
 
+                {{-- Jumlah Pesanan --}}
                 <div class="mb-3">
-                    <label for="qty" class="form-label">Maksimal pemesanan 12 paket (1 Tahun)</label>
+                    <label for="qty" class="form-label fw-semibold">Jumlah Paket (maks. 12)</label>
                     <div class="input-group">
                         <button type="button" class="btn btn-outline-secondary" id="decrement-btn">-</button>
                         <input type="number" class="form-control text-center" id="qty" name="qty"
-                            value="1" required min="1" max="12" readonly />
+                            value="1" min="1" max="12" required>
                         <button type="button" class="btn btn-outline-secondary" id="increment-btn">+</button>
                     </div>
                 </div>
 
-                <button type="submit" class="btn text-white px-3 py-1"
-                    style="background-color: #0d6efd;">Lanjutkan</button>
+                {{-- Total Harga --}}
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Total Pembayaran</label>
+                    <input type="text" id="totalHarga" class="form-control fw-bold"
+                        value="Rp {{ number_format($paket->harga, 0, ',', '.') }}" readonly>
+                </div>
+
+                <button type="submit" class="btn text-white px-3 py-2 w-100 fw-semibold" style="background-color: #0d6efd;">
+                    Lanjutkan ke Pembayaran
+                </button>
             </form>
         </div>
+
+        {{-- Sidebar --}}
         <div class="col-12 col-md-4 d-flex flex-column gap-3">
-            <!-- Bagian metode pembayaran tetap sama -->
             <div class="sidebar-box">
                 <h3>METODE PEMBAYARAN</h3>
                 <p>Kami menerima metode pembayaran aman berikut:</p>
                 <div class="d-flex gap-2">
-                    <img src="{{ asset('image\danalogo.png') }}"
-                        alt="Logo Dana payment method, blue and white text logo" height="20" width="40" />
-                    <img src="{{ asset('image\qrislogo.jpg') }}"
-                        alt="Logo QRIS payment method, black and white text logo" height="20" width="40" />
-                    <img src="{{ asset('image\bnilogo.jpg') }}" alt="Logo BNI payment method, red and orange text logo"
-                        height="20" width="40" />
+                    <img src="{{ asset('image/danalogo.png') }}" alt="Dana" height="20" width="40" />
+                    <img src="{{ asset('image/qrislogo.jpg') }}" alt="QRIS" height="20" width="40" />
+                    <img src="{{ asset('image/bnilogo.jpg') }}" alt="BNI" height="20" width="40" />
                 </div>
             </div>
             <div class="sidebar-box">
@@ -71,8 +90,7 @@
                 <p>Anda dapat melakukan pembayaran secara langsung</p>
                 <button type="button" class="offline-btn">
                     <img src="https://storage.googleapis.com/a1aa/image/ba986f73-56d2-4f98-2d82-92fa6f83e58c.jpg"
-                        alt="Offline payment button with black text on white background" height="20"
-                        width="80" />
+                        alt="Offline payment" height="20" width="80" />
                 </button>
             </div>
         </div>
@@ -109,32 +127,55 @@
 
     /* Untuk Firefox */
     input[type=number] {
-        appearance: '';
+        appearance: none;
         -moz-appearance: textfield;
     }
 </style>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const decrementBtn = document.getElementById('decrement-btn');
-        const incrementBtn = document.getElementById('increment-btn');
-        const qtyInput = document.getElementById('qty');
+document.addEventListener('DOMContentLoaded', function() {
+    const decrementBtn = document.getElementById('decrement-btn');
+    const incrementBtn = document.getElementById('increment-btn');
+    const qtyInput = document.getElementById('qty');
+    const totalHargaInput = document.getElementById('totalHarga');
+    const hargaSatuan = parseInt(document.getElementById('hargaSatuan').value);
 
-        // Fungsi untuk mengurangi jumlah
-        decrementBtn.addEventListener('click', function() {
-            let currentValue = parseInt(qtyInput.value);
-            if (currentValue > 1) {
-                qtyInput.value = currentValue - 1;
-            }
-        });
+    // Fungsi format ke Rupiah
+    function formatRupiah(angka) {
+        return 'Rp ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    }
 
-        // Fungsi untuk menambah jumlah (maksimal 12)
-        incrementBtn.addEventListener('click', function() {
-            let currentValue = parseInt(qtyInput.value);
-            if (currentValue < 12) {
-                qtyInput.value = currentValue + 1;
-            }
-        });
+    // Fungsi update total harga
+    function updateTotal() {
+        const qty = parseInt(qtyInput.value);
+        const total = hargaSatuan * qty;
+        totalHargaInput.value = formatRupiah(total);
+    }
+
+    // Tombol -
+    decrementBtn.addEventListener('click', function() {
+        let currentValue = parseInt(qtyInput.value);
+        if (currentValue > 1) {
+            qtyInput.value = currentValue - 1;
+            updateTotal();
+        }
     });
+
+    // Tombol +
+    incrementBtn.addEventListener('click', function() {
+        let currentValue = parseInt(qtyInput.value);
+        if (currentValue < 12) {
+            qtyInput.value = currentValue + 1;
+            updateTotal();
+        }
+    });
+
+    // Update total kalau user ubah manual di input
+    qtyInput.addEventListener('input', function() {
+        if (qtyInput.value < 1) qtyInput.value = 1;
+        if (qtyInput.value > 12) qtyInput.value = 12;
+        updateTotal();
+    });
+});
 </script>
 @endsection
