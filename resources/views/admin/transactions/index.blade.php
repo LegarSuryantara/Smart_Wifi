@@ -9,11 +9,11 @@
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
       <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
         <div class="p-6 text-gray-900">
-          <!-- Header dengan Judul -->
+          <!-- Header -->
           <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
             <h3 class="text-lg font-medium text-gray-900">Daftar Transaksi</h3>
 
-            <!-- Tombol Aksi -->
+            <!-- Tombol -->
             <div class="flex gap-2">
               <a href="{{ route('transactions') }}"
                 class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md transition-all flex items-center shadow-md">
@@ -60,6 +60,7 @@
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Updated At</th>
                   <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
@@ -75,16 +76,33 @@
                   <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                     Rp {{ number_format($trx->gross_amount,0,',','.') }}
                   </td>
+
                   <td class="px-6 py-4 whitespace-nowrap text-sm">
-                    <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                                @if($trx->transaction_status == 'paid') bg-green-100 text-green-800
-                                                @elseif($trx->transaction_status == 'unpaid') bg-yellow-100 text-yellow-800
-                                                @else bg-gray-100 text-gray-800 @endif">
+                    @php
+                    $color = match($trx->transaction_status) {
+                    'settlement' => 'bg-success text-white',
+                    'pending' => 'bg-warning text-dark',
+                    'cancel' => 'bg-danger text-white',
+                    'expire' => 'bg-secondary text-white',
+                    default => 'bg-light text-dark',
+                    };
+                    @endphp
+
+                    <span class="px-2 py-1 badge rounded-pill {{ $color }}">
                       {{ ucfirst($trx->transaction_status) }}
                     </span>
+
+                  </td>
+
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    {{ $trx->created_at->timezone('Asia/Jakarta')->format('d/m/Y') }}
+                    <br>
+                    {{ $trx->created_at->timezone('Asia/Jakarta')->format('H:i:s') }}
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {{ $trx->created_at->format('d-m-Y H:i') }}
+                    {{ $trx->updated_at->timezone('Asia/Jakarta')->format('d/m/Y') }}
+                    <br>
+                    {{ $trx->updated_at->timezone('Asia/Jakarta')->format('H:i:s') }}
                   </td>
                   <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
                     <a href="{{ route('transactions.sync', $trx->id) }}"

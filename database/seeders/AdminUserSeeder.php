@@ -23,7 +23,7 @@ class AdminUserSeeder extends Seeder
                 'name' => 'Administrator',
                 'phone' => '081234567890',
                 'address' => 'Jl. Admin No. 1, Kota Administrasi',
-                'password' => Hash::make('administrator_default'),
+                'password' => Hash::make('12345678'),
                 'email_verified_at' => now()
             ]
         );
@@ -75,7 +75,7 @@ class AdminUserSeeder extends Seeder
         $this->command->warn('MAIN ADMIN ACCOUNT:');
         $this->command->info('Name: Administrator');
         $this->command->warn('Email: admin@wifi.com');
-        $this->command->warn('Password: administrator_default');
+        $this->command->warn('Password: 12345678');
         $this->command->warn('Phone: 081234567890');
         $this->command->warn('Address: Jl. Admin No. 1, Kota Administrasi');
         $this->command->info('--------------------------------------------');

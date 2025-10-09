@@ -9,6 +9,7 @@ class Orders extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'user_id',
         'paket_id', 
         'name',
         'address',
@@ -26,9 +27,14 @@ class Orders extends Model
         'ewallet_type',
         'bill_key',
         'biller_code',
+        'is_activated',
     ];
 
     public function paket(){
         return $this->belongsTo(Pakets::class);
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

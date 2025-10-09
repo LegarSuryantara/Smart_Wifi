@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pakets;
+use App\Models\Orders;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 
@@ -21,7 +23,15 @@ class UserDashboardController extends Controller implements HasMiddleware
     }
     public function index()
     {
+        // Ambil semua paket untuk ditampilkan di halaman user
         $pakets = Pakets::all();
-        return view('user.dashboard', compact('pakets'));
+
+        // Ambil paket aktif user
+        $activeOrders = Orders::with('paket')
+            ->where('user_id', Auth::id())
+            ->where('is_activated', 'yes')
+            ->get();
+
+        return view('user.dashboard', compact('pakets', 'activeOrders'));
     }
 }

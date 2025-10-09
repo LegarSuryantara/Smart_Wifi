@@ -14,11 +14,8 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
 
-            // Data order internal
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('paket_id')->constrained()->onDelete('cascade');
-            $table->string('name');
-            $table->string('address');
-            $table->string('phone');
             $table->integer('qty');
 
             // Data Midtrans
@@ -35,6 +32,9 @@ return new class extends Migration
             $table->string('ewallet_type')->nullable();    // contoh: gopay/shopeepay
             $table->string('bill_key')->nullable();        // untuk indosat/mandiri
             $table->string('biller_code')->nullable();
+
+            // Status aktivasi
+            $table->enum('is_activated', ['yes', 'no'])->default('no');
 
             $table->timestamps();
         });

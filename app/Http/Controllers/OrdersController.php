@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Orders;
+use App\Models\User;
 use App\Models\Pakets;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Midtrans\Transaction;
 use Illuminate\Http\RedirectResponse;
 use Barryvdh\DomPDF\Facade\Pdf;
-use App\Models\User;
 use Exception;
 
 class OrdersController extends Controller
@@ -18,12 +19,15 @@ class OrdersController extends Controller
     {
         $request->validate([
             'paket_id' => 'required|exists:pakets,id',
-            'name'     => 'required',
-            'address'  => 'required',
-            'phone'    => 'required',
             'qty'      => 'required|integer|min:1'
         ]);
 
+        // Pastikan user login
+        $user = Auth::user();
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'Anda harus login terlebih dahulu.');
+        }
+        $user->user_id = Auth::id();
         $paket = Pakets::findOrFail($request->paket_id);
 
         // Generate unique order_id
@@ -33,34 +37,29 @@ class OrdersController extends Controller
         $gross_amount = $request->qty * $paket->harga;
 
         // Buat data order
-        $orderData = [
-            'paket_id'           => $request->paket_id,
-            'name'               => $request->name,
-            'address'            => $request->address,
-            'phone'              => $request->phone,
-            'qty'                => $request->qty,
-            'gross_amount'       => $gross_amount,
-            'transaction_status' => 'unpaid', // ✅ pakai transaction_status
-            'midtrans_order_id'  => $uniqueOrderId
-        ];
+        $order = Orders::create([
+            'user_id'             => $user->id,
+            'paket_id'            => $request->paket_id,
+            'qty'                 => $request->qty,
+            'gross_amount'        => $gross_amount,
+            'transaction_status'  => 'unpaid',
+            'midtrans_order_id'   => $uniqueOrderId,
+        ]);
 
-        $order = Orders::create($orderData);
-
-        // Konfigurasi Midtrans
-        \Midtrans\Config::$serverKey    = config('midtrans.server_key');
-        \Midtrans\Config::$isProduction = config('midtrans.is_production', false);
-        \Midtrans\Config::$isSanitized  = true;
-        \Midtrans\Config::$is3ds        = true;
-
+        // Parameter transaksi Midtrans (pakai data dari tabel users)
         $params = [
             'transaction_details' => [
-                'order_id'      => $uniqueOrderId,
-                'gross_amount'  => $gross_amount,
+                'order_id'     => $uniqueOrderId,
+                'gross_amount' => $gross_amount,
             ],
             'customer_details' => [
-                'first_name'    => $request->name,
-                'last_name'     => '',
-                'phone'         => $request->phone,
+                'first_name'   => $user->name,
+                'last_name'    => '',
+                'email'        => $user->email,
+                'phone'        => $user->phone,
+                'billing_address' => [
+                    'address' => $user->address,
+                ],
             ],
         ];
 
@@ -80,7 +79,6 @@ class OrdersController extends Controller
                 $vaBank   = null;
                 $vaNumber = null;
 
-                // Jika metode pembayaran bank transfer (VA)
                 if (isset($request->va_numbers[0])) {
                     $vaBank   = $request->va_numbers[0]['bank'];
                     $vaNumber = $request->va_numbers[0]['va_number'];
@@ -88,7 +86,7 @@ class OrdersController extends Controller
 
                 $order->update([
                     'transaction_id'     => $request->transaction_id,
-                    'transaction_status' => $request->transaction_status,
+                    'transaction_status' => $request->transaction_status,   
                     'payment_type'       => $request->payment_type,
                     'gross_amount'       => $request->gross_amount,
                     'fraud_status'       => $request->fraud_status ?? null,
@@ -102,21 +100,9 @@ class OrdersController extends Controller
         }
     }
 
-    public function detailTransaction($orderId)
-    {
-        \Midtrans\Config::$serverKey    = config('midtrans.server_key');
-        \Midtrans\Config::$isProduction = config('midtrans.is_production', false);
-
-        $status = Transaction::status($orderId);
-        dd($status);
-    }
-
     public function syncTransaction($id): RedirectResponse
     {
         $order = Orders::findOrFail($id);
-
-        \Midtrans\Config::$serverKey    = config('midtrans.server_key');
-        \Midtrans\Config::$isProduction = config('midtrans.is_production', false);
 
         try {
             $status = Transaction::status($order->midtrans_order_id);
@@ -135,34 +121,38 @@ class OrdersController extends Controller
                 return redirect()->back()->with('warning', 'Transaksi ada di database tapi Midtrans tidak balas status.');
             }
         } catch (Exception $e) {
-            // Kalau Midtrans kasih 404
             return redirect()->back()->with('error', 'Transaksi tidak ditemukan di Midtrans (mungkin expired atau salah env).');
         }
     }
 
-    public function transactions(Request $request)
+    public function notificationHandler(Request $request)
     {
-        $query = Orders::query();
+        $notif = new \Midtrans\Notification();
 
-        // 1. Filter Tanggal Mulai (start_date)
-        if ($request->filled('start_date')) {
-            // Filter: created_at >= start_date (tanggal awal hari)
-            $query->whereDate('created_at', '>=', $request->start_date);
+        $transactionStatus = $notif->transaction_status;
+        $orderId           = $notif->order_id;
+
+        $order = Orders::where('midtrans_order_id', $orderId)->first();
+
+        if ($order) {
+            $order->update([
+                'transaction_status' => $transactionStatus
+            ]);
         }
+        return response()->json(['success' => true]);
+    }
+  
+    public function markActivated($id)
+    {
+        $order = Orders::findOrFail($id);
+        $order->update(['is_activated' => 'yes']);
 
-        // 2. Filter Tanggal Akhir (end_date)
-        if ($request->filled('end_date')) {
-            // Filter: created_at <= end_date (akhir hari, inklusif)
-            // Menggunakan Carbon untuk mendapatkan akhir hari (23:59:59)
-            $endDate = \Carbon\Carbon::parse($request->end_date)->endOfDay();
-            $query->where('created_at', '<=', $endDate);
-        }
+        return redirect()->back()->with('success', 'Paket telah diaktifkan di Mikrotik dan ditandai selesai.');
+    }
 
-        // Ambil data yang sudah difilter, diurutkan, dan dipaginasi
-        $transactions = $query->latest()->paginate(10);
-
-        // Memastikan parameter filter tetap ada saat navigasi halaman
-        $transactions->appends($request->query());
+    public function transactions()
+    {
+        $transactions = Orders::latest()->paginate(10);
         return view('admin.transactions.index', compact('transactions'));
     }
 

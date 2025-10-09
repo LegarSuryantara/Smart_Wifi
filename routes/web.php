@@ -79,6 +79,13 @@ Route::middleware(['auth', 'permission:admin-access', 'verified'])->group(functi
     Route::put('/pakets/{paket}', [PaketController::class, 'update'])->name('pakets.update');
     Route::delete('/pakets/{paket}', [PaketController::class, 'destroy'])->name('pakets.destroy');
 
+    //Transaction
+    Route::get('/transactions', [OrdersController::class, 'transactions'])->name('transactions');
+    Route::get('/transactions/sync/{id}', [OrdersController::class, 'syncTransaction'])->name('transactions.sync');
+    Route::post('/transactions/notification', [OrdersController::class, 'notificationHandler']);
+
+    Route::post('admin/orders/{id}/mark-activated', [OrdersController::class, 'markActivated'])->name('admin.orders.markActivated');
+
     // Fonnte routes
     Route::resource('messages', MessageController::class);
     Route::resource('devices', DeviceController::class);
