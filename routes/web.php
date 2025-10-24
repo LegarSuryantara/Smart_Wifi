@@ -30,6 +30,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('user.index');
 });
 
+// Allow both admin and regular user to access transactions
+Route::middleware(['auth', 'permission:admin-access|user-access', 'verified'])->group(function () {
+	// Transaction
+	Route::get('/transactions', [OrdersController::class, 'transactions'])->name('transactions');
+	Route::get('/transactions/{orderId}', [OrdersController::class, 'detailTransaction']);
+	Route::get('/transactions/sync/{id}', [OrdersController::class, 'syncTransaction'])->name('transactions.sync');
+	Route::get('/admin/transactions/pdf', [OrdersController::class, 'exportPdf'])->name('transactions.pdf');
+});
+
 Route::middleware(['auth', 'permission:admin-access', 'verified'])->group(function () {
 
     Route::get('/admin-dashboard', [AdminDashboardController::class, 'index'])->name('admin.index');
@@ -61,7 +70,6 @@ Route::middleware(['auth', 'permission:admin-access', 'verified'])->group(functi
     // Customer route
     Route::get('/customers', [CustomerController::class, 'index'])->name('customers.index');
     Route::get('/admin/customers/pdf', [CustomerController::class, 'exportPdf'])->name('customers.pdf');
-
 
     // Pakets routes
     Route::get('/pakets', [PaketController::class, 'index'])->name('pakets.index');

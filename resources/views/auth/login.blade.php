@@ -74,10 +74,12 @@
                         </a>
                     </form>
 
-                    <p class="mt-4 text-center">
-                        Don't have an account?
-                        <a href="{{ route('register') }}">{{ __('Sign up for free!') }}</a>
-                    </p>
+                    @if (Route::has('register'))
+                        <p class="mt-4 text-center">
+                            Don't have an account?
+                            <a href="{{ route('register') }}">{{ __('Sign up for free!') }}</a>
+                        </p>
+                    @endif
                 </div>
             </div>
         </div>
