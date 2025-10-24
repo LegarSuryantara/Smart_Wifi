@@ -45,6 +45,7 @@
     </div>
 </section>
 
+{{-- PAKET AKTIF --}}
 @if($activeOrders->count())
 <section class="active-package-section py-5">
     <div class="container text-center mb-5">
@@ -60,15 +61,19 @@
                 </div>
                 <div class="card-body d-flex flex-column">
                     <p class="text-muted mb-0">Kecepatan hingga</p>
-                    <p class="display-5 fw-bold text-success">{{ $order->paket->kecepatan }}</p>
+                    <p class="display-6 fw-bold text-success">
+                        {{ $order->paket->kecepatan }} <span class="fs-6 text-success">Mbps</span>
+                    </p>
 
                     <p class="text-muted mt-3 mb-0">Harga Bulanan</p>
-                    <p class="h4 fw-bold text-success">Rp {{ number_format($order->paket->harga, 0, ',', '.') }}</p>
+                    <p class="h4 fw-bold text-success">
+                        Rp {{ number_format($order->paket->harga, 0, ',', '.') }}
+                    </p>
 
                     <p class="text-muted mt-2 mb-0">Durasi Paket</p>
                     <p class="fw-semibold text-success">{{ $order->qty }} bulan</p>
 
-                    <span class="badge bg-primary align-self-center mb-3">Aktif</span>
+                    <span class="badge bg-primary align-self-center mt-3">Aktif</span>
                 </div>
             </div>
         </div>
@@ -77,7 +82,7 @@
 </section>
 @endif
 
-{{-- BAGIAN PAKET INTERNET YANG DIPERBARUI --}}
+{{-- DAFTAR SEMUA PAKET --}}
 <section id="paket-internet" class="package-section py-5 bg-light">
     <div class="container">
         <div class="text-center mb-5">
@@ -88,36 +93,35 @@
         <div class="row">
             @forelse($pakets as $paket)
             <div class="col-lg-3 col-md-6 mb-4">
-                {{-- Menggunakan komponen Card dari Bootstrap --}}
                 <div class="card text-center h-100 shadow-sm border-0">
                     <div class="card-header bg-primary text-white border-0">
                         <h3 class="h5 mb-0 fw-bold">{{ $paket->nama_paket }}</h3>
                     </div>
                     <div class="card-body d-flex flex-column">
                         <p class="text-muted mb-0">Kecepatan hingga</p>
-                        <p class="display-5 fw-bold text-primary">{{ $paket->kecepatan }}</p>
+                        <p class="display-6 fw-bold text-primary">
+                            {{ $paket->kecepatan }} <span class="fs-6 text-primary">Mbps</span>
+                        </p>
 
                         <p class="text-muted mt-3 mb-0">Harga Bulanan</p>
-                        <p class="h4 fw-bold">Rp {{ number_format($paket->harga, 0, ',', '.') }}</p>
+                        <p class="h4 fw-bold text-dark">
+                            Rp {{ number_format($paket->harga, 0, ',', '.') }}
+                        </p>
 
                         <span class="badge bg-success align-self-center mb-3">Unlimited</span>
 
-                        <div class="mt-auto">
-                            @php
-                            $hasActive = $activeOrders->count() > 0;
-                            @endphp
+                        @php
+                        $hasActive = $activeOrders->count() > 0;
+                        @endphp
 
-                            <a href="{{ $hasActive ? '#' : route('pakets.show', $paket->id) }}"
-                                class="btn w-100 fw-bold {{ $hasActive ? 'btn-secondary disabled' : 'btn-primary' }}">
-                                {{ $hasActive ? 'Paket Sedang Aktif' : 'Pilih Paket' }}
-                            </a>
-                        </div>
-
+                        <a href="{{ $hasActive ? '#' : route('pakets.show', $paket->id) }}"
+                            class="btn w-100 fw-bold {{ $hasActive ? 'btn-secondary disabled' : 'btn-primary' }}">
+                            {{ $hasActive ? 'Paket Sedang Aktif' : 'Pilih Paket' }}
+                        </a>
                     </div>
                 </div>
             </div>
             @empty
-            {{-- Tampilan jika tidak ada data paket --}}
             <div class="col-12">
                 <div class="alert alert-warning text-center">
                     Saat ini belum ada paket yang tersedia.

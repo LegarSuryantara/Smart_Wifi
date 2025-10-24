@@ -56,42 +56,67 @@
     <x-slot name="script">
         <script>
             let prevData = {};
+            let isUpdating = false;
+            let hasError = false;
 
             async function updateStats() {
-                const res = await fetch("{{ route('monitorings.stats') }}");
-                const data = await res.json();
+                if (isUpdating || hasError) return;
+                isUpdating = true;
 
-                if (data.status === "ok") {
-                    let html = "";
-                    data.interfaces.forEach(iface => {
-                        let rxRate = "";
-                        let txRate = "";
-
-                        if (prevData[iface.name]) {
-                            let rxDiff = iface.rx - prevData[iface.name].rx;
-                            let txDiff = iface.tx - prevData[iface.name].tx;
-                            rxRate = (rxDiff / 1024).toFixed(2) + " KB/s";
-                            txRate = (txDiff / 1024).toFixed(2) + " KB/s";
-                        }
-
-                        prevData[iface.name] = {
-                            rx: iface.rx,
-                            tx: iface.tx
-                        };
-
-                        html += `
-                            <tr>
-                                <td class="px-4 py-2">${iface.name}</td>
-                                <td class="px-4 py-2 text-right font-mono text-green-600 w-32">
-                                    <span class="inline-block text-right w-full">${rxRate}</span>
-                                </td>
-                                <td class="px-4 py-2 text-right font-mono text-blue-600 w-32">
-                                    <span class="inline-block text-right w-full">${txRate}</span>
-                                </td>
-                            </tr>
-                        `;
+                try {
+                    const res = await fetch("{{ route('monitorings.stats') }}", {
+                        cache: "no-store"
                     });
-                    document.getElementById("bandwidth").innerHTML = html;
+                    const data = await res.json();
+
+                    if (data.status === "ok") {
+                        let html = "";
+                        data.interfaces.forEach(iface => {
+                            let rxRate = "";
+                            let txRate = "";
+
+                            if (prevData[iface.name]) {
+                                let rxDiff = iface.rx - prevData[iface.name].rx;
+                                let txDiff = iface.tx - prevData[iface.name].tx;
+                                rxRate = (rxDiff / 1024).toFixed(2) + " KB/s";
+                                txRate = (txDiff / 1024).toFixed(2) + " KB/s";
+                            }
+
+                            prevData[iface.name] = {
+                                rx: iface.rx,
+                                tx: iface.tx
+                            };
+
+                            html += `
+                        <tr>
+                            <td class="px-4 py-2">${iface.name}</td>
+                            <td class="px-4 py-2 text-right font-mono text-green-600 w-32">
+                                <span class="inline-block text-right w-full">${rxRate}</span>
+                            </td>
+                            <td class="px-4 py-2 text-right font-mono text-blue-600 w-32">
+                                <span class="inline-block text-right w-full">${txRate}</span>
+                            </td>
+                        </tr>
+                    `;
+                        });
+                        document.getElementById("bandwidth").innerHTML = html;
+                    } else {
+                        throw new Error(data.message || "Koneksi gagal");
+                    }
+                } catch (err) {
+                    console.error("Monitoring error:", err.message);
+                    hasError = true;
+                    document.getElementById("bandwidth").innerHTML = `
+                <tr>
+                    <td colspan="3" class="px-4 py-2 text-center text-red-500">
+                        Gagal memuat data (${err.message})
+                    </td>
+                </tr>`;
+                    setTimeout(() => {
+                        hasError = false;
+                    }, 30000);
+                } finally {
+                    isUpdating = false;
                 }
             }
 

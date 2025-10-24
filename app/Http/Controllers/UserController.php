@@ -72,10 +72,10 @@ class UserController extends Controller implements HasMiddleware
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|min:3',
+            'name' => 'required|min:3', // Bug perbaiki agar tidak bisa menggunakan karakter special (@#$ dan sebagainya)
             'email' => 'required|email|unique:users,email',
-            'phone' => 'required|unique:users,phone',
-            'address' => 'required',
+            'phone' => 'required|unique:users,phone', // Buat menjadi integer
+            'address' => 'required', // Buat menjadi string
             'password' => 'required|min:8|same:confirm_password',
             'confirm_password' => 'required'
         ]);
