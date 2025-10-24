@@ -14,7 +14,7 @@ class PaketController extends Controller implements HasMiddleware
     public static function middleware()
     {
         return [
-            new Middleware('permission:user-access', only:['index','show']),
+            new Middleware('permission:user-access', only: ['index', 'show']),
             new Middleware('permission:view pakets', only: ['index']),
             new Middleware('permission:edit pakets', only: ['edit', 'update']),
             new Middleware('permission:create pakets', only: ['create', 'store']),
@@ -34,14 +34,18 @@ class PaketController extends Controller implements HasMiddleware
 
         $pakets = Pakets::query()
             ->when($validated['search'] ?? null, function ($query, $search) {
-                $query->where('nama_paket', 'like', '%'.addslashes($search).'%');
+                $query->where('nama_paket', 'like', '%' . addslashes($search) . '%');
             })
             ->when($validated['sort'] ?? 'newest', function ($query, $sort) {
                 switch ($sort) {
-                    case 'oldest': return $query->oldest();
-                    case 'name_asc': return $query->orderBy('nama_paket');
-                    case 'name_desc': return $query->orderByDesc('nama_paket');
-                    default: return $query->latest();
+                    case 'oldest':
+                        return $query->oldest();
+                    case 'name_asc':
+                        return $query->orderBy('nama_paket');
+                    case 'name_desc':
+                        return $query->orderByDesc('nama_paket');
+                    default:
+                        return $query->latest();
                 }
             })
             ->paginate(10)
@@ -73,31 +77,30 @@ class PaketController extends Controller implements HasMiddleware
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'nama_paket' => 'required|string|max:255|unique:pakets,nama_paket',
+            'nama_paket' => 'required|string|max:255|unique:pakets,nama_paket|regex:/^[A-Za-z\s\-]+$/',
             'kategori' => 'required|string|max:255',
-            'harga' => 'required|integer|min:0',
-            'kecepatan' => 'required|string|max:255',
+            'harga' => 'required|integer|min:0|max:9999999',
+            'kecepatan' => 'required|integer|max:9999',
             'deskripsi' => 'nullable|string',
         ]);
 
         try {
             DB::beginTransaction();
-            
+
             Pakets::create($validated);
-            
+
             DB::commit();
-            
+
             return redirect()->route('pakets.index')
                 ->with('success', 'Paket berhasil ditambahkan!');
-                
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->route('pakets.create')
                 ->withInput()
-                ->with('error', 'Gagal menambahkan paket: '.$e->getMessage());
+                ->with('error', 'Gagal menambahkan paket: ' . $e->getMessage());
         }
     }
-    
+
     /**
      * Menampilkan detail paket.
      */
@@ -107,7 +110,7 @@ class PaketController extends Controller implements HasMiddleware
         $paket = Pakets::findOrFail($id);
         return view('admin.pakets.pembayaran', compact('paket'));
     }
-    
+
     /**
      * Menampilkan form edit paket.
      */
@@ -126,29 +129,29 @@ class PaketController extends Controller implements HasMiddleware
                 'required',
                 'string',
                 'max:255',
+                'regex:/^[A-Za-z\s\-]+$/',
                 Rule::unique('pakets', 'nama_paket')->ignore($paket->id)
             ],
             'kategori' => 'required|string|max:255',
-            'harga' => 'required|integer|min:0',
-            'kecepatan' => 'required|string|max:255',
+            'harga' => 'required|integer|min:0|max:9999999',
+            'kecepatan' => 'required|integer|max:9999',
             'deskripsi' => 'nullable|string',
         ]);
 
         try {
             DB::beginTransaction();
-            
+
             $paket->update($validated);
-            
+
             DB::commit();
-            
+
             return redirect()->route('pakets.index')
                 ->with('success', 'Paket berhasil diperbarui!');
-                
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->route('pakets.edit', $paket)
                 ->withInput()
-                ->with('error', 'Gagal memperbarui paket: '.$e->getMessage());
+                ->with('error', 'Gagal memperbarui paket: ' . $e->getMessage());
         }
     }
 
@@ -159,18 +162,17 @@ class PaketController extends Controller implements HasMiddleware
     {
         try {
             DB::beginTransaction();
-            
+
             $paket->delete();
-            
+
             DB::commit();
-            
+
             return redirect()->route('pakets.index')
                 ->with('success', 'Paket berhasil dihapus!');
-                
         } catch (\Exception $e) {
             DB::rollBack();
             return redirect()->route('pakets.index')
-                ->with('error', 'Gagal menghapus paket: '.$e->getMessage());
+                ->with('error', 'Gagal menghapus paket: ' . $e->getMessage());
         }
     }
 }

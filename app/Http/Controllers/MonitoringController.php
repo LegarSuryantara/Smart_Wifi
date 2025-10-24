@@ -9,23 +9,39 @@ use RouterOS\Query;
 
 class MonitoringController extends Controller
 {
+    private static $cachedClient = null;
+
     private function client()
     {
+        if (self::$cachedClient !== null) {
+            return self::$cachedClient;
+        }
+
         $config = new Config([
             'host' => '192.168.101.1',
             'user' => 'alief',
             'pass' => 'alief06',
             'port' => 8728,
-            'timeout' => 3,
+            'timeout' => 1,
+            'attempts' => 2,
         ]);
 
-        return new Client($config);
+        try {
+            self::$cachedClient = new Client($config);
+        } catch (\Throwable $e) {
+            self::$cachedClient = null;
+        }
+
+        return self::$cachedClient;
     }
 
     public function index()
     {
         try {
             $client = $this->client();
+            if (!$client) {
+                throw new \Exception('Tidak bisa konek ke router');
+            }
 
             $identity = $client->query('/system/identity/print')->read()[0]['name'] ?? 'Unknown';
             $router   = $client->query('/system/routerboard/print')->read()[0]['model'] ?? 'Unknown';
@@ -48,6 +64,14 @@ class MonitoringController extends Controller
     {
         try {
             $client = $this->client();
+            if (!$client) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Router tidak dapat dijangkau'
+                ], 200);
+            }
+
+            // Query interface
             $interfaces = $client->query('/interface/print')->read();
 
             $data = [];
@@ -55,8 +79,8 @@ class MonitoringController extends Controller
                 if (isset($iface['rx-byte'], $iface['tx-byte'])) {
                     $data[] = [
                         'name' => $iface['name'],
-                        'rx'   => (int)$iface['rx-byte'],
-                        'tx'   => (int)$iface['tx-byte'],
+                        'rx'   => (int) $iface['rx-byte'],
+                        'tx'   => (int) $iface['tx-byte'],
                     ];
                 }
             }
@@ -64,12 +88,13 @@ class MonitoringController extends Controller
             return response()->json([
                 'status' => 'ok',
                 'interfaces' => $data
-            ]);
+            ], 200);
         } catch (\Throwable $e) {
+            // Hindari lempar exception besar
             return response()->json([
                 'status' => 'error',
-                'message' => $e->getMessage()
-            ]);
+                'message' => 'Koneksi gagal: ' . $e->getMessage(),
+            ], 200);
         }
     }
 }

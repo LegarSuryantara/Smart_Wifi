@@ -1,11 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 body {
     font-family: "Poppins", sans-serif;
     overflow-x: hidden; /* Mencegah scroll horizontal karena animasi */
 }
 
 .hero-section {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url(../image/Herosectionbackground.png);
+    background-image: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+        url(../image/Herosectionbackground.webp);
     background-repeat: no-repeat;
     backdrop-filter: brightness(1);
     background-size: cover;
@@ -116,53 +117,49 @@ body {
 }
 
 @keyframes slideCards {
-    0% { transform: translateX(0%); }
-    100% { transform: translateX(-50%); }
+    0% {
+        transform: translateX(0%);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
 }
 
 @media (max-width: 768px) {
-
     .hero-section {
         height: 100vh;
-        background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(../image/Herosectionbackground.png);
+        background-image: linear-gradient(
+                rgba(0, 0, 0, 0.4),
+                rgba(0, 0, 0, 0.4)
+            ),
+            url(../image/Herosectionbackground.webp);
         background-position: 17% center;
-        
-        
-        
     }
     .navbar-collapse .navbar-nav .nav-item {
-        
         text-align: center;
     }
 
-   
     .navbar-collapse .d-flex {
-        margin-top: 1rem; 
-        flex-direction: column; 
-        align-items: center; 
-        gap: 0.5rem; 
+        margin-top: 1rem;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
     }
 
     .navbar-collapse .d-flex .btn {
-       
         width: 75%;
     }
 
     .navbar-collapse .dropdown-menu {
-       
         text-align: center;
-        border: none; 
+        border: none;
     }
-  .hero-content h1 {
-    font-size: 1.5rem;
-  
-
-  }
+    .hero-content h1 {
+        font-size: 1.5rem;
+    }
 }
 /* --- Responsive untuk Hero Section --- */
 @media (min-width: 991.98px) {
-
-  
     .hero-section {
         padding: 60px 0 120px;
         min-height: auto;
@@ -199,7 +196,6 @@ body {
     }
 }
 /* --- AKHIR DARI HERO SECTION --- */
-
 
 .hero-section p {
     font-size: 1rem;
@@ -291,7 +287,6 @@ iframe {
     border-radius: 0.5rem;
 }
 
-
 /* Password eye icon inside input */
 
 .password-wrapper {
@@ -333,7 +328,6 @@ iframe {
     border-radius: 0.5rem;
 }
 
-
 /* Use blue palette for primary actions on login */
 
 .login-form .btn-primary {
@@ -371,11 +365,10 @@ iframe {
 }
 
 .loginform {
-    background-image: url(../image/backgroundlogin.jpg);
+    background-image: url(../image/backgroundlogin.webp);
     background-repeat: no-repeat;
     background-size: cover;
 }
-
 
 .profile-card {
     max-width: 1000px;
@@ -446,7 +439,6 @@ iframe {
     box-shadow: 0 4px 9px rgba(0, 0, 0, 0.5);
 }
 
-
 /* detail pakets css */
 
 /* --- Detail Paket CSS --- */
@@ -461,21 +453,19 @@ iframe {
     gap: 1rem;
 }
 
-
-.paket-ekonomi>div>p:first-child {
+.paket-ekonomi > div > p:first-child {
     font-size: 0.75rem;
     font-weight: 600;
     color: #7e7e7e;
     margin-bottom: 0;
 }
 
-.paket-ekonomi>div>p:last-child {
+.paket-ekonomi > div > p:last-child {
     font-size: 0.75rem;
     font-weight: 700;
     color: #1a9aff;
     margin-bottom: 0;
 }
-
 
 .desc-paket i {
     color: #4a4a4a;
@@ -496,7 +486,6 @@ iframe {
 .desc-paket ul li {
     margin-bottom: 0.25rem;
 }
-
 
 .purchase-box {
     border: 1px solid #d1d5db;
@@ -548,7 +537,6 @@ iframe {
     border: none;
     border-radius: 0.375rem;
 }
-
 
 .recommendation i {
     color: #4a4a4a;
@@ -641,7 +629,7 @@ iframe {
     .purchase-box {
         max-width: 100%;
     }
-    .recommendation .row>div {
+    .recommendation .row > div {
         margin-bottom: 1rem;
     }
 }
@@ -677,7 +665,7 @@ iframe {
     padding: 1rem;
     box-shadow: 0 0.125rem 0.25rem rgb(0 0 0 / 0.075);
 }
-  
+
 .sidebar-box h3 {
     font-weight: 600;
     font-size: 13px;
@@ -708,4 +696,3 @@ iframe {
 .form-control {
     font-size: 11px;
 }
-

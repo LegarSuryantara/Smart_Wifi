@@ -114,7 +114,7 @@
         </div>
 
         <div class="col-md-6 p-0 d-none d-md-block">
-          <img alt="A cup of coffee on a yellow background" class="img-fluid h-100" src="{{ asset('image/login.png') }}" />
+          <img alt="A cup of coffee on a yellow background" class="img-fluid h-100" src="{{ asset('image/login.webp') }}" />
         </div>
       </div>
     </div>
