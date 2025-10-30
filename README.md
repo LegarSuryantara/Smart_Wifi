@@ -87,7 +87,7 @@ php artisan serve
 ## 🔐 Akun Default Utama
 **Admin**
 - Email: admin@wifi.com
-- Password: administrator_default
+- Password: 12345678
 
 **User Biasa**
 - Email: user@wifi.com
