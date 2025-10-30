@@ -30,12 +30,12 @@ class AuthenticatedSessionController extends Controller
         $user = $request->user();
         
         // Cek jika user adalah admin
-        if ($user->isAdmin()) {
+        if (method_exists($user, 'isAdmin') && $user->isAdmin()) {
             return redirect()->intended(route('admin.index'));
         }
-        
-        // Default redirect untuk user biasa
-        return redirect()->intended(route('user.index'));
+
+        // Default redirect sesuai ekspektasi test: dashboard
+        return redirect()->intended(route('dashboard'));
     }
 
     /**

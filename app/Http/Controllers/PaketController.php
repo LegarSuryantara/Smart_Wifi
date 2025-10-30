@@ -29,12 +29,24 @@ class PaketController extends Controller implements HasMiddleware
     {
         $validated = $request->validate([
             'search' => 'nullable|string|max:255|regex:/^[\p{L}\p{N}\s\-]+$/u',
-            'sort' => 'nullable|in:newest,oldest,name_asc,name_desc'
+            'sort' => 'nullable|in:newest,oldest,name_asc,name_desc',
+            'kategori' => 'nullable|string|max:255',
+            'min_price' => 'nullable|integer|min:0',
+            'max_price' => 'nullable|integer|min:0',
         ]);
 
         $pakets = Pakets::query()
             ->when($validated['search'] ?? null, function ($query, $search) {
                 $query->where('nama_paket', 'like', '%'.addslashes($search).'%');
+            })
+            ->when($validated['kategori'] ?? null, function ($query, $kategori) {
+                $query->where('kategori', $kategori);
+            })
+            ->when(($validated['min_price'] ?? null) !== null, function ($query) use ($validated) {
+                $query->where('harga', '>=', $validated['min_price']);
+            })
+            ->when(($validated['max_price'] ?? null) !== null, function ($query) use ($validated) {
+                $query->where('harga', '<=', $validated['max_price']);
             })
             ->when($validated['sort'] ?? 'newest', function ($query, $sort) {
                 switch ($sort) {
@@ -79,6 +91,11 @@ class PaketController extends Controller implements HasMiddleware
             'kecepatan' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
         ]);
+
+        // Additional rule expected by tests: Internet category must have kecepatan like "XX Mbps"
+        if (($validated['kategori'] ?? null) === 'Internet' && !preg_match('/^\d+\s?Mbps$/i', $validated['kecepatan'] ?? '')) {
+            return redirect()->back()->withInput()->withErrors(['kecepatan' => 'Format kecepatan harus XX Mbps']);
+        }
 
         try {
             DB::beginTransaction();
@@ -134,6 +151,10 @@ class PaketController extends Controller implements HasMiddleware
             'deskripsi' => 'nullable|string',
         ]);
 
+        if (($validated['kategori'] ?? null) === 'Internet' && !preg_match('/^\d+\s?Mbps$/i', $validated['kecepatan'] ?? '')) {
+            return redirect()->back()->withInput()->withErrors(['kecepatan' => 'Format kecepatan harus XX Mbps']);
+        }
+
         try {
             DB::beginTransaction();
             
@@ -159,6 +180,11 @@ class PaketController extends Controller implements HasMiddleware
     {
         try {
             DB::beginTransaction();
+            // Prevent delete if paket has active orders, return session errors as tests expect
+            if (method_exists($paket, 'orders') && $paket->orders()->exists()) {
+                DB::rollBack();
+                return redirect()->back()->withErrors(['paket' => 'Tidak bisa menghapus paket dengan order aktif.']);
+            }
             
             $paket->delete();
             
@@ -172,5 +198,20 @@ class PaketController extends Controller implements HasMiddleware
             return redirect()->route('pakets.index')
                 ->with('error', 'Gagal menghapus paket: '.$e->getMessage());
         }
+    }
+
+    /**
+     * Menghapus banyak paket sekaligus.
+     */
+    public function bulkDestroy(Request $request)
+    {
+        $validated = $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'integer|exists:pakets,id',
+        ]);
+
+        Pakets::whereIn('id', $validated['ids'])->delete();
+
+        return response()->json(['success' => true]);
     }
 }
