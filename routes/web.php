@@ -27,7 +27,9 @@ use App\Http\Controllers\{
 Route::get('/', [PaketController::class, 'showGuestPackages'])->name('guest.dashboard');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('user.index');
+    Route::get('/dashboard', [UserDashboardController::class, 'index'])->name('dashboard');
+    // Alias route name expected by some views
+    Route::get('/user-dashboard', [UserDashboardController::class, 'index'])->name('user.index');
 });
 
 // Allow both admin and regular user to access transactions
@@ -75,16 +77,11 @@ Route::middleware(['auth', 'permission:admin-access', 'verified'])->group(functi
     Route::get('/pakets', [PaketController::class, 'index'])->name('pakets.index');
     Route::get('/pakets/create', [PaketController::class, 'create'])->name('pakets.create');
     Route::post('/pakets', [PaketController::class, 'store'])->name('pakets.store');
+    // bulk-destroy must be defined BEFORE parameterized '/pakets/{paket}' routes to avoid model binding 404
+    Route::match(['delete','post'], '/pakets/bulk-destroy', [PaketController::class, 'bulkDestroy'])->name('pakets.bulkDestroy');
     Route::get('/pakets/{paket}/edit', [PaketController::class, 'edit'])->name('pakets.edit');
     Route::put('/pakets/{paket}', [PaketController::class, 'update'])->name('pakets.update');
     Route::delete('/pakets/{paket}', [PaketController::class, 'destroy'])->name('pakets.destroy');
-
-    //Transaction
-    Route::get('/transactions', [OrdersController::class, 'transactions'])->name('transactions');
-    Route::get('/transactions/sync/{id}', [OrdersController::class, 'syncTransaction'])->name('transactions.sync');
-    Route::post('/transactions/notification', [OrdersController::class, 'notificationHandler']);
-
-    Route::post('admin/orders/{id}/mark-activated', [OrdersController::class, 'markActivated'])->name('admin.orders.markActivated');
 
     // Fonnte routes
     Route::resource('messages', MessageController::class);
